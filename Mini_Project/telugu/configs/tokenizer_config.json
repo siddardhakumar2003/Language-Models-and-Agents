@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "model_type": "bpe",
+  "vocab_size": 16000,
+  "min_frequency": 2,
+  "special_tokens": [
+    "<pad>",
+    "<unk>",
+    "<bos>",
+    "<eos>"
+  ],
+  "pre_tokenizer": "metaspace",
+  "training_samples": 500000,
+  "description": "BPE tokenizer trained on Telugu corpus (INDIC Corpus V2 + manual collection)"
+}

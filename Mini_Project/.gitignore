@@ -1,2 +1,69 @@
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Project specific - Data
+# Track config/metadata files, but NOT raw/processed data
+telugu/data/raw/
+telugu/data/cleaned/
+telugu/data/processed/
+telugu/data/*.txt
+bhojpuri/data/raw/
+bhojpuri/data/cleaned/
+bhojpuri/data/processed/
+bhojpuri/data/*.txt
+# DO track these metadata files:
+# !telugu/data/config.json
+# !bhojpuri/data/config.json
+
+*.log
+pipeline.log
+stats.json
+kaggle.py
+kaggle.txt
+
+# OS
+.DS_Store
+Thumbs.db
+*.tmp
 claude-session.txt
-data/
+TELUGU.md
+BHOJPURI.md
+BHOJPURI_SETUP_SUMMARY.md
+CHANGES_MADE.md
+DATA_COLLECTION_GUIDE.md
+REFACTOR_REPORT.md
+setup.sh
+venv/*

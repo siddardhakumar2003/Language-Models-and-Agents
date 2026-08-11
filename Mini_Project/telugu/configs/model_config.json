@@ -1,0 +1,16 @@
+{
+  "language": "telugu",
+  "model_name": "TeluguTransformer",
+  "architecture": "decoder_only_transformer",
+  "vocab_size": 16000,
+  "embedding_dim": 512,
+  "hidden_dim": 2048,
+  "num_layers": 12,
+  "num_heads": 8,
+  "max_seq_length": 1024,
+  "dropout": 0.1,
+  "layer_norm_eps": 1e-6,
+  "activation": "gelu",
+  "total_parameters": "~25M",
+  "description": "Decoder-only Transformer LM for Telugu (independent model, no shared weights)"
+}
