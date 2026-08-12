@@ -17,10 +17,10 @@ This script:
 import sys
 from pathlib import Path
 
-# Add collect_data to path so we can import the cleaner
+# Add data_collect to path so we can import the cleaner
 sys.path.insert(0, str(Path(__file__).parent))
 
-from collect_data.data_cleaner import BhojpuriDataCleaner
+from data_cleaner import BhojpuriDataCleaner
 
 def main():
     """Run cleaning pipeline on existing data"""

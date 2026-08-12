@@ -1,0 +1,42 @@
+{
+  "language": "Bhojpuri",
+  "data_sources": [
+    "hi.wikipedia.org (800 articles, Devanagari proxy)",
+    "BBC Hindi",
+    "Aajtak",
+    "NDTV",
+    "Hindustan Times",
+    "Webdunia Hindi",
+    "Bhaskar",
+    "Other Hindi content sites"
+  ],
+  "scraping": {
+    "batches_collected": 34,
+    "raw_texts": 3327,
+    "texts_cleaned": 3234,
+    "pass_rate_percent": 97.2,
+    "size_mb": 3.3
+  },
+  "splits": {
+    "train": {
+      "lines": 2587,
+      "percentage": 80.0
+    },
+    "val": {
+      "lines": 323,
+      "percentage": 10.0
+    },
+    "test": {
+      "lines": 324,
+      "percentage": 10.0
+    }
+  },
+  "total_training_lines": 3234,
+  "split_method": "80/10/10 with seed 42",
+  "split_strategy": "in-memory shuffle with deterministic seeding",
+  "target_tokens": 200000000,
+  "batch_size": 100,
+  "created_at": "2026-08-12T12:09:47.956313",
+  "updated_at": "2026-08-12T18:23:09.000000",
+  "ready_for_training": true
+}

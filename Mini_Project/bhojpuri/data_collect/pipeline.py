@@ -74,7 +74,7 @@ class BhojpuriDataPipeline:
         logger.info("Starting data cleaner...")
 
         cleaner = BhojpuriDataCleaner(
-            input_dir=str(self.data_dir / "raw"),
+            input_dir=str(self.data_dir / "processed"),
             output_dir=str(self.data_dir / "cleaned")
         )
         cleaner.run_cleaning()

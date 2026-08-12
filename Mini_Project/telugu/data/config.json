@@ -1,0 +1,52 @@
+{
+  "language": "Telugu",
+  "data_sources": [
+    "te.wikipedia.org (3000 articles via API)",
+    "te.wikibooks.org (500+ pages)",
+    "te.wikiquote.org (300+ quotes)",
+    "te.wikisource.org (300+ texts)",
+    "eenadu.net (news)",
+    "greatandhra.com (news/content)"
+  ],
+  "scraping": {
+    "batches_collected": 326,
+    "raw_texts": 32549,
+    "texts_cleaned": 29206,
+    "pass_rate_percent": 89.7,
+    "tokens_estimated": 2630000,
+    "size_mb": 27.6
+  },
+  "manual_data": {
+    "source": "te.txt (existing corpus)",
+    "lines": 21458261,
+    "size_gb": 15
+  },
+  "splits": {
+    "train": {
+      "telugu_txt_lines": 23364,
+      "te_txt_lines": 17168831,
+      "total_lines": 17192195,
+      "percentage": 80
+    },
+    "val": {
+      "telugu_txt_lines": 2920,
+      "te_txt_lines": 2144950,
+      "total_lines": 2147870,
+      "percentage": 10
+    },
+    "test": {
+      "telugu_txt_lines": 2922,
+      "te_txt_lines": 2144480,
+      "total_lines": 2147402,
+      "percentage": 10
+    }
+  },
+  "total_training_lines": 21488467,
+  "split_method": "80/10/10 with seed 42",
+  "split_strategy": "scraped: shuffled, manual: order-preserved",
+  "target_tokens": 500000000,
+  "batch_size": 100,
+  "created_at": "2026-08-12T16:24:18.258693",
+  "updated_at": "2026-08-12T18:23:09.000000",
+  "ready_for_training": true
+}

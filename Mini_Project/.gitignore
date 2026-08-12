@@ -36,13 +36,13 @@ wheels/
 
 # Project specific - Data
 # Track config/metadata files, but NOT raw/processed data
-telugu/data/raw/
-telugu/data/cleaned/
-telugu/data/processed/
+telugu/data/test/
+telugu/data/train/
+telugu/data/val/
 telugu/data/*.txt
-bhojpuri/data/raw/
-bhojpuri/data/cleaned/
-bhojpuri/data/processed/
+bhojpuri/data/train/
+bhojpuri/data/test/
+bhojpuri/data/val/
 bhojpuri/data/*.txt
 # DO track these metadata files:
 # !telugu/data/config.json

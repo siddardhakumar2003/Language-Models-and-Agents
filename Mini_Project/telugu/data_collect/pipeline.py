@@ -15,8 +15,7 @@ import logging
 from pathlib import Path
 from datetime import datetime
 
-# Imports now in same directory (telugu/collect_data/)
-from .scraper import TeluguTextScraper
+# Imports now in same directory (telugu/data_collect/)
 from .enhanced_scraper import EnhancedTeluguScraper
 from .data_cleaner import TeluguDataCleaner
 
@@ -57,22 +56,18 @@ class DataPipeline:
         with open(self.config_file, 'w') as f:
             json.dump(self.config, f, indent=2)
 
-    def run_scraper(self, use_enhanced: bool = True, max_tokens: int = None):
-        """Run web scraper"""
+    def run_scraper(self, max_tokens: int = None):
+        """Run web scraper (uses EnhancedTeluguScraper with API-driven discovery)"""
         logger.info("Starting scraper...")
 
         if max_tokens is None:
             max_tokens = self.config['target_tokens']
 
-        if use_enhanced:
-            scraper = EnhancedTeluguScraper(output_dir=str(self.data_dir))
-            scraper.run_scraper_continuous(
-                max_tokens=max_tokens,
-                batch_size=self.config['batch_size']
-            )
-        else:
-            scraper = TeluguTextScraper(output_dir=str(self.data_dir))
-            scraper.run_scraper(target_paragraphs=10000)
+        scraper = EnhancedTeluguScraper(output_dir=str(self.data_dir))
+        scraper.run_scraper_continuous(
+            max_tokens=max_tokens,
+            batch_size=self.config['batch_size']
+        )
 
     def run_cleaner(self):
         """Run data cleaner"""
@@ -83,6 +78,39 @@ class DataPipeline:
             output_dir=str(self.data_dir / "cleaned")
         )
         cleaner.run_cleaning()
+
+    def merge_to_single_file(self, output_filename: str = "telugu.txt"):
+        """Merge cleaned texts to a single file"""
+        logger.info("Merging cleaned texts to single file...")
+
+        cleaned_dir = self.data_dir / "cleaned"
+        output_file = self.data_dir / output_filename
+
+        if not cleaned_dir.exists():
+            logger.error(f"Cleaned directory not found: {cleaned_dir}")
+            return
+
+        cleaned_files = sorted(cleaned_dir.glob("cleaned_*.jsonl"))
+        if not cleaned_files:
+            logger.warning("No cleaned JSONL files found")
+            return
+
+        total_lines = 0
+        with open(output_file, 'w', encoding='utf-8') as out:
+            for cleaned_file in cleaned_files:
+                try:
+                    with open(cleaned_file, 'r', encoding='utf-8') as f:
+                        for line in f:
+                            data = json.loads(line)
+                            text = data.get('text', '').strip()
+                            if text:
+                                out.write(text + '\n')
+                                total_lines += 1
+                except Exception as e:
+                    logger.warning(f"Error reading {cleaned_file}: {e}")
+
+        logger.info(f"Merged {total_lines} lines to {output_file}")
+        return total_lines
 
     def show_statistics(self):
         """Display pipeline statistics"""
@@ -168,7 +196,7 @@ def main():
     )
     parser.add_argument(
         '--mode',
-        choices=['scrape', 'clean', 'stats', 'full'],
+        choices=['scrape', 'clean', 'merge', 'stats', 'full'],
         default='full',
         help='Pipeline mode to run'
     )
@@ -194,9 +222,11 @@ def main():
     pipeline = DataPipeline(data_dir=args.data_dir)
 
     if args.mode == 'scrape':
-        pipeline.run_scraper(use_enhanced=True, max_tokens=args.max_tokens)
+        pipeline.run_scraper(max_tokens=args.max_tokens)
     elif args.mode == 'clean':
         pipeline.run_cleaner()
+    elif args.mode == 'merge':
+        pipeline.merge_to_single_file()
     elif args.mode == 'stats':
         pipeline.show_statistics()
     elif args.mode == 'full':

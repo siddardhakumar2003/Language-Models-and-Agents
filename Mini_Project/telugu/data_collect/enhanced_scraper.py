@@ -3,13 +3,15 @@ import json
 import time
 import requests
 from datetime import datetime
-from typing import List, Generator, Set
+from typing import List, Generator, Set, Dict
 from pathlib import Path
 import logging
-from urllib.parse import urljoin
+from urllib.parse import urljoin, quote
 from bs4 import BeautifulSoup
 import hashlib
 import re
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 logging.basicConfig(
     level=logging.INFO,
@@ -18,43 +20,80 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 class EnhancedTeluguScraper:
-    def __init__(self, output_dir: str = "./data"):
+    def __init__(self, output_dir: str = None):
+        # If no output_dir specified, use telugu/data/ (script location aware)
+        if output_dir is None:
+            output_dir = str(Path(__file__).resolve().parent.parent / "data")
         self.output_dir = Path(output_dir)
-        self.output_dir.mkdir(exist_ok=True)
+        self.output_dir.mkdir(parents=True, exist_ok=True)
         self.raw_dir = self.output_dir / "raw"
         self.raw_dir.mkdir(exist_ok=True)
+        self.state_file = self.output_dir / "scrape_state.json"
 
         self.session = requests.Session()
         self.session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
         })
+
+        # Mount HTTP adapter with retry strategy
+        retry_strategy = Retry(
+            total=3,
+            status_forcelist=[429, 500, 502, 503, 504],
+            allowed_methods=["HEAD", "GET", "OPTIONS"],
+            backoff_factor=2
+        )
+        adapter = HTTPAdapter(max_retries=retry_strategy)
+        self.session.mount("http://", adapter)
+        self.session.mount("https://", adapter)
 
         self.seen_texts: Set[str] = set()
         self.token_count = 0
         self.target_tokens = 500_000_000
         self.scraped_urls: Set[str] = set()
+        self.next_batch_id = 0
+
+        self.load_state()
+
+    def load_state(self) -> None:
+        """Load checkpointed state to resume scraping"""
+        if self.state_file.exists():
+            try:
+                with open(self.state_file, 'r') as f:
+                    state = json.load(f)
+                self.scraped_urls = set(state.get('scraped_urls', []))
+                self.seen_texts = set(state.get('seen_texts', []))
+                self.token_count = state.get('token_count', 0)
+                self.next_batch_id = state.get('next_batch_id', 0)
+                logger.info(f"Loaded state: {len(self.scraped_urls)} URLs, {len(self.seen_texts)} texts, {self.token_count} tokens, next batch {self.next_batch_id}")
+            except Exception as e:
+                logger.warning(f"Error loading state: {e}, starting fresh")
+
+    def save_state(self) -> None:
+        """Save current scraping state for resumability"""
+        state = {
+            'scraped_urls': list(self.scraped_urls),
+            'seen_texts': list(self.seen_texts),
+            'token_count': self.token_count,
+            'next_batch_id': self.next_batch_id,
+            'timestamp': datetime.now().isoformat()
+        }
+        with open(self.state_file, 'w') as f:
+            json.dump(state, f, indent=2)
 
     def estimate_tokens(self, text: str) -> int:
         """Estimate token count (rough approximation: ~4 chars per token)"""
         return max(1, len(text) // 4)
 
     def fetch_url(self, url: str, timeout: int = 15) -> str:
-        """Fetch content from URL with retries"""
-        max_retries = 2
-        for attempt in range(max_retries):
-            try:
-                response = self.session.get(url, timeout=timeout)
-                response.raise_for_status()
-                response.encoding = 'utf-8'
-                return response.text
-            except requests.exceptions.Timeout:
-                logger.warning(f"Timeout fetching {url} (attempt {attempt + 1}/{max_retries})")
-                if attempt < max_retries - 1:
-                    time.sleep(2)
-            except requests.exceptions.RequestException as e:
-                logger.warning(f"Error fetching {url}: {e}")
-                return ""
-        return ""
+        """Fetch content from URL with automatic retries and exponential backoff"""
+        try:
+            response = self.session.get(url, timeout=timeout)
+            response.raise_for_status()
+            response.encoding = 'utf-8'
+            return response.text
+        except requests.exceptions.RequestException as e:
+            logger.warning(f"Error fetching {url}: {e}")
+            return ""
 
     def _is_telugu_text(self, text: str, min_length: int = 20) -> bool:
         """Check if text contains Telugu characters"""
@@ -67,28 +106,90 @@ class EnhancedTeluguScraper:
         telugu_count = sum(1 for char in text if telugu_unicode_start <= ord(char) <= telugu_unicode_end)
         return telugu_count / len(text) > 0.25
 
-    def scrape_wikipedia_telugu(self) -> Generator:
-        """Scrape Telugu Wikipedia with limited scope, skipping TOC/infobox/references"""
-        logger.info("Starting Wikipedia Telugu scraping...")
+    def discover_wikipedia_titles(self, target_count: int = 3000, api_base: str = "https://te.wikipedia.org/w/api.php") -> List[str]:
+        """Discover Telugu Wikipedia article titles using MediaWiki API"""
+        logger.info(f"Discovering Wikipedia titles (target: {target_count})...")
 
-        # Key Telugu Wikipedia articles
-        seed_urls = [
-            "https://te.wikipedia.org/wiki/తెలుగు_భాష",
-            "https://te.wikipedia.org/wiki/భారతదేశం",
-            "https://te.wikipedia.org/wiki/ఆంధ్రప్రదేశ్",
-            "https://te.wikipedia.org/wiki/తెలంగాణ",
-            "https://te.wikipedia.org/wiki/చరిత్ర",
-            "https://te.wikipedia.org/wiki/సంస్కృతి",
-            "https://te.wikipedia.org/wiki/సాహిత్యం",
-            "https://te.wikipedia.org/wiki/విజ్ఞానం",
+        discovered = set()
+        seed_categories = [
+            'వర్గం:తెలుగు_సాహిత్యం',
+            'వర్గం:ఆంధ్రప్రదేశ్',
+            'వర్గం:తెలంగాణ',
+            'వర్గం:భారతదేశ_చరిత్ర',
         ]
 
-        for url in seed_urls:
+        # Random sampling for broad coverage
+        for attempt in range(5):
+            try:
+                params = {
+                    'action': 'query',
+                    'list': 'random',
+                    'rnnamespace': '0',
+                    'rnlimit': '500',
+                    'format': 'json'
+                }
+                response = self.session.get(api_base, params=params, timeout=15)
+                if response.status_code == 200:
+                    data = response.json()
+                    for item in data.get('query', {}).get('random', []):
+                        title = item.get('title')
+                        if title:
+                            discovered.add(title)
+                    if len(discovered) >= target_count:
+                        break
+            except Exception as e:
+                logger.warning(f"Error in random sampling (attempt {attempt+1}): {e}")
+            time.sleep(1)
+
+        # Seed categories for topical coherence
+        for category in seed_categories:
+            if len(discovered) >= target_count:
+                break
+            try:
+                cmcontinue = None
+                for _ in range(3):  # Max 3 continuation tokens per category
+                    params = {
+                        'action': 'query',
+                        'list': 'categorymembers',
+                        'cmtitle': category,
+                        'cmlimit': '500',
+                        'cmnamespace': '0',
+                        'format': 'json'
+                    }
+                    if cmcontinue:
+                        params['cmcontinue'] = cmcontinue
+
+                    response = self.session.get(api_base, params=params, timeout=15)
+                    if response.status_code == 200:
+                        data = response.json()
+                        for item in data.get('query', {}).get('categorymembers', []):
+                            title = item.get('title')
+                            if title:
+                                discovered.add(title)
+                        cmcontinue = data.get('query-continue', {}).get('categorymembers', {}).get('cmcontinue')
+                        if not cmcontinue or len(discovered) >= target_count:
+                            break
+                    time.sleep(1)
+            except Exception as e:
+                logger.warning(f"Error discovering category {category}: {e}")
+
+        result = list(discovered)[:target_count]
+        logger.info(f"Discovered {len(result)} Wikipedia article titles")
+        return result
+
+    def scrape_wikipedia_telugu(self) -> Generator:
+        """Scrape discovered Telugu Wikipedia articles"""
+        logger.info("Starting Wikipedia Telugu scraping with discovered titles...")
+
+        titles = self.discover_wikipedia_titles(target_count=3000)
+
+        for title in titles:
+            url = f"https://te.wikipedia.org/wiki/{quote(title)}"
+
             if url in self.scraped_urls:
                 continue
 
             self.scraped_urls.add(url)
-            logger.info(f"Scraping: {url}")
 
             try:
                 content = self.fetch_url(url)
@@ -96,13 +197,11 @@ class EnhancedTeluguScraper:
                     continue
 
                 soup = BeautifulSoup(content, 'html.parser')
-
-                # Find main content div and skip TOC/infobox/references
                 main_content = soup.find('div', id='mw-content-text')
                 if not main_content:
                     main_content = soup
 
-                # Remove unwanted sections before extraction
+                # Remove unwanted sections
                 for skip_elem in main_content.find_all(['div'], {'id': 'toc'}):
                     skip_elem.decompose()
                 for skip_elem in main_content.find_all('table', class_='infobox'):
@@ -114,7 +213,6 @@ class EnhancedTeluguScraper:
                 for skip_elem in main_content.find_all('span', class_='mw-editsection'):
                     skip_elem.decompose()
 
-                # Extract only paragraphs from cleaned content
                 for p in main_content.find_all('p'):
                     text = p.get_text(strip=True)
                     if text and self._is_telugu_text(text):
@@ -123,24 +221,65 @@ class EnhancedTeluguScraper:
                             self.seen_texts.add(text_hash)
                             yield text
 
-                time.sleep(1)
+                time.sleep(0.5)
 
             except Exception as e:
-                logger.warning(f"Error scraping Wikipedia {url}: {e}")
-                continue
+                logger.warning(f"Error scraping {url}: {e}")
+
+    def discover_wiki_subpages(self, project: str = "wikibooks", api_base: str = None) -> List[str]:
+        """Discover subpages in a wiki project using list=allpages"""
+        if api_base is None:
+            api_base = f"https://te.{project}.org/w/api.php"
+
+        logger.info(f"Discovering {project} pages...")
+        pages = []
+
+        try:
+            apfrom = None
+            for attempt in range(3):  # Max 3 continuation tokens
+                params = {
+                    'action': 'query',
+                    'list': 'allpages',
+                    'aplimit': '500',
+                    'apnamespace': '0',
+                    'format': 'json'
+                }
+                if apfrom:
+                    params['apfrom'] = apfrom
+
+                response = self.session.get(api_base, params=params, timeout=15)
+                if response.status_code == 200:
+                    data = response.json()
+                    for item in data.get('query', {}).get('allpages', []):
+                        title = item.get('title')
+                        if title:
+                            pages.append(title)
+                    apfrom = data.get('query-continue', {}).get('allpages', {}).get('apfrom')
+                    if not apfrom:
+                        break
+                time.sleep(1)
+        except Exception as e:
+            logger.warning(f"Error discovering {project} pages: {e}")
+
+        logger.info(f"Discovered {len(pages)} {project} pages")
+        return pages
 
     def scrape_wikibooks_telugu(self) -> Generator:
-        """Scrape Telugu Wikibooks for educational content"""
+        """Scrape Telugu Wikibooks using discovered pages"""
         logger.info("Starting Wikibooks Telugu scraping...")
 
-        # Wikibooks pages with direct URLs
-        books = [
-            "https://te.wikibooks.org/",
-        ]
+        pages = self.discover_wiki_subpages(project="wikibooks", api_base="https://te.wikibooks.org/w/api.php")
 
-        for base_url in books:
+        for title in pages[:500]:  # Limit to avoid excessive scraping
+            url = f"https://te.wikibooks.org/wiki/{quote(title)}"
+
+            if url in self.scraped_urls:
+                continue
+
+            self.scraped_urls.add(url)
+
             try:
-                content = self.fetch_url(base_url)
+                content = self.fetch_url(url)
                 if not content:
                     continue
 
@@ -154,21 +293,30 @@ class EnhancedTeluguScraper:
                             self.seen_texts.add(text_hash)
                             yield text
 
-                time.sleep(1)
+                time.sleep(0.5)
 
             except Exception as e:
-                logger.warning(f"Error scraping Wikibooks: {e}")
+                logger.warning(f"Error scraping wikibook {url}: {e}")
 
-    def scrape_quotations(self) -> Generator:
-        """Scrape Telugu quotations and proverbs"""
-        logger.info("Scraping Telugu quotations...")
+    def scrape_wikiquote_telugu(self) -> Generator:
+        """Scrape Telugu Wikiquote"""
+        logger.info("Starting Wikiquote Telugu scraping...")
 
-        try:
-            # Wikiquote Telugu
-            url = "https://te.wikiquote.org/wiki/ముఖ్య_పేజీ"
+        pages = self.discover_wiki_subpages(project="wikiquote", api_base="https://te.wikiquote.org/w/api.php")
 
-            content = self.fetch_url(url)
-            if content:
+        for title in pages[:300]:
+            url = f"https://te.wikiquote.org/wiki/{quote(title)}"
+
+            if url in self.scraped_urls:
+                continue
+
+            self.scraped_urls.add(url)
+
+            try:
+                content = self.fetch_url(url)
+                if not content:
+                    continue
+
                 soup = BeautifulSoup(content, 'html.parser')
 
                 for quote in soup.find_all(['p', 'blockquote', 'div']):
@@ -179,20 +327,30 @@ class EnhancedTeluguScraper:
                             self.seen_texts.add(text_hash)
                             yield text
 
-                time.sleep(1)
+                time.sleep(0.5)
 
-        except Exception as e:
-            logger.warning(f"Error scraping quotations: {e}")
+            except Exception as e:
+                logger.warning(f"Error scraping wikiquote {url}: {e}")
 
     def scrape_wikisource_telugu(self) -> Generator:
-        """Scrape Telugu Wikisource for literary content"""
-        logger.info("Scraping Wikisource Telugu...")
+        """Scrape Telugu Wikisource"""
+        logger.info("Starting Wikisource Telugu scraping...")
 
-        try:
-            url = "https://te.wikisource.org/"
+        pages = self.discover_wiki_subpages(project="wikisource", api_base="https://te.wikisource.org/w/api.php")
 
-            content = self.fetch_url(url)
-            if content:
+        for title in pages[:300]:
+            url = f"https://te.wikisource.org/wiki/{quote(title)}"
+
+            if url in self.scraped_urls:
+                continue
+
+            self.scraped_urls.add(url)
+
+            try:
+                content = self.fetch_url(url)
+                if not content:
+                    continue
+
                 soup = BeautifulSoup(content, 'html.parser')
 
                 for p in soup.find_all('p'):
@@ -203,22 +361,13 @@ class EnhancedTeluguScraper:
                             self.seen_texts.add(text_hash)
                             yield text
 
-                for div in soup.find_all('div', class_=['mw-parser-output']):
-                    for p in div.find_all('p'):
-                        text = p.get_text(strip=True)
-                        if text and self._is_telugu_text(text, min_length=20):
-                            text_hash = hashlib.md5(text.encode()).hexdigest()
-                            if text_hash not in self.seen_texts:
-                                self.seen_texts.add(text_hash)
-                                yield text
+                time.sleep(0.5)
 
-                time.sleep(1)
-
-        except Exception as e:
-            logger.warning(f"Error scraping Wikisource: {e}")
+            except Exception as e:
+                logger.warning(f"Error scraping wikisource {url}: {e}")
 
     def scrape_news_sites(self) -> Generator:
-        """Scrape Telugu news websites, avoiding nav/menu/footer chrome"""
+        """Scrape Telugu news websites"""
         logger.info("Scraping news sites...")
 
         news_sources = [
@@ -236,7 +385,6 @@ class EnhancedTeluguScraper:
 
                 soup = BeautifulSoup(content, 'html.parser')
 
-                # Remove nav/menu/footer/widget elements before extraction
                 for elem in soup.find_all(['nav', 'footer', 'aside']):
                     elem.decompose()
 
@@ -248,7 +396,6 @@ class EnhancedTeluguScraper:
                     if any(pat in class_lower or pat in id_str for pat in skip_patterns):
                         elem.decompose()
 
-                # Extract only paragraphs and article tags
                 for elem in soup.find_all(['p', 'article']):
                     text = elem.get_text(strip=True)
                     if text and self._is_telugu_text(text, min_length=20):
@@ -285,21 +432,19 @@ class EnhancedTeluguScraper:
 
     def run_scraper_continuous(self, max_tokens: int = 100_000_000, batch_size: int = 50) -> None:
         """Run continuous scraper until reaching token target"""
-        logger.info(f"Starting scraper. Target: {max_tokens / 1e6:.1f}M tokens")
+        logger.info(f"Starting scraper. Target: {max_tokens / 1e6:.1f}M tokens (resuming from {self.token_count / 1e6:.2f}M)")
 
         current_batch = []
-        batch_id = 0
-        self.token_count = 0
+        self.target_tokens = max_tokens
 
         start_time = time.time()
 
-        # Combine multiple sources
         sources = [
             ("Wikipedia", self.scrape_wikipedia_telugu()),
-            ("News Sites", self.scrape_news_sites()),
             ("Wikibooks", self.scrape_wikibooks_telugu()),
-            ("Wikiquote", self.scrape_quotations()),
+            ("Wikiquote", self.scrape_wikiquote_telugu()),
             ("Wikisource", self.scrape_wikisource_telugu()),
+            ("News Sites", self.scrape_news_sites()),
         ]
 
         for source_name, source_generator in sources:
@@ -313,13 +458,16 @@ class EnhancedTeluguScraper:
                     current_batch.append(text)
 
                     if len(current_batch) >= batch_size:
-                        batch_tokens = self.save_batch(current_batch, batch_id)
+                        batch_tokens = self.save_batch(current_batch, self.next_batch_id)
                         self.token_count += batch_tokens
-                        batch_id += 1
+                        self.next_batch_id += 1
+
+                        # Save state after each batch
+                        self.save_state()
 
                         progress_pct = (self.token_count / max_tokens) * 100
                         logger.info(
-                            f"Batch {batch_id-1}: {batch_tokens/1e6:.3f}M tokens | "
+                            f"Batch {self.next_batch_id-1}: {batch_tokens/1e6:.3f}M tokens | "
                             f"Total: {self.token_count/1e6:.2f}M / {max_tokens/1e6:.1f}M ({progress_pct:.1f}%) "
                             f"[{source_name}]"
                         )
@@ -339,12 +487,13 @@ class EnhancedTeluguScraper:
 
         # Save remaining batch
         if current_batch:
-            batch_tokens = self.save_batch(current_batch, batch_id)
+            batch_tokens = self.save_batch(current_batch, self.next_batch_id)
             self.token_count += batch_tokens
+            self.next_batch_id += 1
+            self.save_state()
 
         elapsed_time = time.time() - start_time
 
-        # Final statistics
         if self.raw_dir.exists():
             total_size_mb = sum(f.stat().st_size for f in self.raw_dir.glob('*.jsonl')) / 1024 / 1024
             total_files = len(list(self.raw_dir.glob('*.jsonl')))

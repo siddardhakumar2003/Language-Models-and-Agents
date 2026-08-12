@@ -8,7 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from collect_data.data_cleaner import TeluguDataCleaner
+from data_cleaner import TeluguDataCleaner
 
 def main():
     script_dir = Path(__file__).resolve().parent

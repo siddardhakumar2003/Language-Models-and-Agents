@@ -3,12 +3,14 @@ import json
 import time
 import requests
 from datetime import datetime
-from typing import List, Generator
+from typing import List, Generator, Set
 from pathlib import Path
 import logging
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urljoin, urlparse, quote
 from bs4 import BeautifulSoup
 import hashlib
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 logging.basicConfig(
     level=logging.INFO,
@@ -17,39 +19,81 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 class BhojpuriTextScraper:
-    def __init__(self, output_dir: str = "./data"):
+    def __init__(self, output_dir: str = None):
+        # If no output_dir specified, use bhojpuri/data/ (script location aware)
+        if output_dir is None:
+            output_dir = str(Path(__file__).resolve().parent.parent / "data")
         self.output_dir = Path(output_dir)
-        self.output_dir.mkdir(exist_ok=True)
+        self.output_dir.mkdir(parents=True, exist_ok=True)
         self.raw_dir = self.output_dir / "raw"
         self.processed_dir = self.output_dir / "processed"
         self.raw_dir.mkdir(exist_ok=True)
         self.processed_dir.mkdir(exist_ok=True)
+        self.state_file = self.output_dir / "scrape_state.json"
 
         self.session = requests.Session()
         self.session.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
         })
 
-        self.seen_urls = set()
-        self.seen_texts = set()  # For deduplication
-        self.stats = {
-            'total_files': 0,
-            'total_size_mb': 0,
-            'total_paragraphs': 0
-        }
+        # Mount HTTP adapter with retry strategy
+        retry_strategy = Retry(
+            total=3,
+            status_forcelist=[429, 500, 502, 503, 504],
+            allowed_methods=["HEAD", "GET", "OPTIONS"],
+            backoff_factor=2
+        )
+        adapter = HTTPAdapter(max_retries=retry_strategy)
+        self.session.mount("http://", adapter)
+        self.session.mount("https://", adapter)
+
+        self.seen_urls: Set[str] = set()
+        self.seen_texts: Set[str] = set()
+        self.token_count = 0
+        self.paragraph_count = 0
+        self.next_batch_id = 0
 
         # Bhojpuri Unicode range (Devanagari script)
         self.bhojpuri_unicode_start = 0x0900
         self.bhojpuri_unicode_end = 0x097F
 
-    def fetch_url(self, url: str, timeout: int = 10) -> str:
-        """Fetch content from URL with error handling"""
+        self.load_state()
+
+    def load_state(self) -> None:
+        """Load checkpointed state to resume scraping"""
+        if self.state_file.exists():
+            try:
+                with open(self.state_file, 'r') as f:
+                    state = json.load(f)
+                self.seen_urls = set(state.get('seen_urls', []))
+                self.seen_texts = set(state.get('seen_texts', []))
+                self.paragraph_count = state.get('paragraph_count', 0)
+                self.next_batch_id = state.get('next_batch_id', 0)
+                logger.info(f"Loaded state: {len(self.seen_urls)} URLs, {len(self.seen_texts)} texts, {self.paragraph_count} paragraphs, next batch {self.next_batch_id}")
+            except Exception as e:
+                logger.warning(f"Error loading state: {e}, starting fresh")
+
+    def save_state(self) -> None:
+        """Save current scraping state for resumability"""
+        state = {
+            'seen_urls': list(self.seen_urls),
+            'seen_texts': list(self.seen_texts),
+            'paragraph_count': self.paragraph_count,
+            'next_batch_id': self.next_batch_id,
+            'timestamp': datetime.now().isoformat()
+        }
+        with open(self.state_file, 'w') as f:
+            json.dump(state, f, indent=2)
+
+    def fetch_url(self, url: str, timeout: int = 15) -> str:
+        """Fetch content from URL with automatic retries"""
         try:
             response = self.session.get(url, timeout=timeout)
+            response.raise_for_status()
             response.encoding = 'utf-8'
             return response.text
-        except Exception as e:
-            logger.error(f"Error fetching {url}: {e}")
+        except requests.exceptions.RequestException as e:
+            logger.warning(f"Error fetching {url}: {e}")
             return ""
 
     def extract_bhojpuri_text_wikipedia(self, url: str) -> List[str]:
@@ -98,66 +142,91 @@ class BhojpuriTextScraper:
         # At least 30% of text should be Devanagari characters
         return devanagari_count / len(text) > 0.3 if len(text) > 0 else False
 
-    def scrape_hindi_wikipedia(self) -> Generator:
-        """Scrape Hindi Wikipedia with expanded article list"""
-        logger.info("Starting Hindi Wikipedia scraping (Devanagari)...")
+    def discover_wikipedia_titles(self, target_count: int = 800, api_base: str = "https://hi.wikipedia.org/w/api.php") -> List[str]:
+        """Discover Hindi Wikipedia article titles using MediaWiki API"""
+        logger.info(f"Discovering Wikipedia titles (target: {target_count})...")
 
-        base_url = "https://hi.wikipedia.org"
-
-        # Expanded list of high-content Wikipedia articles
-        articles_to_scrape = [
-            "/wiki/मुख्य_पृष्ठ",
-            "/wiki/भारत",
-            "/wiki/हिन्दी_भाषा",
-            "/wiki/उत्तर_प्रदेश",
-            "/wiki/बिहार",
-            "/wiki/साहित्य",
-            "/wiki/संस्कृति",
-            "/wiki/धर्म",
-            "/wiki/इतिहास",
-            "/wiki/विज्ञान",
-            "/wiki/तकनीकी",
-            "/wiki/खेल",
-            "/wiki/संगीत",
-            "/wiki/कला",
-            "/wiki/नृत्य",
-            "/wiki/राजनीति",
-            "/wiki/अर्थशास्त्र",
-            "/wiki/भोजन",
-            "/wiki/परिवार",
-            "/wiki/शिक्षा",
-            "/wiki/स्वास्थ्य",
-            "/wiki/पर्यावरण",
-            "/wiki/कानून",
-            "/wiki/समाज",
-            "/wiki/परिवहन",
-            "/wiki/मीडिया",
-            "/wiki/तकनीकि",
-            "/wiki/कम्प्यूटर",
-            "/wiki/इंटरनेट",
-            "/wiki/सॉफ्टवेयर",
-            "/wiki/वास्तुकला",
-            "/wiki/चिकित्सा",
-            "/wiki/पशु",
-            "/wiki/पौधे",
-            "/wiki/भूगोल",
-            "/wiki/खेती",
-            "/wiki/व्यापार",
-            "/wiki/यातायात",
-            "/wiki/नैतिकता",
-            "/wiki/वित्त",
-            "/wiki/बैंकिंग",
-            "/wiki/बीमा",
+        discovered = set()
+        seed_categories = [
+            'वर्ग:हिन्दी_साहित्य',
+            'वर्ग:भारत',
+            'वर्ग:उत्तर_प्रदेश',
+            'वर्ग:बिहार',
         ]
 
-        for article in articles_to_scrape:
-            if article in self.seen_urls:
+        # Random sampling for broad coverage
+        for attempt in range(3):
+            try:
+                params = {
+                    'action': 'query',
+                    'list': 'random',
+                    'rnnamespace': '0',
+                    'rnlimit': '500',
+                    'format': 'json'
+                }
+                response = self.session.get(api_base, params=params, timeout=15)
+                if response.status_code == 200:
+                    data = response.json()
+                    for item in data.get('query', {}).get('random', []):
+                        title = item.get('title')
+                        if title:
+                            discovered.add(title)
+                    if len(discovered) >= target_count:
+                        break
+            except Exception as e:
+                logger.warning(f"Error in random sampling (attempt {attempt+1}): {e}")
+            time.sleep(1)
+
+        # Seed categories for topical coherence
+        for category in seed_categories:
+            if len(discovered) >= target_count:
+                break
+            try:
+                cmcontinue = None
+                for _ in range(2):
+                    params = {
+                        'action': 'query',
+                        'list': 'categorymembers',
+                        'cmtitle': category,
+                        'cmlimit': '500',
+                        'cmnamespace': '0',
+                        'format': 'json'
+                    }
+                    if cmcontinue:
+                        params['cmcontinue'] = cmcontinue
+
+                    response = self.session.get(api_base, params=params, timeout=15)
+                    if response.status_code == 200:
+                        data = response.json()
+                        for item in data.get('query', {}).get('categorymembers', []):
+                            title = item.get('title')
+                            if title:
+                                discovered.add(title)
+                        cmcontinue = data.get('query-continue', {}).get('categorymembers', {}).get('cmcontinue')
+                        if not cmcontinue or len(discovered) >= target_count:
+                            break
+                    time.sleep(1)
+            except Exception as e:
+                logger.warning(f"Error discovering category {category}: {e}")
+
+        result = list(discovered)[:target_count]
+        logger.info(f"Discovered {len(result)} Wikipedia article titles")
+        return result
+
+    def scrape_hindi_wikipedia(self) -> Generator:
+        """Scrape discovered Hindi Wikipedia articles (Devanagari proxy for Bhojpuri)"""
+        logger.info("Starting Hindi Wikipedia scraping (Devanagari proxy)...")
+
+        titles = self.discover_wikipedia_titles(target_count=800)
+
+        for title in titles:
+            url = f"https://hi.wikipedia.org/wiki/{quote(title)}"
+
+            if url in self.seen_urls:
                 continue
 
-            url = urljoin(base_url, article)
-            self.seen_urls.add(article)
+            self.seen_urls.add(url)
 
-            logger.info(f"Scraping: {url}")
             try:
                 paragraphs = self.extract_bhojpuri_text_wikipedia(url)
 
@@ -167,9 +236,9 @@ class BhojpuriTextScraper:
                         self.seen_texts.add(text_hash)
                         yield para
             except Exception as e:
-                logger.warning(f"Error scraping {article}: {e}")
+                logger.warning(f"Error scraping {url}: {e}")
 
-            time.sleep(1)
+            time.sleep(0.5)
 
     def scrape_news_sites(self) -> Generator:
         """Scrape Hindi news and content sites with Devanagari text"""
@@ -273,57 +342,70 @@ class BhojpuriTextScraper:
                 f.write('\n')
 
     def run_scraper(self, target_paragraphs: int = 50000) -> None:
-        """Run the complete scraping pipeline"""
-        logger.info(f"Starting Bhojpuri scraper with target of {target_paragraphs} paragraphs")
+        """Run the complete scraping pipeline with checkpointing"""
+        logger.info(f"Starting Bhojpuri scraper with target of {target_paragraphs} paragraphs (resuming from {self.paragraph_count})")
 
-        paragraph_count = 0
         batch_size = 100
         current_batch = []
-        batch_id = 0
 
         start_time = time.time()
 
         # Combine multiple sources
         all_sources = [
-            self.scrape_hindi_wikipedia(),
-            self.scrape_news_sites(),
-            self.scrape_common_crawl_equivalents(),
+            ("Hindi Wikipedia", self.scrape_hindi_wikipedia()),
+            ("News Sites", self.scrape_news_sites()),
+            ("Content Sites", self.scrape_common_crawl_equivalents()),
         ]
 
-        for source in all_sources:
+        for source_name, source in all_sources:
+            logger.info(f"Processing source: {source_name}")
             try:
                 for paragraph in source:
                     current_batch.append(paragraph)
-                    self.save_raw_text(paragraph, batch_id)
+                    self.save_raw_text(paragraph, self.next_batch_id)
 
                     if len(current_batch) >= batch_size:
-                        self.save_json_batch(current_batch, batch_id)
-                        logger.info(f"Batch {batch_id} saved. Total paragraphs: {paragraph_count + len(current_batch)}")
-                        paragraph_count += len(current_batch)
-                        current_batch = []
-                        batch_id += 1
+                        self.save_json_batch(current_batch, self.next_batch_id)
+                        self.paragraph_count += len(current_batch)
+                        self.next_batch_id += 1
 
-                    if paragraph_count >= target_paragraphs:
-                        break
+                        # Save state after each batch
+                        self.save_state()
+
+                        logger.info(f"Batch {self.next_batch_id-1} saved. Total: {self.paragraph_count} paragraphs [{source_name}]")
+                        current_batch = []
+
+                        if self.paragraph_count >= target_paragraphs:
+                            logger.info("Target reached!")
+                            break
             except Exception as e:
-                logger.error(f"Error in scraping: {e}")
+                logger.error(f"Error in source {source_name}: {e}")
+
+            if self.paragraph_count >= target_paragraphs:
+                break
 
         # Save remaining batch
         if current_batch:
-            self.save_json_batch(current_batch, batch_id)
-            paragraph_count += len(current_batch)
+            self.save_json_batch(current_batch, self.next_batch_id)
+            self.paragraph_count += len(current_batch)
+            self.next_batch_id += 1
+            self.save_state()
 
         elapsed_time = time.time() - start_time
 
         # Calculate statistics
-        total_size = sum(f.stat().st_size for f in self.processed_dir.glob('*.jsonl'))
+        total_size = sum(f.stat().st_size for f in self.processed_dir.glob('*.jsonl')) if self.processed_dir.exists() else 0
+        total_files = len(list(self.processed_dir.glob('*.jsonl'))) if self.processed_dir.exists() else 0
 
-        logger.info(f"\n{'='*50}")
-        logger.info(f"Scraping completed in {elapsed_time:.2f} seconds")
-        logger.info(f"Total paragraphs collected: {paragraph_count}")
+        logger.info(f"\n{'='*70}")
+        logger.info(f"Scraping completed in {elapsed_time / 60:.2f} minutes")
+        logger.info(f"Total paragraphs collected: {self.paragraph_count}")
+        logger.info(f"Total files: {total_files}")
         logger.info(f"Total data size: {total_size / 1024 / 1024:.2f} MB")
+        if elapsed_time > 0:
+            logger.info(f"Average paragraphs per second: {self.paragraph_count / elapsed_time:.0f}")
         logger.info(f"Data saved in: {self.output_dir}")
-        logger.info(f"{'='*50}\n")
+        logger.info(f"{'='*70}\n")
 
 if __name__ == "__main__":
     scraper = BhojpuriTextScraper()
