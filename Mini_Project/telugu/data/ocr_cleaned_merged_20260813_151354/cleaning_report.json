@@ -1,6 +1,6 @@
 {
-  "total_processed": 3,
-  "total_kept": 2,
+  "total_processed": 10,
+  "total_kept": 9,
   "total_rejected": 1,
   "rejection_breakdown": {
     "pre_strip_ratio": 0,
