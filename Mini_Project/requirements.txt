@@ -13,5 +13,9 @@ numpy>=1.26.0
 torch>=2.0.0
 tokenizers>=0.13.0
 
+# OCR Data Collection
+pytesseract>=0.3.10
+PyMuPDF>=1.23.0
+
 # Utilities
 Pillow>=10.0.0
