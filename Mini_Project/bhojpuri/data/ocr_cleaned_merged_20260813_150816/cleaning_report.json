@@ -1,0 +1,15 @@
+{
+  "total_processed": 3,
+  "total_kept": 2,
+  "total_rejected": 1,
+  "rejection_breakdown": {
+    "pre_strip_ratio": 0,
+    "min_length": 1,
+    "min_words": 0,
+    "space_density": 0
+  },
+  "duplicates": {
+    "exact_match": 0,
+    "near_match": 0
+  }
+}
