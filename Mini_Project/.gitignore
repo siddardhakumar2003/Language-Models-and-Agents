@@ -53,6 +53,10 @@ stats.json
 kaggle.py
 kaggle.txt
 
+# Tokenizer sample cache (large, auto-generated, never commit)
+telugu/tokenizer/.sample_cache/
+bhojpuri/tokenizer/.sample_cache/
+
 # OS
 .DS_Store
 Thumbs.db
