@@ -16,23 +16,28 @@
     "raw_texts": 3327,
     "texts_cleaned": 3234,
     "pass_rate_percent": 97.2,
-    "size_mb": 3.3
+    "size_mb": 27.6
+  },
+  "data_after_ocr_merge": {
+    "size_mb": 519,
+    "total_lines": 776801,
+    "note": "Original 3,234 lines expanded to 776,801 after merging 511,599 OCR-extracted lines"
   },
   "splits": {
     "train": {
       "lines": 621171,
-      "percentage": 0
+      "percentage": 80
     },
     "val": {
       "lines": 77790,
-      "percentage": 0
+      "percentage": 10
     },
     "test": {
       "lines": 77840,
-      "percentage": 0
+      "percentage": 10
     }
   },
-  "total_training_lines": 3234,
+  "total_training_lines": 776801,
   "split_method": "80/10/10 with seed 42",
   "split_strategy": "in-memory shuffle with deterministic seeding",
   "target_tokens": 500000000,

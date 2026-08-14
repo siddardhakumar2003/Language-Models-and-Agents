@@ -27,12 +27,13 @@
 - ✅ **Configuration**: telugu/data/config.json with complete statistics
 
 #### Bhojpuri (Model L)
-- ✅ **Total Data**: 3,234 lines (100% fresh scraped)
-- ✅ **Data Quality**: 97.2% pass rate (3,327 raw → 3,234 cleaned)
+- ✅ **Total Data**: 776,801 lines (3,234 base + 773,567 OCR-augmented)
+- ✅ **Original Scraping**: 97.2% pass rate (3,327 raw → 3,234 cleaned)
+- ✅ **OCR Augmentation**: 511,599 lines merged from archive.org OCR texts
 - ✅ **Train/Val/Test Splits**:
-  - Train: 2,587 lines (80%)
-  - Val: 323 lines (10%)
-  - Test: 324 lines (10%)
+  - Train: 621,171 lines (80%)
+  - Val: 77,790 lines (10%)
+  - Test: 77,840 lines (10%)
 - ✅ **Cleaning**: 7-stage pipeline with Devanagari script validation
 - ✅ **Configuration**: bhojpuri/data/config.json with complete statistics
 
@@ -154,10 +155,10 @@ repo/
 - **Scraped**: 29,206 lines (0.1%) - 6 web sources ✅
 - **Token Estimate**: 85M+ tokens
 
-**Bhojpuri**: 3,234 lines (100% fresh scraped)
-- **Sources**: 8 web sources (Hindi Wikipedia API + news/content) ✅
-- **Quality**: 97.2% pass rate ✅
-- **Token Estimate**: 13K+ tokens
+**Bhojpuri**: 776,801 lines (3,234 scraped + 773,567 OCR-augmented)
+- **Sources**: 8 web sources (Hindi Wikipedia API + news/content) + archive.org OCR texts ✅
+- **Original Quality**: 97.2% pass rate ✅
+- **Token Estimate**: 135.6M tokens (27.1% of 500M target)
 
 ### 1.3 Data Sources ✅
 
