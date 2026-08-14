@@ -23,22 +23,16 @@
   },
   "splits": {
     "train": {
-      "telugu_txt_lines": 23364,
-      "te_txt_lines": 17168831,
-      "total_lines": 17192195,
-      "percentage": 80
+      "lines": 3112730,
+      "percentage": 0
     },
     "val": {
-      "telugu_txt_lines": 2920,
-      "te_txt_lines": 2144950,
-      "total_lines": 2147870,
-      "percentage": 10
+      "lines": 389070,
+      "percentage": 0
     },
     "test": {
-      "telugu_txt_lines": 2922,
-      "te_txt_lines": 2144480,
-      "total_lines": 2147402,
-      "percentage": 10
+      "lines": 389138,
+      "percentage": 0
     }
   },
   "total_training_lines": 21488467,
@@ -47,19 +41,19 @@
   "target_tokens": 500000000,
   "batch_size": 100,
   "created_at": "2026-08-12T16:24:18.258693",
-  "updated_at": "2026-08-13T15:13:55.518768",
+  "updated_at": "2026-08-14T10:55:32.408711",
   "ready_for_training": true,
   "ocr_data": {
-    "source": "OCR of scanned books/news images via ocr_sources/ (Tesseract, lang=tel)",
+    "source": "archive.org pre-OCR'd text (djvu.txt) + news crawling",
     "files_processed": 0,
     "pages_extracted": 0,
-    "lines_kept_after_cleaning": 0
+    "lines_kept_after_cleaning": 3766703
   },
   "token_progress": {
-    "total_corpus_tokens_estimate": 6889131,
-    "total_corpus_bytes": 27556524,
+    "total_corpus_tokens_estimate": 509296621,
+    "total_corpus_bytes": 2037186487,
     "target_tokens": 500000000,
-    "progress_percent": 1.38,
-    "progress_str": "6.9M / 500M (1.4%)"
+    "progress_percent": 101.8593242,
+    "progress_str": "509.3M / 500M (101.9%)"
   }
 }

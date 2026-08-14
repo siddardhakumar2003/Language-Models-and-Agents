@@ -74,6 +74,8 @@ def merge_ocr_into_splits(
     data_dir: Path,
     accumulator_filename: str = "bhoj.txt",
     split_filename: str = "bhoj.txt",
+    cleaned_dir_name: str = "ocr_cleaned",
+    temp_batch_filename: str = "ocr_new_batch.txt",
 ) -> Dict:
     """
     Merge OCR data into splits and accumulator.
@@ -85,7 +87,7 @@ def merge_ocr_into_splits(
         'accumulator_before': int, 'accumulator_after': int,
     }
     """
-    cleaned_dir = data_dir / "ocr_cleaned"
+    cleaned_dir = data_dir / cleaned_dir_name
     if not cleaned_dir.exists():
         logger.error(f"Cleaned directory not found: {cleaned_dir}")
         return {}
@@ -99,7 +101,7 @@ def merge_ocr_into_splits(
     accumulator_lines_before = sum(1 for _ in open(accumulator, 'r', encoding='utf-8'))
 
     # Step 2: Flatten ocr_cleaned to temp batch file
-    ocr_batch_file = data_dir / "ocr_new_batch.txt"
+    ocr_batch_file = data_dir / temp_batch_filename
     total_lines = flatten_cleaned_jsonl(cleaned_dir, ocr_batch_file)
 
     if total_lines == 0:
@@ -131,13 +133,13 @@ def merge_ocr_into_splits(
     # Step 4: Append split chunks onto existing split files
     logger.info(f"\nAppending split chunks to existing split files...")
     for split in ('train', 'val', 'test'):
-        src = data_dir / split / "ocr_new_batch.txt"
+        src = data_dir / split / temp_batch_filename
         dst = data_dir / split / split_filename
         if not src.exists():
             logger.warning(f"{src} not found, skipping")
             continue
 
-        logger.info(f"  Appending {split}/ocr_new_batch.txt → {split}/{split_filename}")
+        logger.info(f"  Appending {split}/{temp_batch_filename} → {split}/{split_filename}")
         with open(src, 'r', encoding='utf-8') as fin, open(dst, 'a', encoding='utf-8') as fout:
             shutil.copyfileobj(fin, fout)
         src.unlink()

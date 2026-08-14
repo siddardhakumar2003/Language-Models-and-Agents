@@ -8,7 +8,8 @@
     "Hindustan Times",
     "Webdunia Hindi",
     "Bhaskar",
-    "Other Hindi content sites"
+    "Other Hindi content sites",
+    "Satyam810/BhojpuriCorpus (HuggingFace: 386K docs, ~25M tokens, deduplicated)"
   ],
   "scraping": {
     "batches_collected": 34,
@@ -19,16 +20,16 @@
   },
   "splits": {
     "train": {
-      "lines": 2587,
-      "percentage": 80.0
+      "lines": 621171,
+      "percentage": 0
     },
     "val": {
-      "lines": 323,
-      "percentage": 10.0
+      "lines": 77790,
+      "percentage": 0
     },
     "test": {
-      "lines": 324,
-      "percentage": 10.0
+      "lines": 77840,
+      "percentage": 0
     }
   },
   "total_training_lines": 3234,
@@ -37,19 +38,19 @@
   "target_tokens": 500000000,
   "batch_size": 100,
   "created_at": "2026-08-12T12:09:47.956313",
-  "updated_at": "2026-08-13T15:13:56.906372",
+  "updated_at": "2026-08-14T10:50:07.109535",
   "ready_for_training": true,
   "ocr_data": {
-    "source": "OCR of scanned books/news images via ocr_sources/ (Tesseract, lang=hin, Devanagari proxy)",
+    "source": "archive.org pre-OCR'd text (Hindi proxy) + news crawling",
     "files_processed": 0,
     "pages_extracted": 0,
-    "lines_kept_after_cleaning": 0
+    "lines_kept_after_cleaning": 511599
   },
   "token_progress": {
-    "total_corpus_tokens_estimate": 843869,
-    "total_corpus_bytes": 3375476,
+    "total_corpus_tokens_estimate": 135638858,
+    "total_corpus_bytes": 542555434,
     "target_tokens": 500000000,
-    "progress_percent": 0.17,
-    "progress_str": "0.8M / 500M (0.2%)"
+    "progress_percent": 27.1277716,
+    "progress_str": "135.6M / 500M (27.1%)"
   }
 }

@@ -48,7 +48,6 @@ bhojpuri/data/*.txt
 # !telugu/data/config.json
 # !bhojpuri/data/config.json
 
-*.log
 pipeline.log
 stats.json
 kaggle.py

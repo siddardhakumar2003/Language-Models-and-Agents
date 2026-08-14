@@ -1,0 +1,87 @@
+2026-08-11 23:34:42,896 - INFO - Starting Bhojpuri scraper...
+2026-08-11 23:34:42,897 - INFO - Starting Bhojpuri scraper with target of 1600000 paragraphs
+2026-08-11 23:34:42,897 - INFO - Starting Hindi Wikipedia scraping (Devanagari)...
+2026-08-11 23:34:42,897 - INFO - Scraping: https://hi.wikipedia.org/wiki/मुख्य_पृष्ठ
+2026-08-11 23:34:44,677 - INFO - Scraping: https://hi.wikipedia.org/wiki/भारत
+2026-08-11 23:34:46,989 - INFO - Scraping: https://hi.wikipedia.org/wiki/हिन्दी_भाषा
+2026-08-11 23:34:47,825 - INFO - Batch 0 saved. Total paragraphs: 100
+2026-08-11 23:34:48,826 - INFO - Scraping: https://hi.wikipedia.org/wiki/उत्तर_प्रदेश
+2026-08-11 23:34:50,028 - INFO - Batch 1 saved. Total paragraphs: 200
+2026-08-11 23:34:51,028 - INFO - Scraping: https://hi.wikipedia.org/wiki/बिहार
+2026-08-11 23:34:52,894 - INFO - Scraping: https://hi.wikipedia.org/wiki/साहित्य
+2026-08-11 23:34:54,165 - INFO - Scraping: https://hi.wikipedia.org/wiki/संस्कृति
+2026-08-11 23:34:55,560 - INFO - Scraping: https://hi.wikipedia.org/wiki/धर्म
+2026-08-11 23:34:55,825 - INFO - Batch 2 saved. Total paragraphs: 300
+2026-08-11 23:34:56,825 - INFO - Scraping: https://hi.wikipedia.org/wiki/इतिहास
+2026-08-11 23:34:58,265 - INFO - Scraping: https://hi.wikipedia.org/wiki/विज्ञान
+2026-08-11 23:35:00,185 - INFO - Scraping: https://hi.wikipedia.org/wiki/तकनीकी
+2026-08-11 23:35:01,505 - INFO - Scraping: https://hi.wikipedia.org/wiki/खेल
+2026-08-11 23:35:02,917 - INFO - Scraping: https://hi.wikipedia.org/wiki/संगीत
+2026-08-11 23:35:03,275 - INFO - Batch 3 saved. Total paragraphs: 400
+2026-08-11 23:35:04,276 - INFO - Scraping: https://hi.wikipedia.org/wiki/कला
+2026-08-11 23:35:05,703 - INFO - Scraping: https://hi.wikipedia.org/wiki/नृत्य
+2026-08-11 23:35:07,191 - INFO - Scraping: https://hi.wikipedia.org/wiki/राजनीति
+2026-08-11 23:35:09,625 - INFO - Scraping: https://hi.wikipedia.org/wiki/अर्थशास्त्र
+2026-08-11 23:35:10,491 - INFO - Batch 4 saved. Total paragraphs: 500
+2026-08-11 23:35:11,492 - INFO - Scraping: https://hi.wikipedia.org/wiki/भोजन
+2026-08-11 23:35:13,270 - INFO - Scraping: https://hi.wikipedia.org/wiki/परिवार
+2026-08-11 23:35:14,964 - INFO - Scraping: https://hi.wikipedia.org/wiki/शिक्षा
+2026-08-11 23:35:16,949 - INFO - Scraping: https://hi.wikipedia.org/wiki/स्वास्थ्य
+2026-08-11 23:35:18,560 - INFO - Scraping: https://hi.wikipedia.org/wiki/पर्यावरण
+2026-08-11 23:35:19,270 - INFO - Batch 5 saved. Total paragraphs: 600
+2026-08-11 23:35:20,271 - INFO - Scraping: https://hi.wikipedia.org/wiki/कानून
+2026-08-11 23:35:22,401 - INFO - Scraping: https://hi.wikipedia.org/wiki/समाज
+2026-08-11 23:35:24,363 - INFO - Scraping: https://hi.wikipedia.org/wiki/परिवहन
+2026-08-11 23:35:26,244 - INFO - Scraping: https://hi.wikipedia.org/wiki/मीडिया
+2026-08-11 23:35:28,649 - INFO - Scraping: https://hi.wikipedia.org/wiki/तकनीकि
+2026-08-11 23:35:30,158 - INFO - Scraping: https://hi.wikipedia.org/wiki/कम्प्यूटर
+2026-08-11 23:35:32,424 - INFO - Scraping: https://hi.wikipedia.org/wiki/इंटरनेट
+2026-08-11 23:35:33,193 - INFO - Batch 6 saved. Total paragraphs: 700
+2026-08-11 23:35:34,194 - INFO - Scraping: https://hi.wikipedia.org/wiki/सॉफ्टवेयर
+2026-08-11 23:35:36,179 - INFO - Scraping: https://hi.wikipedia.org/wiki/वास्तुकला
+2026-08-11 23:35:37,534 - INFO - Scraping: https://hi.wikipedia.org/wiki/चिकित्सा
+2026-08-11 23:35:39,157 - INFO - Scraping: https://hi.wikipedia.org/wiki/पशु
+2026-08-11 23:35:41,099 - INFO - Batch 7 saved. Total paragraphs: 800
+2026-08-11 23:35:42,102 - INFO - Scraping: https://hi.wikipedia.org/wiki/पौधे
+2026-08-11 23:35:44,432 - INFO - Scraping: https://hi.wikipedia.org/wiki/भूगोल
+2026-08-11 23:35:45,363 - INFO - Batch 8 saved. Total paragraphs: 900
+2026-08-11 23:35:46,363 - INFO - Scraping: https://hi.wikipedia.org/wiki/खेती
+2026-08-11 23:35:48,450 - INFO - Scraping: https://hi.wikipedia.org/wiki/व्यापार
+2026-08-11 23:35:50,761 - INFO - Scraping: https://hi.wikipedia.org/wiki/यातायात
+2026-08-11 23:35:52,812 - INFO - Scraping: https://hi.wikipedia.org/wiki/नैतिकता
+2026-08-11 23:35:54,438 - INFO - Scraping: https://hi.wikipedia.org/wiki/वित्त
+2026-08-11 23:35:56,136 - INFO - Scraping: https://hi.wikipedia.org/wiki/बैंकिंग
+2026-08-11 23:35:57,341 - INFO - Batch 9 saved. Total paragraphs: 1000
+2026-08-11 23:35:58,342 - INFO - Scraping: https://hi.wikipedia.org/wiki/बीमा
+2026-08-11 23:35:59,113 - INFO - Batch 10 saved. Total paragraphs: 1100
+2026-08-11 23:36:00,113 - INFO - Starting news sites scraping (Devanagari)...
+2026-08-11 23:36:00,114 - INFO - Scraping bbc_hindi...
+2026-08-11 23:36:01,399 - INFO - Batch 11 saved. Total paragraphs: 1200
+2026-08-11 23:36:04,401 - INFO - Scraping aajtak...
+2026-08-11 23:36:04,831 - INFO - Batch 12 saved. Total paragraphs: 1300
+2026-08-11 23:36:07,836 - INFO - Scraping hindustan_times...
+2026-08-11 23:36:11,236 - INFO - Scraping theindian_express...
+2026-08-11 23:36:14,539 - INFO - Scraping ndtv...
+2026-08-11 23:36:18,044 - INFO - Starting content site scraping...
+2026-08-11 23:36:18,044 - INFO - Scraping content from: https://www.hindi.webdunia.com/
+2026-08-11 23:36:18,340 - ERROR - Error fetching https://www.hindi.webdunia.com/: HTTPSConnectionPool(host='www.hindi.webdunia.com', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLError(1, '[SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] sslv3 alert handshake failure (_ssl.c:1000)')))
+2026-08-11 23:36:18,341 - WARNING - No content from https://www.hindi.webdunia.com/
+2026-08-11 23:36:18,341 - INFO - Scraping content from: https://www.bhaskar.com/
+2026-08-11 23:36:19,216 - INFO - Batch 13 saved. Total paragraphs: 1400
+2026-08-11 23:36:22,221 - INFO - Scraping content from: https://www.khaskhabar.com/
+2026-08-11 23:36:32,032 - INFO - Batch 14 saved. Total paragraphs: 1500
+2026-08-11 23:36:32,042 - INFO - Batch 15 saved. Total paragraphs: 1600
+2026-08-11 23:36:35,044 - INFO - Scraping content from: https://hindi.ndtv.com/
+2026-08-11 23:36:35,182 - ERROR - Error fetching https://hindi.ndtv.com/: HTTPSConnectionPool(host='hindi.ndtv.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x768bf39f03e0>: Failed to resolve 'hindi.ndtv.com' ([Errno -2] Name or service not known)"))
+2026-08-11 23:36:35,182 - WARNING - No content from https://hindi.ndtv.com/
+2026-08-11 23:36:35,183 - INFO - Scraping content from: https://www.amar.ujala.com/
+2026-08-11 23:36:38,041 - ERROR - Error fetching https://www.amar.ujala.com/: HTTPSConnectionPool(host='www.amar.ujala.com', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'www.amar.ujala.com'. (_ssl.c:1000)")))
+2026-08-11 23:36:38,041 - WARNING - No content from https://www.amar.ujala.com/
+2026-08-11 23:36:38,044 - INFO - 
+==================================================
+2026-08-11 23:36:38,044 - INFO - Scraping completed in 115.15 seconds
+2026-08-11 23:36:38,044 - INFO - Total paragraphs collected: 1620
+2026-08-11 23:36:38,044 - INFO - Total data size: 1.98 MB
+2026-08-11 23:36:38,044 - INFO - Data saved in: data
+2026-08-11 23:36:38,045 - INFO - ==================================================
+
