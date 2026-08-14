@@ -16,12 +16,25 @@
     "raw_texts": 3327,
     "texts_cleaned": 3234,
     "pass_rate_percent": 97.2,
-    "size_mb": 27.6
+    "size_mb": 0.02
   },
-  "data_after_ocr_merge": {
+  "huggingface_corpus": {
+    "source": "Satyam810/BhojpuriCorpus",
+    "documents": 386000,
+    "estimated_tokens": 25000000,
+    "deduplicated": true,
+    "note": "Primary data source: major corpus contribution from HF dataset"
+  },
+  "ocr_augmentation": {
+    "source": "archive.org pre-OCR'd text (Hindi proxy) + news crawling",
+    "pages_extracted": 0,
+    "lines_kept_after_cleaning": 511599,
+    "size_mb": 19.7
+  },
+  "data_composition": {
     "size_mb": 519,
     "total_lines": 776801,
-    "note": "Original 3,234 lines expanded to 776,801 after merging 511,599 OCR-extracted lines"
+    "note": "Combined from: web scraping (3.2K) + HF corpus (386K docs) + OCR extraction (511.6K lines)"
   },
   "splits": {
     "train": {

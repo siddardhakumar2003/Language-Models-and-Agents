@@ -27,14 +27,16 @@
 - ✅ **Configuration**: telugu/data/config.json with complete statistics
 
 #### Bhojpuri (Model L)
-- ✅ **Total Data**: 776,801 lines (3,234 base + 773,567 OCR-augmented)
-- ✅ **Original Scraping**: 97.2% pass rate (3,327 raw → 3,234 cleaned)
-- ✅ **OCR Augmentation**: 511,599 lines merged from archive.org OCR texts
+- ✅ **Total Data**: 776,801 lines (combined from 3 sources)
+  - Web scraping: 3,234 lines (0.4%)
+  - HuggingFace corpus (Satyam810/BhojpuriCorpus): 386K docs, ~25M tokens (primary source)
+  - OCR augmentation: 511,599 lines from archive.org pre-OCR'd texts
+- ✅ **Scraping Quality**: 97.2% pass rate (3,327 raw → 3,234 cleaned)
 - ✅ **Train/Val/Test Splits**:
   - Train: 621,171 lines (80%)
   - Val: 77,790 lines (10%)
   - Test: 77,840 lines (10%)
-- ✅ **Cleaning**: 7-stage pipeline with Devanagari script validation
+- ✅ **Cleaning**: 7-stage pipeline with Devanagari script validation + deduplication
 - ✅ **Configuration**: bhojpuri/data/config.json with complete statistics
 
 #### Key Achievements
@@ -155,9 +157,12 @@ repo/
 - **Scraped**: 29,206 lines (0.1%) - 6 web sources ✅
 - **Token Estimate**: 85M+ tokens
 
-**Bhojpuri**: 776,801 lines (3,234 scraped + 773,567 OCR-augmented)
-- **Sources**: 8 web sources (Hindi Wikipedia API + news/content) + archive.org OCR texts ✅
-- **Original Quality**: 97.2% pass rate ✅
+**Bhojpuri**: 776,801 lines (multi-source: web scraping + HF corpus + OCR)
+- **Sources**: 
+  - Web scraping: 8 sites (Hindi Wikipedia, news/content) → 3,234 lines
+  - HuggingFace: Satyam810/BhojpuriCorpus (386K docs, ~25M tokens) - primary source ✅
+  - OCR: archive.org pre-OCR'd texts → 511,599 lines
+- **Quality**: 97.2% pass rate on scraped data ✅
 - **Token Estimate**: 135.6M tokens (27.1% of 500M target)
 
 ### 1.3 Data Sources ✅
