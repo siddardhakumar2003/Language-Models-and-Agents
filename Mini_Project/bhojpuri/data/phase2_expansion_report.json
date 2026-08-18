@@ -1,0 +1,47 @@
+{
+  "timestamp": "2026-08-15T15:53:40.845629",
+  "pre_expansion": {
+    "total_lines": 776801,
+    "tokens": 135638858
+  },
+  "post_expansion": {
+    "total_lines": 776801,
+    "tokens": 135638858
+  },
+  "expansion_delta": {
+    "lines_added": 0,
+    "tokens_added": 0
+  },
+  "source_results": {
+    "wikipedia": {
+      "total_lines": 0,
+      "train_lines": 0,
+      "val_lines": 0,
+      "test_lines": 0
+    },
+    "fossdot": {
+      "texts_extracted": 0
+    },
+    "bhltr": {
+      "total_lines": 0,
+      "train_lines": 0,
+      "val_lines": 0,
+      "test_lines": 0
+    },
+    "manual_ocr": {
+      "pdfs_processed": 0,
+      "texts_extracted": 0,
+      "error": "OCR not available"
+    }
+  },
+  "failed_sources": [
+    [
+      "FineWeb-2",
+      "Failed to download fineweb-2 parquet: 404 Client Error: Not Found for url: https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/resolve/main/bho_Deva/train-00000-of-00001.parquet"
+    ],
+    [
+      "archive.org",
+      "'BhojpuriArchiveOrgBhojpuriDownloader' object has no attribute 'download_texts_for_identifier'"
+    ]
+  ]
+}

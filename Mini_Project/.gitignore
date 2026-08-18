@@ -70,3 +70,8 @@ DATA_COLLECTION_GUIDE.md
 REFACTOR_REPORT.md
 setup.sh
 venv/*
+*/tokenizer/*/*.json
+*/tokenizer/*/*.log
+PHASE2_EXECUTION_CHECKLIST.md
+PHASE2_EXPANSION_README.md
+PHASE1_COMPLETION_REPORT.txt

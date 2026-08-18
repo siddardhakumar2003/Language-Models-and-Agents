@@ -23,25 +23,25 @@
   },
   "splits": {
     "train": {
-      "lines": 3112730,
+      "lines": 20281561,
       "percentage": 0
     },
     "val": {
-      "lines": 389070,
+      "lines": 2534020,
       "percentage": 0
     },
     "test": {
-      "lines": 389138,
+      "lines": 2533618,
       "percentage": 0
     }
   },
-  "total_training_lines": 21488467,
+  "total_training_lines": 25349199,
   "split_method": "80/10/10 with seed 42",
   "split_strategy": "scraped: shuffled, manual: order-preserved",
   "target_tokens": 500000000,
   "batch_size": 100,
   "created_at": "2026-08-12T16:24:18.258693",
-  "updated_at": "2026-08-14T10:55:32.408711",
+  "updated_at": "2026-08-17T12:59:18.521481",
   "ready_for_training": true,
   "ocr_data": {
     "source": "archive.org pre-OCR'd text (djvu.txt) + news crawling",
@@ -50,10 +50,10 @@
     "lines_kept_after_cleaning": 3766703
   },
   "token_progress": {
-    "total_corpus_tokens_estimate": 509296621,
-    "total_corpus_bytes": 2037186487,
+    "total_corpus_tokens_estimate": 4421917647,
+    "total_corpus_bytes": 17687670589,
     "target_tokens": 500000000,
-    "progress_percent": 101.8593242,
-    "progress_str": "509.3M / 500M (101.9%)"
+    "progress_percent": 884.3835,
+    "progress_str": "4421.9M / 500M (884.4%)"
   }
 }

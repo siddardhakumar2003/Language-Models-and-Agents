@@ -9,7 +9,10 @@
     "Webdunia Hindi",
     "Bhaskar",
     "Other Hindi content sites",
-    "Satyam810/BhojpuriCorpus (HuggingFace: 386K docs, ~25M tokens, deduplicated)"
+    "Satyam810/BhojpuriCorpus (HuggingFace: 386K docs, ~25M tokens, deduplicated)",
+    "YouTube Transcripts (Bhojpuri channels, auto-generated + manual)",
+    "Bhojpuri News Scraping (Bihar Khabar, news sites, Devanagari filtered)",
+    "YouTube Captions (Bhojpuri songs, films, cultural content - auto-extracted)"
   ],
   "scraping": {
     "batches_collected": 34,
@@ -32,22 +35,22 @@
     "size_mb": 19.7
   },
   "data_composition": {
-    "size_mb": 519,
+    "size_mb": 516.4,
     "total_lines": 776801,
     "note": "Combined from: web scraping (3.2K) + HF corpus (386K docs) + OCR extraction (511.6K lines)"
   },
   "splits": {
     "train": {
       "lines": 621171,
-      "percentage": 80
+      "percentage": 0
     },
     "val": {
       "lines": 77790,
-      "percentage": 10
+      "percentage": 0
     },
     "test": {
       "lines": 77840,
-      "percentage": 10
+      "percentage": 0
     }
   },
   "total_training_lines": 776801,
@@ -56,7 +59,7 @@
   "target_tokens": 500000000,
   "batch_size": 100,
   "created_at": "2026-08-12T12:09:47.956313",
-  "updated_at": "2026-08-14T10:50:07.109535",
+  "updated_at": "2026-08-17T12:58:44.134667",
   "ready_for_training": true,
   "ocr_data": {
     "source": "archive.org pre-OCR'd text (Hindi proxy) + news crawling",
@@ -65,10 +68,10 @@
     "lines_kept_after_cleaning": 511599
   },
   "token_progress": {
-    "total_corpus_tokens_estimate": 135638858,
-    "total_corpus_bytes": 542555434,
+    "total_corpus_tokens_estimate": 135359180,
+    "total_corpus_bytes": 541436723,
     "target_tokens": 500000000,
-    "progress_percent": 27.1277716,
-    "progress_str": "135.6M / 500M (27.1%)"
+    "progress_percent": 27.0718,
+    "progress_str": "135.4M / 500M (27.1%)"
   }
 }

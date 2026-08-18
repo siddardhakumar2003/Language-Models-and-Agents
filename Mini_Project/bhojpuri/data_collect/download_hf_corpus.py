@@ -32,6 +32,66 @@ logger = logging.getLogger(__name__)
 HF_PARQUET_URL = "https://huggingface.co/datasets/Satyam810/BhojpuriCorpus/resolve/main/data/BhojpuriCorpus.parquet"
 HF_DATASET_NAME = "Satyam810/BhojpuriCorpus"
 
+
+def deduplicate_with_existing_corpus(data_dir: Path, source_cleaned_dir: Path,
+                                      output_cleaned_dir: Path, state_file=None) -> None:
+    """Deduplicate cleaned texts against existing corpus accumulator."""
+    # Load existing corpus hashes
+    accumulator_path = data_dir / "bhoj.txt"
+    existing_hashes_exact = set()
+    existing_hashes_near = set()
+
+    if accumulator_path.exists():
+        logger.info(f"Loading existing corpus for deduplication: {accumulator_path}")
+        with open(accumulator_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                text = line.strip()
+                if text:
+                    # Exact hash
+                    exact_hash = hashlib.md5(text.encode('utf-8')).hexdigest()
+                    existing_hashes_exact.add(exact_hash)
+                    # Near-match hash (whitespace/punct normalized)
+                    normalized = re.sub(r'[\s\.,!?\-"\']+', '', text).lower()
+                    near_hash = hashlib.md5(normalized.encode('utf-8')).hexdigest()
+                    existing_hashes_near.add(near_hash)
+
+    # Deduplicate cleaned JSONL files
+    output_cleaned_dir.mkdir(parents=True, exist_ok=True)
+    exact_dup_count = 0
+    near_dup_count = 0
+    kept_count = 0
+
+    for jsonl_file in sorted(source_cleaned_dir.glob("cleaned_*.jsonl")):
+        output_file = output_cleaned_dir / jsonl_file.name
+        with open(jsonl_file, 'r', encoding='utf-8') as infile, \
+             open(output_file, 'w', encoding='utf-8') as outfile:
+            for line in infile:
+                try:
+                    entry = json.loads(line)
+                    text = entry.get('text', '').strip()
+                    if not text:
+                        continue
+                    # Check exact match
+                    exact_hash = hashlib.md5(text.encode('utf-8')).hexdigest()
+                    if exact_hash in existing_hashes_exact:
+                        exact_dup_count += 1
+                        continue
+                    # Check near-match
+                    normalized = re.sub(r'[\s\.,!?\-"\']+', '', text).lower()
+                    near_hash = hashlib.md5(normalized.encode('utf-8')).hexdigest()
+                    if near_hash in existing_hashes_near:
+                        near_dup_count += 1
+                        continue
+                    # Keep this entry
+                    outfile.write(line)
+                    existing_hashes_exact.add(exact_hash)
+                    existing_hashes_near.add(near_hash)
+                    kept_count += 1
+                except json.JSONDecodeError:
+                    continue
+
+    logger.info(f"Deduplication complete: {kept_count} kept, {exact_dup_count} exact dups, {near_dup_count} near dups removed")
+
 class HFBhojpuriDownloader:
     def __init__(self, data_dir: Path = None):
         if data_dir is None:

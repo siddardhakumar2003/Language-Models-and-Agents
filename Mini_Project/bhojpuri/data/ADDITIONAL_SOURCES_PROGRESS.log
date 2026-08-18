@@ -1,0 +1,30 @@
+2026-08-15 16:24:14,560 - INFO - ======================================================================
+2026-08-15 16:24:14,562 - INFO - BHOJPURI NEWS SCRAPING PIPELINE
+2026-08-15 16:24:14,562 - INFO - ======================================================================
+2026-08-15 16:24:14,562 - INFO - ======================================================================
+2026-08-15 16:24:14,562 - INFO - BHOJPURI NEWS SCRAPING
+2026-08-15 16:24:14,562 - INFO - ======================================================================
+2026-08-15 16:24:14,562 - INFO - Scraping Bihar Khabar (Bhojpuri)...
+2026-08-15 16:24:29,919 - ERROR - Error scraping Bihar Khabar (Bhojpuri): HTTPSConnectionPool(host='www.bihartoday.com', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1000)')))
+2026-08-15 16:24:29,919 - INFO -   Extracted 0 articles from Bihar Khabar (Bhojpuri)
+2026-08-15 16:24:29,919 - INFO - Scraping Bhojpuri Samachar...
+2026-08-15 16:24:30,169 - ERROR - Error scraping Bhojpuri Samachar: HTTPSConnectionPool(host='bhojpurisamachar.in', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1000)')))
+2026-08-15 16:24:30,169 - INFO -   Extracted 0 articles from Bhojpuri Samachar
+2026-08-15 16:24:30,169 - INFO - Scraping Local news aggregators (Hindi with Bhojpuri)...
+2026-08-15 16:24:30,710 - INFO -   Found 0 potential article containers
+2026-08-15 16:24:30,710 - INFO -   Extracted 0 articles from Local news aggregators (Hindi with Bhojpuri)
+2026-08-15 16:24:30,710 - INFO - Scraping Aaj Tak (Hindi/Bhojpuri)...
+2026-08-15 16:24:32,722 - INFO -   Found 0 potential article containers
+2026-08-15 16:24:32,722 - INFO -   Extracted 0 articles from Aaj Tak (Hindi/Bhojpuri)
+2026-08-15 16:24:32,723 - INFO - Total articles scraped: 0
+2026-08-15 16:24:32,723 - WARNING - No news articles scraped
+2026-08-15 16:24:32,724 - INFO - Updating /media/ubuntu/Personal/IIIT Hyderabad/Semester 3/LMA/Mini_Project/bhojpuri/data/config.json
+2026-08-15 16:24:32,725 - INFO - Computing token progress...
+2026-08-15 16:24:32,725 - INFO -   bhoj.txt: 517.4 MB
+2026-08-15 16:24:32,725 - INFO - Reading OCR cumulative stats...
+2026-08-15 16:24:32,725 - INFO - Recomputing splits...
+2026-08-15 16:24:33,596 - INFO -   train/bhoj.txt: 621171 lines
+2026-08-15 16:24:33,706 - INFO -   val/bhoj.txt: 77790 lines
+2026-08-15 16:24:33,816 - INFO -   test/bhoj.txt: 77840 lines
+2026-08-15 16:24:33,818 - INFO - ✓ Config updated: 135.6M / 500M tokens (27.1%)
+2026-08-15 16:24:33,819 - INFO - Token progress: 135.6M / 500M (27.1%)

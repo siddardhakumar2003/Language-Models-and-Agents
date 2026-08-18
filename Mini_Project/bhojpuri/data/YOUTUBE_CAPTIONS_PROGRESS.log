@@ -1,0 +1,60 @@
+2026-08-15 16:31:36,500 - INFO - ======================================================================
+2026-08-15 16:31:36,501 - INFO - YOUTUBE CAPTIONS PIPELINE (Legitimate Bhojpuri Sources)
+2026-08-15 16:31:36,501 - INFO - ======================================================================
+2026-08-15 16:31:36,501 - INFO - ======================================================================
+2026-08-15 16:31:36,501 - INFO - YOUTUBE BHOJPURI CAPTION SCRAPING
+2026-08-15 16:31:36,501 - INFO - ======================================================================
+2026-08-15 16:31:36,501 - WARNING - yt-dlp not installed. Installing for YouTube search...
+2026-08-15 16:32:29,501 - INFO - ✓ yt-dlp installed
+2026-08-15 16:32:29,501 - INFO - Searching YouTube for: 'भोजपुरी गाना'
+2026-08-15 16:32:29,501 - WARNING - Using fallback search (limited results)
+2026-08-15 16:32:29,501 - WARNING -   No videos found for 'भोजपुरी गाना'
+2026-08-15 16:32:29,501 - INFO - Searching YouTube for: 'भोजपुरी संगीत'
+2026-08-15 16:32:29,501 - WARNING - Using fallback search (limited results)
+2026-08-15 16:32:29,501 - WARNING -   No videos found for 'भोजपुरी संगीत'
+2026-08-15 16:32:29,501 - INFO - Searching YouTube for: 'भोजपुरी फिल्म'
+2026-08-15 16:32:29,501 - WARNING - Using fallback search (limited results)
+2026-08-15 16:32:29,501 - WARNING -   No videos found for 'भोजपुरी फिल्म'
+2026-08-15 16:32:29,501 - INFO - Searching YouTube for: 'भोजपुरी नाटक'
+2026-08-15 16:32:29,501 - WARNING - Using fallback search (limited results)
+2026-08-15 16:32:29,501 - WARNING -   No videos found for 'भोजपुरी नाटक'
+2026-08-15 16:32:29,501 - INFO - Searching YouTube for: 'भोजपुरी समाचार'
+2026-08-15 16:32:29,501 - WARNING - Using fallback search (limited results)
+2026-08-15 16:32:29,501 - WARNING -   No videos found for 'भोजपुरी समाचार'
+2026-08-15 16:32:29,501 - INFO - Searching YouTube for: 'भोजपुरी लोक गीत'
+2026-08-15 16:32:29,501 - WARNING - Using fallback search (limited results)
+2026-08-15 16:32:29,501 - WARNING -   No videos found for 'भोजपुरी लोक गीत'
+2026-08-15 16:32:29,502 - INFO - Searching YouTube for: 'भोजपुरी बोली'
+2026-08-15 16:32:29,502 - WARNING - Using fallback search (limited results)
+2026-08-15 16:32:29,502 - WARNING -   No videos found for 'भोजपुरी बोली'
+2026-08-15 16:32:29,502 - INFO - Searching YouTube for: 'भोजपुरी संस्कृति'
+2026-08-15 16:32:29,502 - WARNING - Using fallback search (limited results)
+2026-08-15 16:32:29,502 - WARNING -   No videos found for 'भोजपुरी संस्कृति'
+2026-08-15 16:32:29,502 - INFO - Total captions extracted: 0
+2026-08-15 16:32:29,502 - INFO - Searching YouTube for: 'भोजपुरी गाना'
+2026-08-15 16:32:29,502 - WARNING - Using fallback search (limited results)
+2026-08-15 16:32:29,502 - INFO - Searching YouTube for: 'भोजपुरी संगीत'
+2026-08-15 16:32:29,502 - WARNING - Using fallback search (limited results)
+2026-08-15 16:32:29,502 - INFO - Searching YouTube for: 'भोजपुरी फिल्म'
+2026-08-15 16:32:29,502 - WARNING - Using fallback search (limited results)
+2026-08-15 16:32:29,502 - INFO - Searching YouTube for: 'भोजपुरी नाटक'
+2026-08-15 16:32:29,502 - WARNING - Using fallback search (limited results)
+2026-08-15 16:32:29,502 - INFO - Searching YouTube for: 'भोजपुरी समाचार'
+2026-08-15 16:32:29,502 - WARNING - Using fallback search (limited results)
+2026-08-15 16:32:29,502 - INFO - Searching YouTube for: 'भोजपुरी लोक गीत'
+2026-08-15 16:32:29,502 - WARNING - Using fallback search (limited results)
+2026-08-15 16:32:29,502 - INFO - Searching YouTube for: 'भोजपुरी बोली'
+2026-08-15 16:32:29,502 - WARNING - Using fallback search (limited results)
+2026-08-15 16:32:29,503 - INFO - Searching YouTube for: 'भोजपुरी संस्कृति'
+2026-08-15 16:32:29,503 - WARNING - Using fallback search (limited results)
+2026-08-15 16:32:29,503 - WARNING - No YouTube captions extracted
+2026-08-15 16:32:29,503 - INFO - Updating /media/ubuntu/Personal/IIIT Hyderabad/Semester 3/LMA/Mini_Project/bhojpuri/data/config.json
+2026-08-15 16:32:29,503 - INFO - Computing token progress...
+2026-08-15 16:32:29,503 - INFO -   bhoj.txt: 517.4 MB
+2026-08-15 16:32:29,503 - INFO - Reading OCR cumulative stats...
+2026-08-15 16:32:29,503 - INFO - Recomputing splits...
+2026-08-15 16:32:30,411 - INFO -   train/bhoj.txt: 621171 lines
+2026-08-15 16:32:30,518 - INFO -   val/bhoj.txt: 77790 lines
+2026-08-15 16:32:30,625 - INFO -   test/bhoj.txt: 77840 lines
+2026-08-15 16:32:30,627 - INFO - ✓ Config updated: 135.6M / 500M tokens (27.1%)
+2026-08-15 16:32:30,628 - INFO - Token progress: 135.6M / 500M (27.1%)
