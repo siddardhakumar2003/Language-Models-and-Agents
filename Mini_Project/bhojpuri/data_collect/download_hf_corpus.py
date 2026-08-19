@@ -23,7 +23,7 @@ import requests
 import pandas as pd
 
 from .data_cleaner import BhojpuriDataCleaner
-from .ocr_merge import merge_ocr_into_splits
+from .ocr_merge import merge_ocr_into_splits, ensure_accumulator_exists
 from .update_config_ocr_fixed import update_config_bhojpuri
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -36,24 +36,23 @@ HF_DATASET_NAME = "Satyam810/BhojpuriCorpus"
 def deduplicate_with_existing_corpus(data_dir: Path, source_cleaned_dir: Path,
                                       output_cleaned_dir: Path, state_file=None) -> None:
     """Deduplicate cleaned texts against existing corpus accumulator."""
-    # Load existing corpus hashes
-    accumulator_path = data_dir / "bhoj.txt"
+    # Reconstruct accumulator from splits if missing (root is deleted after every merge)
+    accumulator_path = ensure_accumulator_exists(data_dir, "bhoj.txt")
     existing_hashes_exact = set()
     existing_hashes_near = set()
 
-    if accumulator_path.exists():
-        logger.info(f"Loading existing corpus for deduplication: {accumulator_path}")
-        with open(accumulator_path, 'r', encoding='utf-8') as f:
-            for line in f:
-                text = line.strip()
-                if text:
-                    # Exact hash
-                    exact_hash = hashlib.md5(text.encode('utf-8')).hexdigest()
-                    existing_hashes_exact.add(exact_hash)
-                    # Near-match hash (whitespace/punct normalized)
-                    normalized = re.sub(r'[\s\.,!?\-"\']+', '', text).lower()
-                    near_hash = hashlib.md5(normalized.encode('utf-8')).hexdigest()
-                    existing_hashes_near.add(near_hash)
+    logger.info(f"Loading existing corpus for deduplication: {accumulator_path}")
+    with open(accumulator_path, 'r', encoding='utf-8') as f:
+        for line in f:
+            text = line.strip()
+            if text:
+                # Exact hash
+                exact_hash = hashlib.md5(text.encode('utf-8')).hexdigest()
+                existing_hashes_exact.add(exact_hash)
+                # Near-match hash (whitespace/punct normalized)
+                normalized = re.sub(r'[\s\.,!?\-"\']+', '', text).lower()
+                near_hash = hashlib.md5(normalized.encode('utf-8')).hexdigest()
+                existing_hashes_near.add(near_hash)
 
     # Deduplicate cleaned JSONL files
     output_cleaned_dir.mkdir(parents=True, exist_ok=True)

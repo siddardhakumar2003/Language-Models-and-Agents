@@ -19,8 +19,7 @@ from typing import Dict
 import shutil
 
 import pandas as pd
-import requests
-from tqdm import tqdm
+from datasets import load_dataset
 
 from .data_cleaner import BhojpuriDataCleaner
 from .download_hf_corpus import deduplicate_with_existing_corpus
@@ -30,59 +29,25 @@ from .update_config_ocr_fixed import update_config_bhojpuri
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# FineWeb-2 bho_Deva parquet URL
-# The dataset is organized by language on HuggingFace
-FINEWEB2_BASE_URL = "https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/resolve/main"
-FINEWEB2_BHO_PARQUET = f"{FINEWEB2_BASE_URL}/bho_Deva/train-00000-of-00001.parquet"
 
-
-def download_fineweb2_parquet(data_dir: Path) -> Path:
-    """Download the fineweb-2 bho_Deva parquet file."""
-    download_dir = data_dir / "fineweb2_raw_download"
-    download_dir.mkdir(exist_ok=True)
-
-    parquet_file = download_dir / "fineweb2_bho_Deva.parquet"
-
-    if parquet_file.exists():
-        logger.info(f"Parquet file already exists at {parquet_file}")
-        return parquet_file
-
-    logger.info(f"Downloading fineweb-2 bho_Deva parquet from {FINEWEB2_BHO_PARQUET}")
-
+def load_fineweb2_bho_deva() -> pd.DataFrame:
+    """Load fineweb-2 bho_Deva dataset via HuggingFace datasets library."""
+    logger.info("Loading fineweb-2 bho_Deva via HuggingFace datasets API...")
     try:
-        response = requests.get(FINEWEB2_BHO_PARQUET, stream=True, timeout=30)
-        response.raise_for_status()
-
-        total_size = int(response.headers.get('content-length', 0))
-        chunk_size = 8192
-
-        with open(parquet_file, 'wb') as f:
-            with tqdm(total=total_size, unit='B', unit_scale=True, desc="Downloading") as pbar:
-                for chunk in response.iter_content(chunk_size=chunk_size):
-                    if chunk:
-                        f.write(chunk)
-                        pbar.update(len(chunk))
-
-        logger.info(f"Downloaded parquet file: {parquet_file.stat().st_size / 1024 / 1024:.1f} MB")
-        return parquet_file
-
+        ds = load_dataset("HuggingFaceFW/fineweb-2", "bho_Deva", split="train", trust_remote_code=True)
+        df = ds.to_pandas()
+        logger.info(f"Loaded {len(df)} rows from fineweb-2 bho_Deva")
+        return df
     except Exception as e:
-        raise RuntimeError(f"Failed to download fineweb-2 parquet: {e}")
+        raise RuntimeError(f"Failed to load fineweb-2 dataset: {e}")
 
 
-def parquet_to_jsonl(parquet_file: Path, raw_dir: Path) -> int:
-    """Convert parquet to JSONL."""
-    logger.info(f"Reading parquet file: {parquet_file}")
-
-    try:
-        df = pd.read_parquet(parquet_file)
-    except Exception as e:
-        raise RuntimeError(f"Failed to read parquet file: {e}")
-
+def parquet_to_jsonl(df: pd.DataFrame, raw_dir: Path) -> int:
+    """Convert DataFrame to JSONL."""
     if 'text' not in df.columns:
-        raise ValueError("Parquet file does not have a 'text' column")
+        raise ValueError("DataFrame does not have a 'text' column")
 
-    logger.info(f"Parquet file contains {len(df)} rows")
+    logger.info(f"DataFrame contains {len(df)} rows")
 
     # Write to JSONL in batches
     batch_size = 5000
@@ -113,17 +78,15 @@ def process_fineweb2_corpus(data_dir: Path) -> Dict[str, int]:
     logger.info("FINEWEB-2 BHO_DEVA CORPUS PROCESSING")
     logger.info("=" * 70)
 
-    # Download parquet
-    parquet_file = download_fineweb2_parquet(data_dir)
-
     # Create raw and cleaned directories
     raw_dir = data_dir / "fineweb2_raw"
     cleaned_dir = data_dir / "fineweb2_cleaned"
     raw_dir.mkdir(exist_ok=True)
     cleaned_dir.mkdir(exist_ok=True)
 
-    # Convert parquet to JSONL
-    text_count = parquet_to_jsonl(parquet_file, raw_dir)
+    # Load dataset and convert to JSONL
+    df = load_fineweb2_bho_deva()
+    text_count = parquet_to_jsonl(df, raw_dir)
 
     if text_count == 0:
         logger.warning("No texts extracted from parquet; skipping cleaning/merge")
@@ -160,8 +123,6 @@ def process_fineweb2_corpus(data_dir: Path) -> Dict[str, int]:
     logger.info("Cleaning up intermediate files...")
     if raw_dir.exists():
         shutil.rmtree(raw_dir)
-    if (data_dir / "fineweb2_raw_download").exists():
-        shutil.rmtree(data_dir / "fineweb2_raw_download")
 
     # Archive cleaned dir
     timestamp = datetime.now().isoformat()

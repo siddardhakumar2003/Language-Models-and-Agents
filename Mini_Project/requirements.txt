@@ -9,10 +9,13 @@ tqdm>=4.66.0
 pandas>=2.1.0
 numpy>=1.26.0
 pyarrow>=12.0.0
+zstandard>=0.20.0
 
 # ML/Deep Learning
 torch>=2.0.0
+transformers>=4.30.0
 tokenizers>=0.13.0
+sentencepiece>=0.1.99
 
 # OCR Data Collection
 pytesseract>=0.3.10

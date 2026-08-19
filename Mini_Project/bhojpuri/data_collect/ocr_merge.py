@@ -6,9 +6,10 @@ After ocr_extractor.py + existing BhojpuriDataCleaner produce ocr_cleaned/*.json
 this script:
 1. Reconstructs bhoj.txt from existing split fragments if absent
 2. Flattens all ocr_cleaned/*.jsonl into a temp batch file
-3. Splits the temp batch 80/10/10 using existing split_dataset.py logic
-4. Appends the three new chunks onto existing train/val/test/bhoj.txt files
-5. Appends the full new batch onto the accumulator bhoj.txt
+3. Appends the full new batch onto the accumulator bhoj.txt
+4. Re-splits the ENTIRE accumulator 80/10/10 using existing split_dataset.py logic
+5. OVERWRITES existing train/val/test/bhoj.txt files with the fresh split (not appending)
+6. DELETES the now-redundant root bhoj.txt accumulator
 
 Usage:
     python3 ocr_merge.py [--data-dir DATADIR]
@@ -109,10 +110,19 @@ def merge_ocr_into_splits(
         ocr_batch_file.unlink(missing_ok=True)
         return {'total_lines': 0, 'train_lines': 0, 'val_lines': 0, 'test_lines': 0}
 
-    # Step 3: Split the temp batch file
-    logger.info(f"\nSplitting {ocr_batch_file.name} into 80/10/10...")
+    # Step 3: Append full batch to accumulator (root now = old + new, the full corpus)
+    logger.info(f"\nAppending full batch to accumulator (bhoj.txt)...")
+    with open(ocr_batch_file, 'r', encoding='utf-8') as fin, open(accumulator, 'a', encoding='utf-8') as fout:
+        shutil.copyfileobj(fin, fout)
+    logger.info(f"  ✓ {total_lines} lines appended to accumulator")
+
+    # Clean up temp batch file (folded into accumulator, no longer needed)
+    ocr_batch_file.unlink()
+
+    # Step 4: Re-split the ENTIRE accumulator 80/10/10 (overwrites train/val/test)
+    logger.info(f"\nRe-splitting entire accumulator ({accumulator_lines_before + total_lines} lines total) into 80/10/10...")
     split_result = split_file(
-        input_path=ocr_batch_file,
+        input_path=accumulator,
         output_dir=data_dir,
         train_ratio=0.8,
         val_ratio=0.1,
@@ -120,38 +130,19 @@ def merge_ocr_into_splits(
     )
 
     if not split_result:
-        logger.error("Split failed")
-        ocr_batch_file.unlink(missing_ok=True)
+        logger.error("Split failed; leaving accumulator intact for recovery")
         return {}
 
     train_lines = split_result.get('train_lines', 0)
     val_lines = split_result.get('val_lines', 0)
     test_lines = split_result.get('test_lines', 0)
 
-    logger.info(f"\nSplit result: train={train_lines}, val={val_lines}, test={test_lines}")
+    logger.info(f"Split result: train={train_lines}, val={val_lines}, test={test_lines}")
 
-    # Step 4: Append split chunks onto existing split files
-    logger.info(f"\nAppending split chunks to existing split files...")
-    for split in ('train', 'val', 'test'):
-        src = data_dir / split / temp_batch_filename
-        dst = data_dir / split / split_filename
-        if not src.exists():
-            logger.warning(f"{src} not found, skipping")
-            continue
-
-        logger.info(f"  Appending {split}/{temp_batch_filename} → {split}/{split_filename}")
-        with open(src, 'r', encoding='utf-8') as fin, open(dst, 'a', encoding='utf-8') as fout:
-            shutil.copyfileobj(fin, fout)
-        src.unlink()
-
-    # Step 5: Append full batch to accumulator
-    logger.info(f"\nAppending full batch to accumulator...")
-    with open(ocr_batch_file, 'r', encoding='utf-8') as fin, open(accumulator, 'a', encoding='utf-8') as fout:
-        shutil.copyfileobj(fin, fout)
-    ocr_batch_file.unlink()
-
-    accumulator_lines_after = sum(1 for _ in open(accumulator, 'r', encoding='utf-8'))
-    logger.info(f"Accumulator: {accumulator_lines_before} → {accumulator_lines_after} lines")
+    # Step 5: Delete the now-redundant root accumulator
+    logger.info(f"\nDeleting redundant root accumulator ({accumulator_filename})...")
+    accumulator.unlink()
+    logger.info(f"  ✓ Root accumulator deleted; splits now contain full corpus")
 
     # Step 6: Archive ocr_cleaned to prevent double-append
     archive_dir = data_dir / f"ocr_cleaned_merged_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
@@ -163,12 +154,12 @@ def merge_ocr_into_splits(
     logger.info("=" * 70)
 
     return {
-        'total_lines': total_lines,
+        'total_lines': accumulator_lines_before + total_lines,
         'train_lines': train_lines,
         'val_lines': val_lines,
         'test_lines': test_lines,
         'accumulator_before': accumulator_lines_before,
-        'accumulator_after': accumulator_lines_after,
+        'accumulator_after': accumulator_lines_before + total_lines,
     }
 
 

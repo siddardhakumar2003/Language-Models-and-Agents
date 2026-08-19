@@ -52,6 +52,21 @@ pipeline.log
 stats.json
 kaggle.py
 kaggle.txt
+phase3_translation_progress.log
+phase3_translation_nohup.out
+phase3_translation.pid
+phase3_translation_report.json
+translation_state.json
+hindi_books_archive_org_state.json
+news_crawl_translate_state.json
+hindi_news_raw/
+hindi_books_raw/
+hindi_translated_raw/
+hindi_translated_cleaned/
+hindi_translated_cleaned_merged_*
+
+# Local NLLB-200 model and HF cache (large binary files, not source)
+bhojpuri/model/.hf_cache/
 
 # Tokenizer sample cache (large, auto-generated, never commit)
 telugu/tokenizer/.sample_cache/
@@ -75,3 +90,4 @@ venv/*
 PHASE2_EXECUTION_CHECKLIST.md
 PHASE2_EXPANSION_README.md
 PHASE1_COMPLETION_REPORT.txt
+ADDITIONAL_SOURCES_README.md

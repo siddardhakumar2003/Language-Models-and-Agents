@@ -42,10 +42,6 @@ def download_wikipedia_dump(data_dir: Path) -> Path:
 
     dump_file = dump_dir / "bhwiki-latest-pages-articles.xml.bz2"
 
-    if dump_file.exists():
-        logger.info(f"Wikipedia dump already exists at {dump_file}")
-        return dump_file
-
     logger.info(f"Downloading Bhojpuri Wikipedia dump from {WIKI_DUMP_URL}")
     result = subprocess.run(
         ["wget", "-c", "-O", str(dump_file), WIKI_DUMP_URL],

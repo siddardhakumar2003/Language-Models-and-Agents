@@ -8,13 +8,22 @@ logger = logging.getLogger(__name__)
 
 def compute_corpus_tokens_estimate(data_dir, language="bhojpuri"):
     total_bytes = 0
-    files_to_check = ["te.txt", "telugu.txt"] if language == "telugu" else ["bhoj.txt"]
-    for fname in files_to_check:
-        fpath = data_dir / fname
-        if fpath.exists():
-            size = fpath.stat().st_size
-            total_bytes += size
-            logger.info(f"  {fname}: {size / 1024 / 1024:.1f} MB")
+    if language == "telugu":
+        files_to_check = ["te.txt", "telugu.txt"]
+        for fname in files_to_check:
+            fpath = data_dir / fname
+            if fpath.exists():
+                size = fpath.stat().st_size
+                total_bytes += size
+                logger.info(f"  {fname}: {size / 1024 / 1024:.1f} MB")
+    else:
+        # For Bhojpuri, sum splits (root bhoj.txt is deleted after every merge)
+        for split in ('train', 'val', 'test'):
+            fpath = data_dir / split / "bhoj.txt"
+            if fpath.exists():
+                size = fpath.stat().st_size
+                total_bytes += size
+                logger.info(f"  {split}/bhoj.txt: {size / 1024 / 1024:.1f} MB")
     return total_bytes // 4, total_bytes
 
 def recompute_splits_block(data_dir, language="bhojpuri"):

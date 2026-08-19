@@ -74,6 +74,9 @@ class BhojpuriDataCleaner:
     def _normalize_whitespace(self, text: str) -> str:
         """Normalize multiple spaces to single space, strip leading/trailing"""
         text = re.sub(r'\s+', ' ', text)
+        # Collapse redundant patterns: `-\s*+` → `-` and `.\s*+` → `.`
+        text = re.sub(r'-\s*\+', '-', text)
+        text = re.sub(r'\.\s*\+', '.', text)
         return text.strip()
 
     def _compute_space_density(self, text: str) -> float:

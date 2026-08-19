@@ -70,10 +70,13 @@ class Phase3TranslationOrchestrator:
             logger.info(message)
 
     def _get_corpus_tokens(self):
-        corpus_file = self.data_dir / "bhoj.txt"
-        if corpus_file.exists():
-            return corpus_file.stat().st_size // 4
-        return 0
+        # Root bhoj.txt is deleted after every merge, so read from splits instead
+        total_size = 0
+        for split in ('train', 'val', 'test'):
+            split_file = self.data_dir / split / "bhoj.txt"
+            if split_file.exists():
+                total_size += split_file.stat().st_size
+        return total_size // 4
 
     def _archive_cleaned_dir(self, cleaned_dir_name: str):
         """Archive cleaned directory after merge."""
@@ -87,7 +90,11 @@ class Phase3TranslationOrchestrator:
         """Execute one complete cycle of the translation pipeline."""
         try:
             corpus_tokens_before = self._get_corpus_tokens()
-            corpus_lines_before = sum(1 for _ in open(self.data_dir / "bhoj.txt")) if (self.data_dir / "bhoj.txt").exists() else 0
+            corpus_lines_before = 0
+            for split in ('train', 'val', 'test'):
+                split_file = self.data_dir / split / "bhoj.txt"
+                if split_file.exists():
+                    corpus_lines_before += sum(1 for _ in open(split_file))
             self._log_progress(f"CYCLE {cycle_num} | Starting... (corpus: {corpus_tokens_before/1e6:.1f}M, {corpus_lines_before:,} lines)")
             cycle_start_time = time.time()
 
@@ -204,7 +211,11 @@ class Phase3TranslationOrchestrator:
 
             # Log cycle completion with corpus growth
             corpus_tokens_after = self._get_corpus_tokens()
-            corpus_lines_after = sum(1 for _ in open(self.data_dir / "bhoj.txt")) if (self.data_dir / "bhoj.txt").exists() else 0
+            corpus_lines_after = 0
+            for split in ('train', 'val', 'test'):
+                split_file = self.data_dir / split / "bhoj.txt"
+                if split_file.exists():
+                    corpus_lines_after += sum(1 for _ in open(split_file))
             corpus_tokens_gained = corpus_tokens_after - corpus_tokens_before
             corpus_lines_gained = corpus_lines_after - corpus_lines_before
             progress_pct = 100.0 * corpus_tokens_after / self.target_tokens

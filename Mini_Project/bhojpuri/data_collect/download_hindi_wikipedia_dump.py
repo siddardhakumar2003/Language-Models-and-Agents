@@ -34,10 +34,6 @@ def download_hindi_wikipedia_dump(data_dir: Path) -> Path:
 
     dump_file = dump_dir / "hiwiki-latest-pages-articles.xml.bz2"
 
-    if dump_file.exists():
-        logger.info(f"Hindi Wikipedia dump already exists at {dump_file} ({dump_file.stat().st_size / 1024 / 1024:.1f} MB)")
-        return dump_file
-
     logger.info(f"Downloading Hindi Wikipedia dump from {WIKI_DUMP_URL}")
     logger.info("(This is ~239MB; may take a few minutes depending on bandwidth)")
     result = subprocess.run(

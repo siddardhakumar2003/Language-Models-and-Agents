@@ -57,13 +57,13 @@
 - ⏳ Test with sample books/news articles
 - ⏳ Measure token growth toward 500M targets (Telugu already at ~3.75B; Bhojpuri targeting growth)
 
-### Phase 2: Model Implementation, Pretraining, Evaluation 🔄 **PENDING**
+### Phase 3: Model Implementation, Pretraining, Evaluation 🔄 **PENDING**
 - ⏳ Tokenizer training (BPE - Telugu 32K, Bhojpuri 16K)
 - ⏳ Transformer model implementation
 - ⏳ Pretraining with next-token prediction
 - ⏳ Evaluation and metrics
 
-### Phase 3: Reasoning Finetuning & Analysis 🔄 **PENDING**
+### Phase 4: Reasoning Finetuning & Analysis 🔄 **PENDING**
 - ⏳ Reasoning task dataset creation
 - ⏳ Finetuning on semantic similarity + QA tasks
 - ⏳ Attention pattern analysis
@@ -232,11 +232,51 @@ telugu/data/
 └── test/telugu.txt + te.txt            ✅ 2.1M lines
 
 bhojpuri/data/
-├── config.json                        ✅ Full statistics
+├── config.json                        ✅ Full statistics (updated 2026-08-19)
 ├── scrape_state.json                  ✅ Checkpoint
-├── train/bhoj.txt                      ✅ 2,587 lines
-├── val/bhoj.txt                        ✅ 323 lines
-└── test/bhoj.txt                       ✅ 324 lines
+├── train/*.txt                         ✅ 627,925 lines
+├── val/*.txt                           ✅ 78,137 lines
+└── test/*.txt                          ✅ 78,391 lines
 
 README.md                     ✅ Complete documentation
 ```
+
+---
+
+## Current Corpus Status (2026-08-19)
+
+### Bhojpuri Corpus Metrics
+- **Total Tokens**: 136.6M / 500M (27.3%)
+- **Total Lines**: 784,453 lines (80/10/10 split)
+- **Corpus Size**: 523MB
+- **Status**: ✅ Ready for training
+
+### Data Sources Composition
+1. **HuggingFace Corpus** (Satyam810/BhojpuriCorpus): 386K docs, ~25M tokens (primary)
+2. **Bhojpuri Wikipedia** (bho.wikipedia.org): ~8,900 articles
+3. **Hindi→Bhojpuri MT** (NLLB-200): 5,796 records translated, 15,852 lines
+4. **Archive.org Books** (OCR'd Hindi): 511,599 lines
+5. **Web Scraping**: 3,234 lines from news + content sites
+6. **GlotCC-V1 & Fish-Food**: De-duplicated (0 new additions)
+
+### Quality Metrics
+- ✅ Deduplication: Exact + near-duplicate removal
+- ✅ Script Validation: 100% Devanagari (bho_Deva)
+- ✅ Deterministic Splits: 80/10/10 with seed 42
+- ✅ No Corrupted Files: All JSONL/TXT parseable
+
+---
+
+## Quick Start Guides
+
+### Training Tokenizer (Telugu/Bhojpuri)
+```bash
+cd telugu/tokenizer
+jupyter notebook train_tokenizer_full.ipynb
+# or
+cd bhojpuri/tokenizer
+jupyter notebook wp_tokenizer.ipynb
+```
+
+### Training Model
+See `telugu/train/` or `bhojpuri/train/` directories for training scripts (Phase 3).

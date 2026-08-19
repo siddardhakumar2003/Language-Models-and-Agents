@@ -12,7 +12,12 @@
     "Satyam810/BhojpuriCorpus (HuggingFace: 386K docs, ~25M tokens, deduplicated)",
     "YouTube Transcripts (Bhojpuri channels, auto-generated + manual)",
     "Bhojpuri News Scraping (Bihar Khabar, news sites, Devanagari filtered)",
-    "YouTube Captions (Bhojpuri songs, films, cultural content - auto-extracted)"
+    "YouTube Captions (Bhojpuri songs, films, cultural content - auto-extracted)",
+    "bho.wikipedia.org (bhwiki-latest-pages-articles dump, ~8,857 articles)",
+    "Hindi\u2192Bhojpuri Machine Translation (NLLB-200, local CPU; sources: Hindi news + archive.org books + hi.wikipedia.org)",
+    "GlotCC-V1 (bho-Deva, web-crawl, 949 docs)",
+    "HPLT3.0 (bho_Deva, web-crawl, ~32.8k docs)",
+    "goldfish-models/fish-food (bho_deva, 262K rows)"
   ],
   "scraping": {
     "batches_collected": 34,
@@ -41,15 +46,15 @@
   },
   "splits": {
     "train": {
-      "lines": 621171,
+      "lines": 627925,
       "percentage": 0
     },
     "val": {
-      "lines": 77790,
+      "lines": 78137,
       "percentage": 0
     },
     "test": {
-      "lines": 77840,
+      "lines": 78391,
       "percentage": 0
     }
   },
@@ -59,7 +64,7 @@
   "target_tokens": 500000000,
   "batch_size": 100,
   "created_at": "2026-08-12T12:09:47.956313",
-  "updated_at": "2026-08-17T12:58:44.134667",
+  "updated_at": "2026-08-19T10:03:06.568192",
   "ready_for_training": true,
   "ocr_data": {
     "source": "archive.org pre-OCR'd text (Hindi proxy) + news crawling",
@@ -68,10 +73,38 @@
     "lines_kept_after_cleaning": 511599
   },
   "token_progress": {
-    "total_corpus_tokens_estimate": 135359180,
-    "total_corpus_bytes": 541436723,
+    "total_corpus_tokens_estimate": 136606695,
+    "total_corpus_bytes": 546426782,
     "target_tokens": 500000000,
-    "progress_percent": 27.0718,
-    "progress_str": "135.4M / 500M (27.1%)"
+    "progress_percent": 27.321339,
+    "progress_str": "136.6M / 500M (27.3%)"
+  },
+  "hindi_translation": {
+    "source": "Hindi news (news_crawler.py) + archive.org Hindi books + hi.wikipedia.org (hiwiki dump)",
+    "translation_method": "NLLB-200 distilled-600M (local CPU inference, hin_Deva\u2192bho_Deva)",
+    "hindi_records_translated": 5796,
+    "hindi_records_failed": 12,
+    "translated_lines_kept_after_cleaning": 15852,
+    "api_calls_total": 43516,
+    "last_run_at": "2026-08-19T06:43:29.792113",
+    "status": "COMPLETE"
+  },
+  "phase3_fineweb_translation": {
+    "source": "fineweb-edu dataset (Kaggle: nameonlu/fineweb-edu)",
+    "mount_path": "/kaggle/input/datasets/nameonlu/fineweb-edu",
+    "file_format": "TXT files",
+    "translation_method": "BART-English-to-Bhojpuri-Alpha2 (GPU inference)",
+    "status": "READY FOR EXECUTION",
+    "notebook": "T.ipynb (corrected for TXT files)",
+    "expected_processing_time": "70+ days on T4 GPU for full 3GB dataset",
+    "recommendation": "Use faster GPU or split into smaller chunks"
+  },
+  "project_status": {
+    "phase1_data_collection": "COMPLETE",
+    "phase2_expansion": "COMPLETE",
+    "phase3_hindi_translation": "COMPLETE",
+    "phase3_fineweb_translation": "READY",
+    "cleanup_status": "COMPLETE - buffer files and temporary data removed (2026-08-19)",
+    "last_updated": "2026-08-19T10:27:00"
   }
 }
