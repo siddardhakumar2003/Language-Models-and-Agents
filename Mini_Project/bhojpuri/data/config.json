@@ -46,15 +46,15 @@
   },
   "splits": {
     "train": {
-      "lines": 627925,
+      "lines": 621769,
       "percentage": 0
     },
     "val": {
-      "lines": 78137,
+      "lines": 77358,
       "percentage": 0
     },
     "test": {
-      "lines": 78391,
+      "lines": 77683,
       "percentage": 0
     }
   },
@@ -64,20 +64,20 @@
   "target_tokens": 500000000,
   "batch_size": 100,
   "created_at": "2026-08-12T12:09:47.956313",
-  "updated_at": "2026-08-19T10:03:06.568192",
+  "updated_at": "2026-08-19T13:57:14.564496",
   "ready_for_training": true,
   "ocr_data": {
     "source": "archive.org pre-OCR'd text (Hindi proxy) + news crawling",
     "files_processed": 0,
     "pages_extracted": 0,
-    "lines_kept_after_cleaning": 511599
+    "lines_kept_after_cleaning": 0
   },
   "token_progress": {
-    "total_corpus_tokens_estimate": 136606695,
-    "total_corpus_bytes": 546426782,
+    "total_corpus_tokens_estimate": 135361900,
+    "total_corpus_bytes": 541447603,
     "target_tokens": 500000000,
-    "progress_percent": 27.321339,
-    "progress_str": "136.6M / 500M (27.3%)"
+    "progress_percent": 27.07238,
+    "progress_str": "135.4M / 500M (27.1%)"
   },
   "hindi_translation": {
     "source": "Hindi news (news_crawler.py) + archive.org Hindi books + hi.wikipedia.org (hiwiki dump)",
@@ -106,5 +106,16 @@
     "phase3_fineweb_translation": "READY",
     "cleanup_status": "COMPLETE - buffer files and temporary data removed (2026-08-19)",
     "last_updated": "2026-08-19T10:27:00"
+  },
+  "synthetic_generation": {
+    "worker_a": {
+      "topic": "Folk Tales & Cultural Heritage",
+      "generations_attempted": 20,
+      "generations_succeeded": 9,
+      "texts_after_cleaning": 9,
+      "merged_lines": 776810,
+      "last_cycle": 1,
+      "last_updated": "2026-08-19T13:57:14.567085"
+    }
   }
 }
