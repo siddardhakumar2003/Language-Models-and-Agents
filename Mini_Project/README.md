@@ -15,27 +15,32 @@
 **Status**: All data collected, cleaned, split, and ready for tokenization (Deadline: 19 Aug 2026)
 
 #### Telugu (Model H)
-- ✅ **Total Data**: 21,488,467 lines (21.5M)
+- ✅ **Total Data**: 25,349,199 lines (25.3M)
   - Fresh scraped: 29,206 lines (0.1%) from 6 web sources
-  - Manual (te.txt): 21,458,261 lines (99.9%) existing corpus
+  - Manual (te.txt): 21,458,261 lines (84.6%) existing corpus
+  - OCR augmentation: 3,766,703 lines (14.9%) from archive.org
+- ✅ **Estimated Tokens**: 4,421,917,647 (4.4B tokens - 884.4% of 500M target)
 - ✅ **Data Quality**: 89.7% pass rate (32,549 raw → 29,206 cleaned)
 - ✅ **Train/Val/Test Splits**:
-  - Train: 17,192,195 lines (80%)
-  - Val: 2,147,870 lines (10%)
-  - Test: 2,147,402 lines (10%)
+  - Train: 20,281,561 lines (80%, 14.0 GB)
+  - Val: 2,534,020 lines (10%, 1.7 GB)
+  - Test: 2,533,618 lines (10%, 1.7 GB)
 - ✅ **Cleaning**: 7-stage pipeline (Unicode normalization, deduplication, validation)
 - ✅ **Configuration**: telugu/data/config.json with complete statistics
 
 #### Bhojpuri (Model L)
-- ✅ **Total Data**: 776,801 lines (combined from 3 sources)
+- ✅ **Total Data**: 776,801 lines (combined from 5 sources)
   - Web scraping: 3,234 lines (0.4%)
   - HuggingFace corpus (Satyam810/BhojpuriCorpus): 386K docs, ~25M tokens (primary source)
-  - OCR augmentation: 511,599 lines from archive.org pre-OCR'd texts
+  - OCR augmentation: 511,599 lines (65.9%) from archive.org pre-OCR'd texts
+  - Machine Translation (Hindi→Bhojpuri): 15,852 lines via NLLB-200
+  - Bhojpuri Wikipedia: ~8,900 articles (~261K lines remaining after dedup)
+- ✅ **Estimated Tokens**: 136,606,695 (136.6M tokens - 27.3% of 500M target)
 - ✅ **Scraping Quality**: 97.2% pass rate (3,327 raw → 3,234 cleaned)
 - ✅ **Train/Val/Test Splits**:
-  - Train: 621,171 lines (80%)
-  - Val: 77,790 lines (10%)
-  - Test: 77,840 lines (10%)
+  - Train: 627,925 lines (80%, 414 MB)
+  - Val: 78,137 lines (10%, 52 MB)
+  - Test: 78,391 lines (10%, 52 MB)
 - ✅ **Cleaning**: 7-stage pipeline with Devanagari script validation + deduplication
 - ✅ **Configuration**: bhojpuri/data/config.json with complete statistics
 
@@ -48,22 +53,25 @@
 - ✅ Deterministic 80/10/10 splits with seed 42 (reproducible)
 - ✅ Complete documentation in PROJECT_SUMMARY.md
 
-### Phase 1b: OCR-Based Data Augmentation 🔄 **IN PROGRESS**
-- ✅ OCR extraction pipeline (Tesseract via PyMuPDF for PDF rendering)
-- ✅ OCR-specific pre-cleaning (header/footer removal, hyphenation, line-break handling)
-- ✅ Integration with existing TeluguDataCleaner/BhojpuriDataCleaner (unmodified reuse)
-- ✅ Merge-and-append strategy (no re-shuffling of existing splits)
-- ✅ Token progress tracking (500M target per language, report-only)
-- ⏳ Test with sample books/news articles
-- ⏳ Measure token growth toward 500M targets (Telugu already at ~3.75B; Bhojpuri targeting growth)
+### Phase 1b: Tokenizer Training ✅ **COMPLETE**
+- ✅ **Telugu Tokenizers** (3 variants, 50K vocab each):
+  - Byte-Level BPE: 1,978 unique tokens used, 1.33 chars/token, 0.0% UNK rate
+  - Unicode-Level BPE: 11,398 unique tokens used, 5.93 chars/token, 0.0% UNK rate
+  - WordPiece: 9,539 unique tokens used, 5.84 chars/token, 0.0% UNK rate
+- ✅ **Bhojpuri Tokenizers** (3 variants):
+  - Byte-Level BPE (8K vocab): 7,761 unique tokens, 1.54 chars/token, 0.0% UNK rate
+  - Unicode-Level BPE (16K vocab): 15,643 unique tokens, 3.44 chars/token, 0.0% UNK rate
+  - WordPiece (16K vocab): 5.9M test tokens, 0.0001% UNK rate
+- ✅ All tokenizers evaluated on held-out test sets with zero/near-zero unknown rates
+- ✅ Complete tokenizer evaluation report with fertility analysis and coverage metrics
 
-### Phase 3: Model Implementation, Pretraining, Evaluation 🔄 **PENDING**
-- ⏳ Tokenizer training (BPE - Telugu 32K, Bhojpuri 16K)
-- ⏳ Transformer model implementation
+### Phase 2: Model Implementation, Pretraining, Evaluation 🔄 **PENDING**
+- ⏳ Transformer model implementation (decoder-only)
 - ⏳ Pretraining with next-token prediction
 - ⏳ Evaluation and metrics
+- ⏳ Checkpoint saving and model weights
 
-### Phase 4: Reasoning Finetuning & Analysis 🔄 **PENDING**
+### Phase 3: Reasoning Finetuning & Analysis 🔄 **PENDING**
 - ⏳ Reasoning task dataset creation
 - ⏳ Finetuning on semantic similarity + QA tasks
 - ⏳ Attention pattern analysis
@@ -152,18 +160,20 @@ repo/
 
 ### 1.2 Dataset Completion ✅
 
-**Telugu**: 21,488,467 lines total
-- **Manual**: 21,458,261 lines (99.9%) - te.txt existing corpus ✅
-- **Scraped**: 29,206 lines (0.1%) - 6 web sources ✅
-- **Token Estimate**: 85M+ tokens
+**Telugu**: 25,349,199 lines total
+- **Manual Corpus**: 21,458,261 lines (84.6%) - te.txt existing ✅
+- **Web Scraped**: 29,206 lines (0.1%) - 6 sources ✅
+- **OCR Augmentation**: 3,766,703 lines (14.9%) - archive.org ✅
+- **Token Estimate**: 4,421,917,647 (4.4B tokens) - 884.4% of 500M target ✅
 
-**Bhojpuri**: 776,801 lines (multi-source: web scraping + HF corpus + OCR)
-- **Sources**: 
-  - Web scraping: 8 sites (Hindi Wikipedia, news/content) → 3,234 lines
-  - HuggingFace: Satyam810/BhojpuriCorpus (386K docs, ~25M tokens) - primary source ✅
-  - OCR: archive.org pre-OCR'd texts → 511,599 lines
+**Bhojpuri**: 776,801 lines (multi-source)
+- **Web Scraping**: 3,234 lines (0.4%) - 8 Hindi/Bhojpuri sites ✅
+- **HuggingFace Corpus**: ~261K lines (33.6%) - Satyam810/BhojpuriCorpus primary source ✅
+- **OCR Augmentation**: 511,599 lines (65.9%) - archive.org pre-OCR'd texts ✅
+- **Hindi→Bhojpuri MT**: 15,852 lines via NLLB-200 ✅
+- **Wikipedia**: ~8,900 articles - included in HF deduplicated corpus
 - **Quality**: 97.2% pass rate on scraped data ✅
-- **Token Estimate**: 135.6M tokens (27.1% of 500M target)
+- **Token Estimate**: 136,606,695 (136.6M tokens) - 27.3% of 500M target
 
 ### 1.3 Data Sources ✅
 
@@ -224,59 +234,106 @@ test/:  324 lines (10%) ✅
 ### Deliverables (Phase 1) ✅
 
 ```
+report/phase-1/
+├── phase1_report.tex                  ✅ Comprehensive LaTeX report
+├── phase1_report.pdf                  ✅ Compiled (use XeLaTeX/LuaLaTeX)
+├── plot_data_collection.png           ✅ Collection metrics
+├── plot_cleaning_results.png          ✅ Cleaning pipeline results
+├── plot_data_splits.png               ✅ Train/Val/Test distribution
+├── plot_data_sources_bhojpuri.png     ✅ Bhojpuri source composition
+└── plot_token_progress.png            ✅ Token progress tracking
+
 telugu/data/
-├── config.json                        ✅ Full statistics
+├── config.json                        ✅ Full statistics & metadata
 ├── scrape_state.json                  ✅ Checkpoint
-├── train/telugu.txt + te.txt           ✅ 17.2M lines
-├── val/telugu.txt + te.txt             ✅ 2.1M lines
-└── test/telugu.txt + te.txt            ✅ 2.1M lines
+├── train/                              ✅ 20.3M lines (14 GB)
+├── val/                                ✅ 2.5M lines (1.7 GB)
+└── test/                               ✅ 2.5M lines (1.7 GB)
+
+telugu/tokenizer/
+├── full_byte_level/telugu_tokenizer_full.json        ✅ 50K vocab
+├── full_unicode_level/checkpoint_batch_140.json      ✅ 50K vocab
+└── full_wordPiece_level/telugu_wp_tokenizer.json     ✅ 50K vocab
 
 bhojpuri/data/
 ├── config.json                        ✅ Full statistics (updated 2026-08-19)
 ├── scrape_state.json                  ✅ Checkpoint
-├── train/*.txt                         ✅ 627,925 lines
-├── val/*.txt                           ✅ 78,137 lines
-└── test/*.txt                          ✅ 78,391 lines
+├── train/                              ✅ 627.9K lines (414 MB)
+├── val/                                ✅ 78.1K lines (52 MB)
+└── test/                               ✅ 78.4K lines (52 MB)
 
-README.md                     ✅ Complete documentation
+bhojpuri/tokenizer/
+├── full_byte_level/bhoj_tokenizer_report_full.json       ✅ 8K vocab
+├── full_unicode_level/bhoj_tokenizer_report_full.json    ✅ 16K vocab
+└── full_wordPiece_level/bhojpuri_wp_tokenizer.json       ✅ 16K vocab
+
+README.md                                             ✅ Complete documentation
 ```
 
 ---
 
-## Current Corpus Status (2026-08-19)
+## Phase 1 Completion Status (2026-08-19)
 
-### Bhojpuri Corpus Metrics
-- **Total Tokens**: 136.6M / 500M (27.3%)
-- **Total Lines**: 784,453 lines (80/10/10 split)
-- **Corpus Size**: 523MB
-- **Status**: ✅ Ready for training
+### Dataset Summary
+**Telugu (Model H)**:
+- **Total Tokens**: 4,421,917,647 (4.4B) - 884.4% of 500M target ✅ EXCEEDED
+- **Total Lines**: 25,349,199 (25.3M)
+- **Corpus Size**: 17.4 GB
+- **Status**: ✅ Ready for Phase 2
 
-### Data Sources Composition
-1. **HuggingFace Corpus** (Satyam810/BhojpuriCorpus): 386K docs, ~25M tokens (primary)
-2. **Bhojpuri Wikipedia** (bho.wikipedia.org): ~8,900 articles
-3. **Hindi→Bhojpuri MT** (NLLB-200): 5,796 records translated, 15,852 lines
-4. **Archive.org Books** (OCR'd Hindi): 511,599 lines
-5. **Web Scraping**: 3,234 lines from news + content sites
-6. **GlotCC-V1 & Fish-Food**: De-duplicated (0 new additions)
+**Bhojpuri (Model L)**:
+- **Total Tokens**: 136,606,695 (136.6M) - 27.3% of 500M target
+- **Total Lines**: 776,801
+- **Corpus Size**: 518 MB
+- **Status**: ✅ Ready for Phase 2
 
-### Quality Metrics
-- ✅ Deduplication: Exact + near-duplicate removal
-- ✅ Script Validation: 100% Devanagari (bho_Deva)
-- ✅ Deterministic Splits: 80/10/10 with seed 42
-- ✅ No Corrupted Files: All JSONL/TXT parseable
+### Tokenizer Summary
+- ✅ **6 Total Tokenizers Trained** (3 per language)
+- ✅ **All Tokenizers Evaluated** on held-out test sets
+- ✅ **Zero/Near-Zero UNK Rates** (0.0000% to 0.0001%)
+- ✅ **Independent Vocabularies** (no vocabulary sharing)
+- ✅ **Fertility Analysis** (chars per token: 1.33-5.93 for Telugu, 1.54-3.44 for Bhojpuri)
+
+### Phase 1 Deliverables
+- ✅ **Phase 1 Report**: `report/phase-1/phase1_report.tex` (full LaTeX document)
+- ✅ **Data Plots**: 5 publication-quality visualizations (PNG)
+- ✅ **Configuration Files**: Complete statistics in config.json files
+- ✅ **Tokenizer Checkpoints**: All trained tokenizers saved
+- ✅ **Kaggle Dataset**: https://www.kaggle.com/datasets/kspsvlnsiddardha/lma-slm
 
 ---
 
 ## Quick Start Guides
 
-### Training Tokenizer (Telugu/Bhojpuri)
+### Phase 1: View the Report
 ```bash
-cd telugu/tokenizer
-jupyter notebook train_tokenizer_full.ipynb
-# or
-cd bhojpuri/tokenizer
-jupyter notebook wp_tokenizer.ipynb
+# Compile LaTeX report to PDF (requires XeLaTeX or LuaLaTeX)
+cd report/phase-1/
+xelatex phase1_report.tex
+# or use Overleaf: https://www.overleaf.com/
+# Copy phase1_report.tex and PNG plots to Overleaf, set compiler to XeLaTeX
 ```
 
-### Training Model
-See `telugu/train/` or `bhojpuri/train/` directories for training scripts (Phase 3).
+### Phase 1: Access the Dataset
+- **Kaggle**: https://www.kaggle.com/datasets/kspsvlnsiddardha/lma-slm
+- **Local Paths**:
+  - Telugu: `/media/ubuntu/Personal/IIIT Hyderabad/Semester 3/LMA/Mini_Project/telugu/data/`
+  - Bhojpuri: `/media/ubuntu/Personal/IIIT Hyderabad/Semester 3/LMA/Mini_Project/bhojpuri/data/`
+
+### Phase 1: Load Tokenizers
+```python
+from tokenizers import Tokenizer
+
+# Telugu tokenizers
+te_byte = Tokenizer.from_file("telugu/tokenizer/full_byte_level/telugu_tokenizer_full.json")
+te_unicode = Tokenizer.from_file("telugu/tokenizer/full_unicode_level/checkpoint_batch_140.json")
+te_wp = Tokenizer.from_file("telugu/tokenizer/full_wordPiece_level/telugu_wp_tokenizer.json")
+
+# Bhojpuri tokenizers
+bh_byte = Tokenizer.from_file("bhojpuri/tokenizer/full_byte_level/bhoj_tokenizer_report_full.json")
+bh_unicode = Tokenizer.from_file("bhojpuri/tokenizer/full_unicode_level/bhoj_tokenizer_report_full.json")
+bh_wp = Tokenizer.from_file("bhojpuri/tokenizer/full_wordPiece_level/bhojpuri_wp_tokenizer.json")
+```
+
+### Phase 2: Model Training (Upcoming)
+See `telugu/train/` or `bhojpuri/train/` directories for training scripts (Phase 2).
