@@ -1,0 +1,33 @@
+% Tokenizer Evaluation Results
+
+% Telugu
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|r|r|r|r|}
+\hline
+\textbf{Variant} & \textbf{Vocab} & \textbf{Avg Chars/Token} & \textbf{UNK Rate} & \textbf{Unique Tokens} \\
+\hline
+byte_level & 50,000 & 1.3327 & 0.0000% & 1,978 \\
+unicode_level & 50,000 & 5.9283 & 0.0000% & 11,398 \\
+wordpiece & 50,000 & 5.8353 & 0.0000% & 9,539 \\
+\hline
+\end{tabular}
+\caption{Telugu Tokenizer Evaluation Results}
+\label{tab:tokenizer_eval_telugu}
+\end{table}
+
+% Bhojpuri
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|r|r|r|r|}
+\hline
+\textbf{Variant} & \textbf{Vocab} & \textbf{Avg Chars/Token} & \textbf{UNK Rate} & \textbf{Unique Tokens} \\
+\hline
+\hline
+\end{tabular}
+\caption{Bhojpuri Tokenizer Evaluation Results}
+\label{tab:tokenizer_eval_bhojpuri}
+\end{table}
+

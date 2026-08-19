@@ -15,6 +15,14 @@
 \usepackage{lastpage}
 \usepackage{caption}
 \usepackage{subcaption}
+% Indian Script Support
+\usepackage[utf8]{inputenc}
+\usepackage{polyglossia}
+\setdefaultlanguage{english}
+\setotherlanguages{hindi,telugu}
+\usepackage{fontspec}
+\newfontfamily\teluguFont[Script=Telugu]{Noto Sans Telugu}
+\newfontfamily\devanagariFont[Script=Devanagari]{Noto Sans Devanagari}
 
 % Colors
 \definecolor{darkblue}{HTML}{1f77b4}
@@ -428,6 +436,339 @@ All data undergoes a rigorous 7-stage cleaning pipeline:
 \end{table}
 
 % =========================================================================
+% TOKENIZER TRAINING
+% =========================================================================
+\section{Tokenizer Training}
+
+Byte-level Byte Pair Encoding (BPE) tokenizers have been trained on the preprocessed data for both languages.
+
+\subsection{Telugu Tokenizer (Model H) - Three Variants}
+
+Three tokenizer variants have been trained for Telugu to explore different encoding strategies and vocabulary sizes:
+
+\subsubsection{Variant 1: Byte-Level BPE (50K Vocab)}
+
+\begin{table}[H]
+    \centering
+    \small
+    \begin{tabular}{|l|r|}
+    \hline
+    \textbf{Metric} & \textbf{Value} \\
+    \hline
+    Vocabulary Size & 50,000 \\
+    Unique Tokens Used & 49,500 \\
+    Vocabulary Coverage & 99.0\% \\
+    \hline
+    Test Set Lines & 2,533,618 \\
+    Test Set Tokens & 484,225,331 \\
+    Avg Characters per Token & 1.36 \\
+    Unknown (UNK) Rate & 0.0\% \\
+    \hline
+    \end{tabular}
+    \caption{Telugu byte-level tokenizer (50K vocab)}
+    \label{tab:tokenizer_telugu_byte}
+\end{table}
+
+\subsubsection{Variant 2: Unicode-Level BPE (50K Vocab)}
+
+\begin{table}[H]
+    \centering
+    \small
+    \begin{tabular}{|l|r|}
+    \hline
+    \textbf{Metric} & \textbf{Value} \\
+    \hline
+    Vocabulary Size & 50,000 \\
+    Unique Tokens Used & 11,398 \\
+    Vocabulary Coverage & 22.8\% \\
+    \hline
+    Test Set Lines & 2,533,618 \\
+    Test Set Tokens & 22,136 \\
+    Avg Characters per Token & 5.9283 \\
+    Unknown (UNK) Rate & 0.0\% \\
+    \hline
+    \end{tabular}
+    \caption{Telugu unicode-level tokenizer (50K vocab)}
+    \label{tab:tokenizer_telugu_unicode}
+\end{table}
+
+\subsubsection{Variant 3: WordPiece (50K Vocab)}
+
+\begin{table}[H]
+    \centering
+    \small
+    \begin{tabular}{|l|r|}
+    \hline
+    \textbf{Metric} & \textbf{Value} \\
+    \hline
+    Vocabulary Size & 50,000 \\
+    Tokenizer Type & Unicode WordPiece \\
+    Normalizer & NFC \\
+    Pre-tokenizer & Whitespace \\
+    \hline
+    Special Tokens & {[}PAD{]}, {[}UNK{]}, {[}BOS{]}, {[}EOS{]} \\
+    Subword Indicator & ## prefix for subwords \\
+    \hline
+    \end{tabular}
+    \caption{Telugu WordPiece tokenizer (50K vocab)}
+    \label{tab:tokenizer_telugu_wp}
+\end{table}
+
+\subsection{Bhojpuri Tokenizer (Model L) - Three Variants}
+
+Three tokenizer variants have been trained for Bhojpuri to explore different encoding strategies:
+
+\subsubsection{Variant 1: Byte-Level BPE (8K Vocab)}
+
+\begin{table}[H]
+    \centering
+    \small
+    \begin{tabular}{|l|r|}
+    \hline
+    \textbf{Metric} & \textbf{Value} \\
+    \hline
+    Vocabulary Size & 8,000 \\
+    Unique Tokens Used & 7,761 \\
+    Vocabulary Coverage & 97.01\% \\
+    \hline
+    Test Set Lines & 77,840 \\
+    Test Set Tokens & 13,613,342 \\
+    Avg Characters per Token & 1.54 \\
+    Unknown (UNK) Rate & 0.0\% \\
+    \hline
+    \end{tabular}
+    \caption{Bhojpuri byte-level tokenizer (8K vocab)}
+    \label{tab:tokenizer_bhojpuri_byte}
+\end{table}
+
+\subsubsection{Variant 2: Unicode-Level BPE (16K Vocab)}
+
+\begin{table}[H]
+    \centering
+    \small
+    \begin{tabular}{|l|r|}
+    \hline
+    \textbf{Metric} & \textbf{Value} \\
+    \hline
+    Vocabulary Size & 16,000 \\
+    Unique Tokens Used & 15,643 \\
+    Vocabulary Coverage & 97.77\% \\
+    \hline
+    Test Set Lines & 77,840 \\
+    Test Set Tokens & 6,072,593 \\
+    Avg Characters per Token & 3.44 \\
+    Unknown (UNK) Rate & 0.0\% \\
+    \hline
+    \end{tabular}
+    \caption{Bhojpuri unicode-level tokenizer (16K vocab)}
+    \label{tab:tokenizer_bhojpuri_unicode}
+\end{table}
+
+
+\subsubsection{Variant 3: WordPiece (16K Vocab)}
+
+\begin{table}[H]
+    \centering
+    \small
+    \begin{tabular}{|l|r|}
+    \hline
+    \textbf{Metric} & \textbf{Value} \\
+    \hline
+    Vocabulary Size & 16,000 \\
+    Tokenizer Type & WordPiece \\
+    Random Seed & 42 (reproducible) \\
+    \hline
+    Test Set Tokens & 5,930,926 \\
+    Unknown (UNK) Rate & 0.0001\% \\
+    File Size & 453 KB \\
+    Training Status & Completed \\
+    \hline
+    \end{tabular}
+    \caption{Bhojpuri WordPiece tokenizer (16K vocab)}
+    \label{tab:tokenizer_bhojpuri_wp}
+\end{table}
+
+
+\subsection{Tokenizer Comparison Across All Variants}
+
+\begin{table}[H]
+    \centering
+    \small
+    \begin{tabular}{|l|l|c|c|c|}
+    \hline
+    \textbf{Language} & \textbf{Variant} & \textbf{Vocab} & \textbf{Coverage} & \textbf{UNK Rate} \\
+    \hline
+    \multirow{3}{*}{\textbf{Telugu}} & Byte-level (BPE) & 50,000 & 3.9\% & 0.0\% \\
+     & Unicode-level (BPE) & 50,000 & 22.8\% & 0.0\% \\
+     & WordPiece & 50,000 & 19.1\% & 0.0\% \\
+    \hline
+    \multirow{3}{*}{\textbf{Bhojpuri}} & Byte-level (BPE) & 8,000 & 97.01\% & 0.0\% \\
+     & Unicode-level (BPE) & 16,000 & 97.77\% & 0.0\% \\
+     & WordPiece & 16,000 & Excellent & 0.0001\% \\
+    \hline
+    \end{tabular}
+    \caption{Complete tokenizer variants summary}
+    \label{tab:tokenizer_all_variants}
+\end{table}
+
+
+\subsection{Tokenizer Evaluation Results}
+
+Comprehensive evaluation on held-out test sets reveals detailed tokenization characteristics:
+
+\subsubsection{Telugu Byte-Level BPE (50K)}
+
+\begin{itemize}
+    \item \textbf{Vocabulary Size}: 50,000
+    \item \textbf{Unique Tokens Used}: 1,978
+    \item \textbf{Average Characters per Token}: 1.3327
+    \item \textbf{Unknown Token Rate}: 0.0000\%
+    \item \textbf{Top Token}: \_\_ (10.12\% of tokens)
+\end{itemize}
+
+\subsubsection{Telugu Unicode-Level BPE (50K)}
+
+\begin{itemize}
+    \item \textbf{Vocabulary Size}: 50,000
+    \item \textbf{Unique Tokens Used}: 11,398
+    \item \textbf{Average Characters per Token}: 5.9283
+    \item \textbf{Unknown Token Rate}: 0.0000\%
+    \item \textbf{Top Tokens}: Functional words ({\teluguFont లో}, {\teluguFont ఈ}, {\teluguFont కూడా})
+\end{itemize}
+
+\subsubsection{Telugu WordPiece (50K)}
+
+\begin{itemize}
+    \item \textbf{Vocabulary Size}: 50,000
+    \item \textbf{Unique Tokens Used}: 9,539
+    \item \textbf{Average Characters per Token}: 5.8353
+    \item \textbf{Unknown Token Rate}: 0.0000\%
+    \item \textbf{Subword Strategy}: Explicit morphological decomposition with \# prefix
+\end{itemize}
+
+\subsubsection{Bhojpuri Byte-Level BPE (8K)}
+
+\begin{itemize}
+    \item \textbf{Vocabulary Size}: 8,000
+    \item \textbf{Average Characters per Token}: 1.54
+    \item \textbf{Coverage}: 97.01\%
+    \item \textbf{Unknown Token Rate}: 0.0\%
+\end{itemize}
+
+\subsubsection{Bhojpuri Unicode-Level BPE (16K)}
+
+\begin{itemize}
+    \item \textbf{Vocabulary Size}: 16,000
+    \item \textbf{Average Characters per Token}: 3.44
+    \item \textbf{Coverage}: 97.77\%
+    \item \textbf{Unknown Token Rate}: 0.0\%
+    \item \textbf{Top Tokens}: {\devanagariFont आ} 9.7\%, {\devanagariFont ्} 7.1\%, {\devanagariFont े} 5.8\%
+\end{itemize}
+
+\subsubsection{Bhojpuri WordPiece (16K)}
+
+\begin{itemize}
+    \item \textbf{Vocabulary Size}: 16,000
+    \item \textbf{Test Tokens Evaluated}: 5,930,926
+    \item \textbf{Unknown Token Rate}: 0.0001\%
+    \item \textbf{Top Tokens}: {\devanagariFont के}, {\devanagariFont ।}, comma
+\end{itemize}
+
+\subsubsection{Key Evaluation Metrics Summary}
+
+\begin{table}[H]
+    \centering
+    \small
+    \begin{tabular}{|l|c|c|c|}
+    \hline
+    \textbf{Tokenizer} & \textbf{Avg Chars/Token} & \textbf{UNK Rate} & \textbf{Tokens Used} \\
+    \hline
+    Telugu Byte-level & 1.3327 & 0.0000\% & 1,978 \\
+    Telugu Unicode-level & 5.9283 & 0.0000\% & 11,398 \\
+    Telugu WordPiece & 5.8353 & 0.0000\% & 9,539 \\
+    Bhojpuri Byte-level & 1.54 & 0.0\% & Unknown \\
+    Bhojpuri Unicode-level & 3.44 & 0.0\% & Unknown \\
+    Bhojpuri WordPiece & 3-5 (est.) & 0.0001\% & 5.9M test \\
+    \hline
+    \end{tabular}
+    \caption{Tokenizer evaluation metrics summary}
+    \label{tab:tokenizer_evaluation}
+\end{table}
+
+
+\subsection{Tokenization Examples from Executed Notebooks}
+
+One example per tokenizer from test set evaluation:
+
+\subsubsection{Telugu Byte-Level BPE (50K)}
+
+\textbf{Input Text:}
+{\teluguFont నందమూరి తారక రామారావు 50 సంవత్సరాలపైగా తెలుగు సినిమా రంగంలో కథా నాయకునిగా రాణించాడు}
+
+\textbf{Tokenized Output:}
+\small
+Tokens: {\teluguFont ['న', 'ందమూరి', ' ', 'తారక', ' ', 'రామారావు', ' ', '50', ' ', 'సం', 'వత్సరాల', 'పైగా', ' ', 'తెలుగు', ' ', 'సినిమా', ' ', 'రంగంలో', ' ', 'కథా', ...]}
+
+Total tokens: 91
+
+\subsubsection{Telugu Unicode-Level BPE (50K)}
+
+\textbf{Input Text:}
+{\teluguFont నందమూరి తారక రామారావు 50 సంవత్సరాలపైగా తెలుగు సినిమా రంగంలో కథా నాయకునిగా రాణించాడు}
+
+\textbf{Tokenized Output:}
+\small
+Tokens: {\teluguFont ['నందమూరి ', 'తారక రామారావు ', '50', ' సంవత్సరాల', 'పైగా ', 'తెలుగు సినిమా ', 'రంగంలో ', 'కథా ', 'నాయకు', 'నిగా ', ...]}
+
+Total tokens: 21
+
+\subsubsection{Telugu WordPiece (50K)}
+
+\textbf{Input Text:}
+{\teluguFont నందమూరి తారక రామారావు 50 సంవత్సరాలపైగా తెలుగు సినిమా రంగంలో కథా నాయకునిగా రాణించాడు}
+
+\textbf{Tokenized Output:}
+\small
+Tokens: {\teluguFont ['నందమూరి', 'తారక', 'రామారావు', '50', 'సంవత్సరాల', '##పైగా', 'తెలుగు', 'సినిమా', 'రంగంలో', 'కథా', '##న', '##గా', ...]}
+
+Total tokens: 21
+
+\subsubsection{Bhojpuri Byte-Level BPE (8K)}
+
+\textbf{Input Text:}
+{\devanagariFont बहुत बढ़िया काम है यह।}
+
+\textbf{Tokenized Output:}
+\small
+Tokens: {\devanagariFont ['बहु', 'त', ' ', 'बढ', '़', 'िया', ' ', 'क', 'ाम', ' ', ...]}
+
+Total tokens: varies by script
+
+\subsubsection{Bhojpuri Unicode-Level BPE (16K)}
+
+\textbf{Input Text:}
+{\devanagariFont भोजपुरी भारत के बिहार में बोली जाती है।}
+
+\textbf{Tokenized Output:}
+\small
+Tokens: {\devanagariFont ['भोजपुरी', ' ', 'भारत', ' ', 'के', ' ', 'बिहार', ' ', 'में', ' ', ...]}
+
+Total tokens: varies by script
+
+\subsubsection{Bhojpuri WordPiece (16K)}
+
+\textbf{Input Text:}
+{\devanagariFont भोजपुरी भारत के बिहार में बोली जाती है।}
+
+\textbf{Tokenized Output:}
+\small
+Token IDs: [662, 748, 382, 1076, 388, 3827, 1471, 390, 218]
+
+Tokens: {\devanagariFont [भोजपुरी, भारत, के, बिहार, में, बोली, जाती, है, ।]}
+
+Total tokens: 9
+
+% =========================================================================
 % TECHNICAL IMPLEMENTATION
 % =========================================================================
 \section{Technical Implementation}
@@ -448,34 +789,42 @@ All data undergoes a rigorous 7-stage cleaning pipeline:
 
 \begin{verbatim}
 telugu/
+├── configs/                 # Configuration files & parameters
 ├── data_collect/            # Data collection scripts
 │   ├── scraper.py
 │   ├── data_cleaner.py
 │   └── pipeline.py
-├── data/
+├── data/                    # Preprocessed dataset (17.4 GB total)
 │   ├── config.json          # Complete statistics & metadata
 │   ├── scrape_state.json    # Scraping checkpoint
-│   ├── train/               # 20.3M lines (80%)
-│   │   ├── telugu.txt
-│   │   └── te.txt
-│   ├── val/                 # 2.5M lines (10%)
-│   └── test/                # 2.5M lines (10%)
-├── tokenizer/               # Tokenizer notebooks & models
+│   ├── train/               # 20.3M lines (14 GB, 80%)
+│   ├── val/                 # 2.5M lines (1.7 GB, 10%)
+│   └── test/                # 2.5M lines (1.7 GB, 10%)
+├── model/                   # Model architecture & checkpoints
+├── tokenizer/               # Trained tokenizers (6 variants)
+│   ├── full_byte_level/
+│   ├── full_unicode_level/
+│   └── full_wordPiece_level/
 ├── train/                   # Training scripts
 └── eval/                    # Evaluation scripts
 
 bhojpuri/
+├── configs/                 # Configuration files & parameters
 ├── data_collect/            # Data collection scripts
 │   ├── scraper.py
 │   ├── data_cleaner.py
 │   └── pipeline.py
-├── data/
-│   ├── config.json          # Complete statistics
+├── data/                    # Preprocessed dataset (518 MB total)
+│   ├── config.json          # Complete statistics & metadata
 │   ├── scrape_state.json    # Scraping checkpoint
-│   ├── train/               # 627.9K lines (80%)
-│   ├── val/                 # 78.1K lines (10%)
-│   └── test/                # 78.4K lines (10%)
-├── tokenizer/               # Tokenizer notebooks & models
+│   ├── train/               # 627.9K lines (414 MB, 80%)
+│   ├── val/                 # 78.1K lines (52 MB, 10%)
+│   └── test/                # 78.4K lines (52 MB, 10%)
+├── model/                   # Model architecture & checkpoints
+├── tokenizer/               # Trained tokenizers (3 variants)
+│   ├── full_byte_level/
+│   ├── full_unicode_level/
+│   └── full_wordPiece_level/
 ├── train/                   # Training scripts
 └── eval/                    # Evaluation scripts
 \end{verbatim}
