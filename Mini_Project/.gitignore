@@ -50,7 +50,7 @@ bhojpuri/data/*.txt
 
 pipeline.log
 stats.json
-kaggle.py
+kaggle*.py
 kaggle.txt
 phase3_translation_progress.log
 phase3_translation_nohup.out

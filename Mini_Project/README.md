@@ -298,8 +298,9 @@ README.md                                             ✅ Complete documentation
 - ✅ **Phase 1 Report**: `report/phase-1/phase1_report.tex` (full LaTeX document)
 - ✅ **Data Plots**: 5 publication-quality visualizations (PNG)
 - ✅ **Configuration Files**: Complete statistics in config.json files
-- ✅ **Tokenizer Checkpoints**: All trained tokenizers saved
+- ✅ **Tokenizer Checkpoints**: All 6 trained tokenizers saved
 - ✅ **Kaggle Dataset**: https://www.kaggle.com/datasets/kspsvlnsiddardha/lma-slm
+- ✅ **Kaggle Tokenizers**: https://www.kaggle.com/datasets/kspsvlnsiddardha/lma-tokenizers
 
 ---
 
@@ -314,11 +315,14 @@ xelatex phase1_report.tex
 # Copy phase1_report.tex and PNG plots to Overleaf, set compiler to XeLaTeX
 ```
 
-### Phase 1: Access the Dataset
-- **Kaggle**: https://www.kaggle.com/datasets/kspsvlnsiddardha/lma-slm
+### Phase 1: Access the Dataset & Tokenizers
+- **Kaggle Dataset**: https://www.kaggle.com/datasets/kspsvlnsiddardha/lma-slm
+- **Kaggle Tokenizers**: https://www.kaggle.com/datasets/kspsvlnsiddardha/lma-tokenizers
 - **Local Paths**:
-  - Telugu: `/media/ubuntu/Personal/IIIT Hyderabad/Semester 3/LMA/Mini_Project/telugu/data/`
-  - Bhojpuri: `/media/ubuntu/Personal/IIIT Hyderabad/Semester 3/LMA/Mini_Project/bhojpuri/data/`
+  - Telugu Data: `/media/ubuntu/Personal/IIIT Hyderabad/Semester 3/LMA/Mini_Project/telugu/data/`
+  - Bhojpuri Data: `/media/ubuntu/Personal/IIIT Hyderabad/Semester 3/LMA/Mini_Project/bhojpuri/data/`
+  - Telugu Tokenizers: `/media/ubuntu/Personal/IIIT Hyderabad/Semester 3/LMA/Mini_Project/telugu/tokenizer/`
+  - Bhojpuri Tokenizers: `/media/ubuntu/Personal/IIIT Hyderabad/Semester 3/LMA/Mini_Project/bhojpuri/tokenizer/`
 
 ### Phase 1: Load Tokenizers
 ```python
