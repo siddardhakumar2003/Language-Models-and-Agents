@@ -257,7 +257,7 @@ All data undergoes a rigorous 7-stage cleaning pipeline:
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{../plot/plot_data_collection.png}
+    \includegraphics[width=0.75\textwidth]{./plot/plot_data_collection.png}
     \caption{
         \textbf{Left}: Total lines per language. Telugu: 25.3M lines vs Bhojpuri: 1.83M lines (13.9x ratio).
         \textbf{Right}: Estimated tokens. Telugu: 4.4B (884\% of 500M target); Bhojpuri: 291.7M (58.3\% of target).
@@ -269,7 +269,7 @@ All data undergoes a rigorous 7-stage cleaning pipeline:
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{../plot/plot_cleaning_results.png}
+    \includegraphics[width=0.75\textwidth]{./plot/plot_cleaning_results.png}
     \caption{
         Data cleaning pipeline effectiveness. Both languages show strong pass rates.
         Telugu: 89.7\% pass rate with large-scale data. Bhojpuri: 97.2\% pass rate with targeted scraping.
@@ -281,7 +281,7 @@ All data undergoes a rigorous 7-stage cleaning pipeline:
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{../plot/plot_data_sources_bhojpuri.png}
+    \includegraphics[width=0.8\textwidth]{./plot/plot_data_sources_bhojpuri.png}
     \caption{
         Bhojpuri data sources composition (1.83M lines total). Primary: HuggingFace corpus (261K lines).
         Major augmentation: English→Bhojpuri translation (711K lines, 39\% of total) via NLLB-200.
@@ -290,18 +290,7 @@ All data undergoes a rigorous 7-stage cleaning pipeline:
     \label{fig:sources_bhojpuri}
 \end{figure}
 
-\subsection{Token Progress Toward 500M Target}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{../plot/plot_token_progress.png}
-    \caption{
-        Progress toward 500M token target. Telugu: 4,421.9M tokens (884.4\% complete, exceeds target by 8.8x).
-        Bhojpuri: 291.7M tokens (58.3\% complete, 2.1x expansion from Phase 1). Target achieved for Telugu;
-        Bhojpuri approaching target with Phase 3 English→Bhojpuri translation pipeline.
-    }
-    \label{fig:token_progress}
-\end{figure}
 
 
 
@@ -621,7 +610,7 @@ Three tokenizer variants have been trained for Bhojpuri to explore different enc
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.90\textwidth]{../plot/plot_tokenizer_fertility.png}
+    \includegraphics[width=0.90\textwidth]{./plot/plot_tokenizer_fertility.png}
     \caption{
         Tokenizer fertility (average characters per token) across all 6 variants, measuring compression efficiency.
         Byte-level tokenizers most compact: Telugu 1.33 chars/token, Bhojpuri 1.54 chars/token.
@@ -704,14 +693,14 @@ Comprehensive evaluation on held-out test sets reveals detailed tokenization cha
     \small
     \begin{tabular}{|l|c|c|c|}
     \hline
-    \textbf{Tokenizer} & \textbf{Avg Chars/Token} & \textbf{UNK Rate} & \textbf{Tokens Used} \\
+    \textbf{Tokenizer} & \textbf{Vocab Size} & \textbf{Avg Chars/Token} & \textbf{UNK Rate} \\
     \hline
-    Telugu Byte-level & 1.3327 & 0.0000\% & 1,978 \\
-    Telugu Unicode-level & 5.9283 & 0.0000\% & 11,398 \\
-    Telugu WordPiece & 5.8353 & 0.0000\% & 9,539 \\
-    Bhojpuri Byte-level & 1.5412 & 0.0000\% & 7,761 \\
-    Bhojpuri Unicode-level & 4.348 & 0.0000\% & 31,258 \\
-    Bhojpuri WordPiece & 3.95 & 0.0002\% & 11,391,403 \\
+    Telugu Byte-level & 50,000 & 1.3327 & 0.0000\% \\
+    Telugu Unicode-level & 50,000 & 5.9283 & 0.0000\% \\
+    Telugu WordPiece & 50,000 & 5.8353 & 0.0000\% \\
+    Bhojpuri Byte-level & 8,000 & 1.5412 & 0.0000\% \\
+    Bhojpuri Unicode-level & 32,000 & 4.348 & 0.0000\% \\
+    Bhojpuri WordPiece & 32,000 & 3.95 & 0.0002\% \\
     \hline
     \end{tabular}
     \caption{Tokenizer evaluation metrics summary}
