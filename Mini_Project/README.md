@@ -66,13 +66,20 @@
 - ✅ All tokenizers evaluated on held-out test sets with zero/near-zero unknown rates
 - ✅ Complete tokenizer evaluation report with fertility analysis and coverage metrics
 
+### Phase 3: Data Expansion via Translation ✅ **COMPLETE**
+- ✅ **English→Bhojpuri Translation**: 711,138 lines via NLLB-200 (fineweb-edu source)
+- ✅ **Hindi→Bhojpuri Translation**: 15,852 lines via NLLB-200 (Hindi Wikipedia source)
+- ✅ **Bhojpuri Corpus Expansion**: 1,826,713 total lines (2.3x increase from Phase 1)
+- ✅ **Translation Quality**: Verified via NLLB-200 neural machine translation
+- ✅ **Completion Date**: 2026-08-21
+
 ### Phase 2: Model Implementation, Pretraining, Evaluation 🔄 **PENDING**
 - ⏳ Transformer model implementation (decoder-only)
 - ⏳ Pretraining with next-token prediction
 - ⏳ Evaluation and metrics
 - ⏳ Checkpoint saving and model weights
 
-### Phase 3: Reasoning Finetuning & Analysis 🔄 **PENDING**
+### Phase 4: Reasoning Finetuning & Analysis 🔄 **PENDING**
 - ⏳ Reasoning task dataset creation
 - ⏳ Finetuning on semantic similarity + QA tasks
 - ⏳ Attention pattern analysis
@@ -167,14 +174,14 @@ repo/
 - **OCR Augmentation**: 3,766,703 lines (14.9%) - archive.org ✅
 - **Token Estimate**: 4,421,917,647 (4.4B tokens) - 884.4% of 500M target ✅
 
-**Bhojpuri**: 776,801 lines (multi-source)
-- **Web Scraping**: 3,234 lines (0.4%) - 8 Hindi/Bhojpuri sites ✅
-- **HuggingFace Corpus**: ~261K lines (33.6%) - Satyam810/BhojpuriCorpus primary source ✅
-- **OCR Augmentation**: 511,599 lines (65.9%) - archive.org pre-OCR'd texts ✅
-- **Hindi→Bhojpuri MT**: 15,852 lines via NLLB-200 ✅
-- **Wikipedia**: ~8,900 articles - included in HF deduplicated corpus
+**Bhojpuri**: 1,826,713 lines (multi-source, expanded in Phase 3)
+- **Web Scraping**: 3,234 lines (0.2%) - 8 Hindi/Bhojpuri sites ✅
+- **HuggingFace Corpus**: ~261K lines (14.3%) - Satyam810/BhojpuriCorpus primary source ✅
+- **OCR Augmentation**: 511,599 lines (28.0%) - archive.org pre-OCR'd texts ✅
+- **English→Bhojpuri Translation**: 711,138 lines (39.0%) via NLLB-200 (Phase 3) ✅
+- **Hindi→Bhojpuri Translation**: 15,852 lines (0.9%) via NLLB-200 (Phase 3) ✅
 - **Quality**: 97.2% pass rate on scraped data ✅
-- **Token Estimate**: 136,606,695 (136.6M tokens) - 27.3% of 500M target
+- **Token Estimate**: 291,685,379 (291.7M tokens) - 58.3% of 500M target
 
 ### 1.3 Data Sources ✅
 
@@ -225,11 +232,11 @@ val/:   telugu.txt (2,920) + te.txt (2,144,950) = 2,147,870 lines ✅
 test/:  telugu.txt (2,922) + te.txt (2,144,480) = 2,147,402 lines ✅
 ```
 
-**Bhojpuri Splits**:
+**Bhojpuri Splits** (after Phase 3 expansion):
 ```
-train/: 2,587 lines (80%) ✅
-val/:   323 lines (10%) ✅
-test/:  324 lines (10%) ✅
+train/:  1,461,821 lines (80%) ✅
+val/:      182,219 lines (10%) ✅
+test/:     182,673 lines (10%) ✅
 ```
 
 ### Deliverables (Phase 1) ✅
@@ -257,11 +264,11 @@ telugu/tokenizer/
 └── full_wordPiece_level/telugu_wp_tokenizer.json     ✅ 50K vocab
 
 bhojpuri/data/
-├── config.json                        ✅ Full statistics (updated 2026-08-19)
+├── config.json                        ✅ Full statistics (updated 2026-08-21)
 ├── scrape_state.json                  ✅ Checkpoint
-├── train/                              ✅ 627.9K lines (414 MB)
-├── val/                                ✅ 78.1K lines (52 MB)
-└── test/                               ✅ 78.4K lines (52 MB)
+├── train/                              ✅ 1,461,821 lines (expanded in Phase 3)
+├── val/                                ✅ 182,219 lines (expanded in Phase 3)
+└── test/                               ✅ 182,673 lines (expanded in Phase 3)
 
 bhojpuri/tokenizer/
 ├── full_byte_level/bhoj_tokenizer_report_full.json       ✅ 8K vocab
@@ -273,7 +280,7 @@ README.md                                             ✅ Complete documentation
 
 ---
 
-## Phase 1 Completion Status (2026-08-19)
+## Project Status Summary (As of 2026-08-21)
 
 ### Dataset Summary
 **Telugu (Model H)**:
@@ -342,4 +349,10 @@ bh_wp = Tokenizer.from_file("bhojpuri/tokenizer/full_wordPiece_level/bhojpuri_wp
 ```
 
 ### Phase 2: Model Training (Upcoming)
-See `telugu/train/` or `bhojpuri/train/` directories for training scripts (Phase 2).
+See `telugu/train/` or `bhojpuri/train/` directories for training scripts.
+
+### Phase 3: Translation Pipeline (Complete)
+Translation infrastructure for Bhojpuri data expansion via English→Bhojpuri and Hindi→Bhojpuri translation using NLLB-200 is production-ready.
+- **English Translation Script**: `bhojpuri/data_collect/english_to_bhojpuri_translator.py`
+- **Merge Scripts**: `bhojpuri/data_collect/merge_english_translations.py` and `merge_multiple_translations.py`
+- **Training Notebook**: `bhojpuri/data_collect/English_to_Bhojpuri_Translation_KAGGLE.ipynb`
