@@ -93,13 +93,14 @@ This report provides a comprehensive data collection and preprocessing report fo
 
 \subsubsection{Bhojpuri (Model L)}
 \begin{itemize}
-    \item Total lines collected: 776,810
-    \item Estimated tokens: 135,361,900 (135.4M)
+    \item Total lines collected: 1,826,713 (2.3x increase from Phase 1)
+    \item Estimated tokens: 291,685,379 (291.7M)
     \item Web-scraped texts: 3,234 (97.2\% pass rate from 3,327 raw)
-    \item HuggingFace Corpus: 386,000 documents (~25M tokens)
-    \item OCR augmentation: 511,599 lines
-    \item Machine Translation (Hindi→Bhojpuri): 15,852 lines
-    \item Target: 500M tokens | Progress: 27.1\%
+    \item HuggingFace Corpus: ~261K lines primary source
+    \item OCR augmentation: 511,599 lines (28.0%)
+    \item Hindi→Bhojpuri Translation (NLLB-200): 15,852 lines
+    \item English→Bhojpuri Translation (fineweb-edu): 711,138 lines (39.0%)
+    \item Target: 500M tokens | Progress: 58.3\%
 \end{itemize}
 
 \subsection{Data Processing Pipeline}
@@ -143,10 +144,11 @@ The data collection strategy differs between the two languages to accommodate re
 
 \begin{itemize}
     \item \textbf{Primary Source}: HuggingFace Corpus (Satyam810/BhojpuriCorpus) - 386K docs
-    \item \textbf{Augmentation 1}: OCR extraction from archive.org Hindi texts - 511.6K lines
-    \item \textbf{Augmentation 2}: Web scraping from Hindi news sites (Devanagari proxy) - 3.2K lines
-    \item \textbf{Augmentation 3}: Machine Translation (Hindi→Bhojpuri via NLLB-200) - 15.8K lines
-    \item \textbf{Total}: 776.8K lines training data (27.1\% toward 500M token target)
+    \item \textbf{Augmentation 1}: OCR extraction from archive.org Hindi texts - 511.6K lines (28.0\%)
+    \item \textbf{Augmentation 2}: English→Bhojpuri Translation (fineweb-edu NLLB-200) - 711.1K lines (39.0\%)
+    \item \textbf{Augmentation 3}: Hindi→Bhojpuri Machine Translation (NLLB-200) - 15.8K lines
+    \item \textbf{Augmentation 4}: Web scraping from Hindi news sites - 3.2K lines
+    \item \textbf{Total}: 1.83M lines training data (58.3\% toward 500M token target)
 \end{itemize}
 
 \subsection{Data Sources}
@@ -255,10 +257,10 @@ All data undergoes a rigorous 7-stage cleaning pipeline:
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{plot_data_collection.png}
+    \includegraphics[width=0.75\textwidth]{../plot/plot_data_collection.png}
     \caption{
-        \textbf{Left}: Total lines per language. Telugu has 32.5x more training data than Bhojpuri.
-        \textbf{Right}: Estimated tokens. Telugu already exceeds 500M target; Bhojpuri at 27.1\% of target.
+        \textbf{Left}: Total lines per language. Telugu: 25.3M lines vs Bhojpuri: 1.83M lines (13.9x ratio).
+        \textbf{Right}: Estimated tokens. Telugu: 4.4B (884\% of 500M target); Bhojpuri: 291.7M (58.3\% of target).
     }
     \label{fig:collection}
 \end{figure}
@@ -267,7 +269,7 @@ All data undergoes a rigorous 7-stage cleaning pipeline:
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{plot_cleaning_results.png}
+    \includegraphics[width=0.75\textwidth]{../plot/plot_cleaning_results.png}
     \caption{
         Data cleaning pipeline effectiveness. Both languages show strong pass rates.
         Telugu: 89.7\% pass rate with large-scale data. Bhojpuri: 97.2\% pass rate with targeted scraping.
@@ -275,40 +277,30 @@ All data undergoes a rigorous 7-stage cleaning pipeline:
     \label{fig:cleaning}
 \end{figure}
 
-\subsection{Data Source Composition (Telugu vs Bhojpuri)}
+\subsection{Data Source Composition (Bhojpuri)}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{plot_data_sources_both.png}
+    \includegraphics[width=0.8\textwidth]{../plot/plot_data_sources_bhojpuri.png}
     \caption{
-        \textbf{Left}: Telugu sources dominated by manual corpus (84.6\%), with OCR augmentation (14.9\%) and web scraping (0.1\%).
-        \textbf{Right}: Bhojpuri sources more diverse - HuggingFace corpus primary, substantial OCR augmentation,
-        plus web scraping and machine translation to boost lower-resource data.
+        Bhojpuri data sources composition (1.83M lines total). Primary: HuggingFace corpus (261K lines).
+        Major augmentation: English→Bhojpuri translation (711K lines, 39\% of total) via NLLB-200.
+        Supporting sources: OCR from archive.org (512K lines), Hindi→Bhojpuri translation (15.8K lines), web scraping (3.2K lines).
     }
-    \label{fig:sources_both}
+    \label{fig:sources_bhojpuri}
 \end{figure}
 
 \subsection{Token Progress Toward 500M Target}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.50\textwidth]{plot_token_distribution.png}
+    \includegraphics[width=0.8\textwidth]{../plot/plot_token_progress.png}
     \caption{
-        Token distribution: Telugu (4.4B tokens, 884.4\% of goal) vs Bhojpuri (135.4M tokens, 27.1\% of goal).
+        Progress toward 500M token target. Telugu: 4,421.9M tokens (884.4\% complete, exceeds target by 8.8x).
+        Bhojpuri: 291.7M tokens (58.3\% complete, 2.1x expansion from Phase 1). Target achieved for Telugu;
+        Bhojpuri approaching target with Phase 3 English→Bhojpuri translation pipeline.
     }
     \label{fig:token_progress}
-\end{figure}
-
-\subsection{Phase 1 Comprehensive Summary}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\textwidth]{plot_phase1_summary.png}
-    \caption{
-        Comprehensive overview showing data collection breakdown by source (top), key statistics for both languages (bottom left),
-        and tokenizer evaluation summary (bottom right).
-    }
-    \label{fig:phase1_summary}
 \end{figure}
 
 
@@ -354,11 +346,11 @@ All data undergoes a rigorous 7-stage cleaning pipeline:
     \hline
     \textbf{Split} & \textbf{Lines} & \textbf{Percentage} \\
     \hline
-    \textbf{Train} & 621,769 & 80.0\% \\
-    Validation & 77,358 & 10.0\% \\
-    Test & 77,683 & 10.0\% \\
+    \textbf{Train} & 1,461,821 & 80.0\% \\
+    Validation & 182,219 & 10.0\% \\
+    Test & 182,673 & 10.0\% \\
     \hline
-    \textbf{Total} & 776,810 & 100.0\% \\
+    \textbf{Total} & 1,826,713 & 100.0\% \\
     \hline
     \end{tabular}
     \caption{Bhojpuri (Model L) data split breakdown}
@@ -415,7 +407,7 @@ All data undergoes a rigorous 7-stage cleaning pipeline:
     \textbf{Metric} & \textbf{Value} \\
     \hline
     \textbf{Language} & Bhojpuri \\
-    \textbf{Model Size} & Lower-resource \\
+    \textbf{Model Size} & Lower-resource (Phase 3 expanded) \\
     \hline
     \multicolumn{2}{|c|}{\textit{Data Collection}} \\
     \hline
@@ -423,22 +415,24 @@ All data undergoes a rigorous 7-stage cleaning pipeline:
     Web scraping - Cleaned texts & 3,234 \\
     Web scraping - Pass rate & 97.2\% \\
     \hline
-    HuggingFace Corpus & 386,000 docs \\
+    HuggingFace Corpus & 386,000 docs (~261K lines) \\
     Estimated HF tokens & 25,000,000 \\
     \hline
-    OCR augmentation (archive.org) & 511,599 lines \\
+    OCR augmentation (archive.org) & 511,599 lines (28.0\%) \\
     OCR augmentation size & 19.7 MB \\
     \hline
-    Machine Translation (Hindi→Bhojpuri) & 15,852 lines \\
-    Translation source & Hindi news + Wikipedia \\
-    Translation method & NLLB-200 distilled-600M \\
+    Hindi→Bhojpuri Translation (NLLB-200) & 15,852 lines \\
+    \hline
+    English→Bhojpuri Translation (fineweb-edu) & 711,138 lines (39.0\%) \\
+    Translation records & 901,562 raw → 711,138 clean \\
+    Translation method & NLLB-200 en\_Latn→bho\_Deva \\
     \hline
     \multicolumn{2}{|c|}{\textit{Token Progress}} \\
     \hline
-    Total corpus tokens (estimated) & 135,361,900 \\
-    Total corpus size & 516.4 MB \\
+    Total corpus tokens (estimated) & 291,685,379 \\
+    Total corpus size & 1,112.7 MB \\
     Target tokens & 500,000,000 \\
-    Progress & 27.1\% \\
+    Progress & 58.3\% \\
 
     \hline
     \end{tabular}
@@ -552,7 +546,7 @@ Three tokenizer variants have been trained for Bhojpuri to explore different enc
     \label{tab:tokenizer_bhojpuri_byte}
 \end{table}
 
-\subsubsection{Variant 2: Unicode-Level BPE (16K Vocab)}
+\subsubsection{Variant 2: Unicode-Level BPE (32K Vocab)}
 
 \begin{table}[H]
     \centering
@@ -561,22 +555,22 @@ Three tokenizer variants have been trained for Bhojpuri to explore different enc
     \hline
     \textbf{Metric} & \textbf{Value} \\
     \hline
-    Vocabulary Size & 16,000 \\
-    Unique Tokens Used & 15,643 \\
-    Vocabulary Coverage & 97.77\% \\
+    Vocabulary Size & 32,000 \\
+    Unique Tokens Used & 31,258 \\
+    Vocabulary Coverage & 97.68\% \\
     \hline
-    Test Set Lines & 77,683 \\
-    Test Set Tokens & 6,072,593 \\
-    Avg Characters per Token & 3.4369 \\
+    Test Set Lines & 182,673 \\
+    Test Set Tokens & 10,420,151 \\
+    Avg Characters per Token & 4.348 \\
     Unknown (UNK) Rate & 0.0\% \\
     \hline
     \end{tabular}
-    \caption{Bhojpuri unicode-level tokenizer (16K vocab)}
+    \caption{Bhojpuri unicode-level tokenizer (32K vocab)}
     \label{tab:tokenizer_bhojpuri_unicode}
 \end{table}
 
 
-\subsubsection{Variant 3: WordPiece (16K Vocab)}
+\subsubsection{Variant 3: WordPiece (32K Vocab)}
 
 \begin{table}[H]
     \centering
@@ -585,18 +579,18 @@ Three tokenizer variants have been trained for Bhojpuri to explore different enc
     \hline
     \textbf{Metric} & \textbf{Value} \\
     \hline
-    Vocabulary Size & 16,000 \\
-    Tokenizer Type & WordPiece \\
+    Vocabulary Size & 32,000 \\
+    Tokenizer Type & WordPiece (subword decomposition) \\
     Random Seed & 42 (reproducible) \\
     \hline
-    Test Set Lines & 77,683 \\
-    Test Set Tokens & 5,930,926 \\
-    Unknown (UNK) Rate & 0.0001\% \\
-    File Size & 453 KB \\
+    Test Set Tokens & 11,391,403 \\
+    Avg Characters per Token & 3.95 \\
+    Unknown (UNK) Rate & 0.0002\% \\
+    File Size & 567 KB \\
     Training Status & Completed \\
     \hline
     \end{tabular}
-    \caption{Bhojpuri WordPiece tokenizer (16K vocab)}
+    \caption{Bhojpuri WordPiece tokenizer (32K vocab)}
     \label{tab:tokenizer_bhojpuri_wp}
 \end{table}
 
@@ -615,8 +609,8 @@ Three tokenizer variants have been trained for Bhojpuri to explore different enc
      & WordPiece & 50,000 & 0.0000\% \\
     \hline
     \multirow{3}{*}{\textbf{Bhojpuri}} & Byte-level (BPE) & 8,000 & 0.0000\% \\
-     & Unicode-level (BPE) & 16,000 & 0.0000\% \\
-     & WordPiece & 16,000 & 0.0001\% \\
+     & Unicode-level (BPE) & 32,000 & 0.0000\% \\
+     & WordPiece & 32,000 & 0.0002\% \\
     \hline
     \end{tabular}
     \caption{Tokenizer variants summary}
@@ -627,13 +621,13 @@ Three tokenizer variants have been trained for Bhojpuri to explore different enc
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.90\textwidth]{plot_tokenizer_analysis.png}
+    \includegraphics[width=0.90\textwidth]{../plot/plot_tokenizer_fertility.png}
     \caption{
-        Comprehensive tokenizer evaluation across all 6 variants.
-        \textbf{Top-Left}: Vocabulary size vs actual tokens used (usage efficiency).
-        \textbf{Top-Right}: Average characters per token (fertility) showing byte-level compression vs linguistic units.
-        \textbf{Bottom-Left}: Unknown token rates demonstrating near-perfect corpus coverage (0.0000-0.0001\%).
-        \textbf{Bottom-Right}: Summary statistics and key metrics.
+        Tokenizer fertility (average characters per token) across all 6 variants, measuring compression efficiency.
+        Byte-level tokenizers most compact: Telugu 1.33 chars/token, Bhojpuri 1.54 chars/token.
+        Unicode-level tokenizers preserve linguistic structure: Telugu 5.93 chars/token, Bhojpuri 4.35 chars/token.
+        WordPiece tokenizers: Telugu 5.84 chars/token, Bhojpuri 3.95 chars/token.
+        Green bars indicate high compression (< 3 chars/token); red bars indicate linguistic units.
     }
     \label{fig:tokenizer_analysis}
 \end{figure}
@@ -682,25 +676,25 @@ Comprehensive evaluation on held-out test sets reveals detailed tokenization cha
     \item \textbf{Top Tokens}: {\devanagariFont आ} 9.71\%, {\devanagariFont ्} 7.11\%, {\devanagariFont े} 5.81\%
 \end{itemize}
 
-\subsubsection{Bhojpuri Unicode-Level BPE (16K)}
+\subsubsection{Bhojpuri Unicode-Level BPE (32K)}
 
 \begin{itemize}
-    \item \textbf{Vocabulary Size}: 16,000
-    \item \textbf{Unique Tokens Used}: 15,643
-    \item \textbf{Average Characters per Token}: 3.4369
-    \item \textbf{Coverage}: 97.77\%
+    \item \textbf{Vocabulary Size}: 32,000
+    \item \textbf{Unique Tokens Used}: 31,258
+    \item \textbf{Average Characters per Token}: 4.348
+    \item \textbf{Coverage}: 97.68\%
     \item \textbf{Unknown Token Rate}: 0.0\%
-    \item \textbf{Top Tokens}: ``-'' (0.40\%), {\devanagariFont ।} (0.35\%), {\devanagariFont के} (0.30\%)
+    \item \textbf{Top Tokens}: {\devanagariFont ।} (0.33\%), {\devanagariFont आ} (0.33\%), ``-'' (0.30\%)
 \end{itemize}
 
-\subsubsection{Bhojpuri WordPiece (16K)}
+\subsubsection{Bhojpuri WordPiece (32K)}
 
 \begin{itemize}
-    \item \textbf{Vocabulary Size}: 16,000
-    \item \textbf{Test Lines Evaluated}: 77,683
-    \item \textbf{Test Tokens Evaluated}: 5,930,926
-    \item \textbf{Unknown Token Rate}: 0.0001\%
-    \item \textbf{Top Tokens}: {\devanagariFont के} (191,018), {\devanagariFont ।} (151,048), comma (119,912)
+    \item \textbf{Vocabulary Size}: 32,000
+    \item \textbf{Test Tokens Evaluated}: 11,391,403
+    \item \textbf{Average Characters per Token}: 3.95
+    \item \textbf{Unknown Token Rate}: 0.0002\%
+    \item \textbf{Top Tokens}: {\devanagariFont के} (762,460), comma (346,142), {\devanagariFont ।} (266,937)
 \end{itemize}
 
 \subsubsection{Key Evaluation Metrics Summary}
@@ -716,8 +710,8 @@ Comprehensive evaluation on held-out test sets reveals detailed tokenization cha
     Telugu Unicode-level & 5.9283 & 0.0000\% & 11,398 \\
     Telugu WordPiece & 5.8353 & 0.0000\% & 9,539 \\
     Bhojpuri Byte-level & 1.5412 & 0.0000\% & 7,761 \\
-    Bhojpuri Unicode-level & 3.4369 & 0.0000\% & 15,643 \\
-    Bhojpuri WordPiece & 3.5 & 0.0001\% & 5,930,926 \\
+    Bhojpuri Unicode-level & 4.348 & 0.0000\% & 31,258 \\
+    Bhojpuri WordPiece & 3.95 & 0.0002\% & 11,391,403 \\
     \hline
     \end{tabular}
     \caption{Tokenizer evaluation metrics summary}

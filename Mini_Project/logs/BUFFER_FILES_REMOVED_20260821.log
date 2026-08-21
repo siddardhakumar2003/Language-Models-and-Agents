@@ -1,0 +1,61 @@
+# Data Collection Buffer Files Removal Log
+# Date: 2026-08-21
+# Purpose: Clean intermediate/temporary files from data collection pipeline
+
+## Summary
+Removed 1.96 GB of intermediate buffer files from data collection process.
+Final train/val/test splits preserved in each language directory.
+
+## Bhojpuri Intermediate Buffers Removed
+
+### English Translation Raw Data
+- english_translated_raw_merged_20260820_110734/
+  Size: 211M | Files: 1
+  Purpose: Intermediate NLLB-200 English→Bhojpuri raw translation output
+  
+- english_translated_raw_merged_20260821_104926/
+  Size: 434M | Files: 1
+  Purpose: Intermediate NLLB-200 English→Bhojpuri raw translation output (reprocessed)
+
+### OCR Cleaned Data
+- ocr_cleaned_merged_20260819_135713/
+  Size: 12K | Files: 1
+  Purpose: First attempt OCR data cleaning (superseded by later versions)
+  
+- ocr_cleaned_merged_20260820_110734/
+  Size: 211M | Files: 342
+  Purpose: Intermediate OCR cleaning output (later merged into final splits)
+  
+- ocr_cleaned_merged_20260821_104926/
+  Size: 432M | Files: 721
+  Purpose: Intermediate OCR cleaning output (latest iteration, merged into final splits)
+
+### Translated Data Buffer
+- Translated/
+  Size: 661M | Files: 6
+  Purpose: Intermediate translation output files before deduplication and merging
+
+## Total Cleaned
+- Bhojpuri Buffer Directories: 5
+- Total Space Freed: 1.96 GB
+- Files Removed: ~1071
+
+## Preserved Final Data
+
+### Bhojpuri Final Splits
+- train/: 891M (final training data, 1.46M lines, 1.17B tokens)
+- val/: 111M (final validation data, 182.2K lines)
+- test/: 112M (final test data, 182.7K lines)
+
+### Telugu Final Splits
+- train/: 14G (final training data, 20.3M lines)
+- val/: 1.7G (final validation data, 2.5M lines)
+- test/: 1.7G (final test data, 2.5M lines)
+
+## Verification
+All final train/val/test splits remain intact and are used in:
+1. Phase 1 Report (report/phase-1/phase1_report.tex)
+2. Tokenizer training and evaluation
+3. Kaggle dataset publication
+
+No data loss occurred - only intermediate processing buffers were removed.

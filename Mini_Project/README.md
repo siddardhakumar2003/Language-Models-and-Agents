@@ -29,20 +29,21 @@
 - ✅ **Configuration**: telugu/data/config.json with complete statistics
 
 #### Bhojpuri (Model L)
-- ✅ **Total Data**: 776,801 lines (combined from 5 sources)
-  - Web scraping: 3,234 lines (0.4%)
-  - HuggingFace corpus (Satyam810/BhojpuriCorpus): 386K docs, ~25M tokens (primary source)
-  - OCR augmentation: 511,599 lines (65.9%) from archive.org pre-OCR'd texts
-  - Machine Translation (Hindi→Bhojpuri): 15,852 lines via NLLB-200
-  - Bhojpuri Wikipedia: ~8,900 articles (~261K lines remaining after dedup)
-- ✅ **Estimated Tokens**: 136,606,695 (136.6M tokens - 27.3% of 500M target)
+- ✅ **Total Data**: 1,826,713 lines (2.3x expansion from Phase 1)
+  - HuggingFace corpus (Satyam810/BhojpuriCorpus): ~261K lines (primary source)
+  - OCR augmentation: 511,599 lines (28.0%) from archive.org pre-OCR'd texts
+  - English→Bhojpuri Translation (fineweb-edu): 711,138 lines (39.0%) via NLLB-200
+  - Hindi→Bhojpuri Translation: 15,852 lines via NLLB-200
+  - Web scraping: 3,234 lines from Hindi/Bhojpuri news sites
+- ✅ **Estimated Tokens**: 291,685,379 (291.7M tokens - 58.3% of 500M target) ⬆️ from 27.3%
+- ✅ **Corpus Size**: 1,112.7 MB
 - ✅ **Scraping Quality**: 97.2% pass rate (3,327 raw → 3,234 cleaned)
 - ✅ **Train/Val/Test Splits**:
-  - Train: 627,925 lines (80%, 414 MB)
-  - Val: 78,137 lines (10%, 52 MB)
-  - Test: 78,391 lines (10%, 52 MB)
+  - Train: 1,461,821 lines (80%)
+  - Val: 182,219 lines (10%)
+  - Test: 182,673 lines (10%)
 - ✅ **Cleaning**: 7-stage pipeline with Devanagari script validation + deduplication
-- ✅ **Configuration**: bhojpuri/data/config.json with complete statistics
+- ✅ **Configuration**: bhojpuri/data/config.json with complete statistics (updated 2026-08-21)
 
 #### Key Achievements
 - ✅ API-driven web scraping (MediaWiki API for automatic article discovery)
@@ -59,9 +60,9 @@
   - Unicode-Level BPE: 11,398 unique tokens used, 5.93 chars/token, 0.0% UNK rate
   - WordPiece: 9,539 unique tokens used, 5.84 chars/token, 0.0% UNK rate
 - ✅ **Bhojpuri Tokenizers** (3 variants):
-  - Byte-Level BPE (8K vocab): 7,761 unique tokens, 1.54 chars/token, 0.0% UNK rate
-  - Unicode-Level BPE (16K vocab): 15,643 unique tokens, 3.44 chars/token, 0.0% UNK rate
-  - WordPiece (16K vocab): 5.9M test tokens, 0.0001% UNK rate
+  - Byte-Level BPE (8K vocab): 7,761 unique tokens, 1.54 chars/token, 97.01% coverage, 0.0% UNK rate
+  - Unicode-Level BPE (32K vocab): 31,258 unique tokens, 4.348 chars/token, 97.68% coverage, 0.0% UNK rate
+  - WordPiece (32K vocab): 11.4M test tokens, 0.0002% UNK rate
 - ✅ All tokenizers evaluated on held-out test sets with zero/near-zero unknown rates
 - ✅ Complete tokenizer evaluation report with fertility analysis and coverage metrics
 
@@ -281,11 +282,12 @@ README.md                                             ✅ Complete documentation
 - **Corpus Size**: 17.4 GB
 - **Status**: ✅ Ready for Phase 2
 
-**Bhojpuri (Model L)**:
-- **Total Tokens**: 136,606,695 (136.6M) - 27.3% of 500M target
-- **Total Lines**: 776,801
-- **Corpus Size**: 518 MB
-- **Status**: ✅ Ready for Phase 2
+**Bhojpuri (Model L)** - MAJOR EXPANSION:
+- **Total Tokens**: 291,685,379 (291.7M) - 58.3% of 500M target ⬆️ from 27.3%
+- **Total Lines**: 1,826,713 (2.3x increase) ⬆️ from 776,801
+- **Corpus Size**: 1,112.7 MB ⬆️ from 518 MB
+- **New Sources**: English→Bhojpuri translation (711K lines) + Hindi→Bhojpuri translation (16K lines)
+- **Status**: ✅ Ready for Phase 2 (substantial phase 3 expansion completed)
 
 ### Tokenizer Summary
 - ✅ **6 Total Tokenizers Trained** (3 per language)

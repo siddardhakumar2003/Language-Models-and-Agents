@@ -17,7 +17,8 @@
     "Hindi\u2192Bhojpuri Machine Translation (NLLB-200, local CPU; sources: Hindi news + archive.org books + hi.wikipedia.org)",
     "GlotCC-V1 (bho-Deva, web-crawl, 949 docs)",
     "HPLT3.0 (bho_Deva, web-crawl, ~32.8k docs)",
-    "goldfish-models/fish-food (bho_deva, 262K rows)"
+    "goldfish-models/fish-food (bho_deva, 262K rows)",
+    "English\u2192Bhojpuri Machine Translation (NLLB-200, Kaggle GPU; source: fineweb-edu)"
   ],
   "scraping": {
     "batches_collected": 34,
@@ -40,31 +41,31 @@
     "size_mb": 19.7
   },
   "data_composition": {
-    "size_mb": 516.4,
-    "total_lines": 776801,
+    "size_mb": 1112.7,
+    "total_lines": 1826713,
     "note": "Combined from: web scraping (3.2K) + HF corpus (386K docs) + OCR extraction (511.6K lines)"
   },
   "splits": {
     "train": {
-      "lines": 621769,
+      "lines": 1461821,
       "percentage": 0
     },
     "val": {
-      "lines": 77358,
+      "lines": 182219,
       "percentage": 0
     },
     "test": {
-      "lines": 77683,
+      "lines": 182673,
       "percentage": 0
     }
   },
-  "total_training_lines": 776801,
+  "total_training_lines": 1826713,
   "split_method": "80/10/10 with seed 42",
   "split_strategy": "in-memory shuffle with deterministic seeding",
   "target_tokens": 500000000,
   "batch_size": 100,
   "created_at": "2026-08-12T12:09:47.956313",
-  "updated_at": "2026-08-19T13:57:14.564496",
+  "updated_at": "2026-08-21T10:49:28.790361",
   "ready_for_training": true,
   "ocr_data": {
     "source": "archive.org pre-OCR'd text (Hindi proxy) + news crawling",
@@ -73,11 +74,11 @@
     "lines_kept_after_cleaning": 0
   },
   "token_progress": {
-    "total_corpus_tokens_estimate": 135361900,
-    "total_corpus_bytes": 541447603,
+    "total_corpus_tokens_estimate": 291685379,
+    "total_corpus_bytes": 1166741517,
     "target_tokens": 500000000,
-    "progress_percent": 27.07238,
-    "progress_str": "135.4M / 500M (27.1%)"
+    "progress_percent": 58.3370758,
+    "progress_str": "291.7M / 500M (58.3%)"
   },
   "hindi_translation": {
     "source": "Hindi news (news_crawler.py) + archive.org Hindi books + hi.wikipedia.org (hiwiki dump)",
@@ -90,22 +91,21 @@
     "status": "COMPLETE"
   },
   "phase3_fineweb_translation": {
-    "source": "fineweb-edu dataset (Kaggle: nameonlu/fineweb-edu)",
-    "mount_path": "/kaggle/input/datasets/nameonlu/fineweb-edu",
-    "file_format": "TXT files",
-    "translation_method": "BART-English-to-Bhojpuri-Alpha2 (GPU inference)",
-    "status": "READY FOR EXECUTION",
-    "notebook": "T.ipynb (corrected for TXT files)",
-    "expected_processing_time": "70+ days on T4 GPU for full 3GB dataset",
-    "recommendation": "Use faster GPU or split into smaller chunks"
+    "source": "fineweb-edu dataset (Kaggle: nameonlu/fineweb-edu, folders: Translated/2/bhojpuri_translations, Translated/3/bhojpuri_translations)",
+    "translation_method": "NLLB-200 (english_to_bhojpuri_translator.py, en_Latn\u2192bho_Deva, GPU inference on Kaggle)",
+    "raw_records_translated": 901562,
+    "cleaned_lines_kept": 719425,
+    "merged_lines": 711138,
+    "last_run_at": "2026-08-21T10:49:31.498726",
+    "status": "COMPLETE"
   },
   "project_status": {
     "phase1_data_collection": "COMPLETE",
     "phase2_expansion": "COMPLETE",
     "phase3_hindi_translation": "COMPLETE",
-    "phase3_fineweb_translation": "READY",
+    "phase3_fineweb_translation": "COMPLETE",
     "cleanup_status": "COMPLETE - buffer files and temporary data removed (2026-08-19)",
-    "last_updated": "2026-08-19T10:27:00"
+    "last_updated": "2026-08-21T10:49:31.498744"
   },
   "synthetic_generation": {
     "worker_a": {
