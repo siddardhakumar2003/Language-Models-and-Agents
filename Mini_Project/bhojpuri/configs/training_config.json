@@ -8,14 +8,14 @@
   "total_steps": 500000,
   "eval_steps": 5000,
   "checkpoint_steps": 10000,
-  "optimizer": "adam",
+  "optimizer": "adamw",
   "scheduler": "cosine_with_warmup",
   "loss_function": "cross_entropy",
   "gradient_accumulation_steps": 1,
   "max_grad_norm": 1.0,
   "seed": 42,
-  "device": "cuda",
+  "device": "auto",
   "num_workers": 4,
-  "mixed_precision": "fp16",
-  "description": "Training configuration for Bhojpuri pretraining"
+  "amp": true,
+  "description": "Training configuration for Bhojpuri pretraining. Device is auto-detected (cuda if available, else cpu)."
 }

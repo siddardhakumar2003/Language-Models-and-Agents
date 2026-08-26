@@ -1,9 +1,7 @@
 """
-Telugu Transformer Language Model Implementation
-
-This module contains the decoder-only Transformer architecture for Telugu.
+Bhojpuri Transformer Language Model Implementation
 """
 
-from .transformer import TeluguTransformer
+from .transformer import BhojpuriTransformer
 
-__all__ = ["TeluguTransformer"]
+__all__ = ["BhojpuriTransformer"]

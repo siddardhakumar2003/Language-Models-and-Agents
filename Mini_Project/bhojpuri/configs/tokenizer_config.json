@@ -1,15 +1,22 @@
 {
   "language": "bhojpuri",
-  "model_type": "bpe",
-  "vocab_size": 16000,
-  "min_frequency": 2,
-  "special_tokens": [
-    "<pad>",
-    "<unk>",
-    "<bos>",
-    "<eos>"
-  ],
-  "pre_tokenizer": "metaspace",
-  "training_samples": 500000,
-  "description": "BPE tokenizer trained on Bhojpuri corpus (INDIC Corpus V2 + manual collection)"
+  "model_type": "wordpiece",
+  "tokenizer_path": "../tokenizer/full_wordPiece_level/bhojpuri_wp_tokenizer.json",
+  "vocab_size": 32000,
+  "special_tokens": {
+    "pad_token": "[PAD]",
+    "unk_token": "[UNK]",
+    "bos_token": "[CLS]",
+    "eos_token": "[SEP]"
+  },
+  "special_token_ids": {
+    "pad_token_id": 0,
+    "unk_token_id": 1,
+    "bos_token_id": 2,
+    "eos_token_id": 3
+  },
+  "normalizer": "NFC",
+  "pre_tokenizer": "Whitespace",
+  "decoder": "WordPiece",
+  "description": "WordPiece tokenizer trained on Bhojpuri corpus (Phase 1b complete). Note: [CLS] and [SEP] are mapped to BOS and EOS roles for LM generation."
 }
