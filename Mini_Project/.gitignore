@@ -115,10 +115,12 @@ CLAUDE.md
 
 # PyTorch model checkpoints (large .pt files, auto-generated)
 *.pt
+*.pth
 telugu/model/outputs/
 bhojpuri/model/outputs/
-api_token.txt
-SidLMA
 telugu/train/kaggle_bundle/*
-
 bhojpuri/train/kaggle_bundle/*
+
+# API tokens and temp directories
+api_token.txt
+SidLMA/*

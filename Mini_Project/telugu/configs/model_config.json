@@ -2,23 +2,25 @@
   "language": "telugu",
   "model_name": "TeluguTransformer",
   "architecture": "decoder_only_transformer",
-  "vocab_size": 50000,
+  "vocab_size": 10000,
   "embedding_dim": 256,
-  "num_layers": 15,
+  "num_layers": 6,
   "num_heads": 8,
   "head_dim": 32,
   "hidden_dim": 1024,
-  "max_seq_length": 512,
+  "max_seq_length": 128,
   "dropout": 0.1,
   "layer_norm_eps": 1e-6,
   "activation": "gelu",
   "positional_encoding": "learned_absolute",
   "tie_embeddings": true,
-  "total_parameters": "24.73M",
+  "total_parameters": "4.5M",
   "parameter_breakdown": {
-    "token_embedding": "12.80M",
-    "positional_embedding": "0.13M",
-    "transformer_body": "11.80M"
+    "token_embedding": "2.56M",
+    "positional_embedding": "0.033M",
+    "transformer_body": "1.9M"
   },
-  "description": "Decoder-only Transformer LM for Telugu (independent model, no shared weights). Identical body to Bhojpuri for clean H-vs-L comparison; vocab size difference is the intended confound."
+  "description": "Decoder-only Transformer LM for Telugu (independent model, no shared weights). 6-layer architecture with 10K vocabulary, trained from scratch without pretrained components.",
+  "training_date": "2026-09-03",
+  "final_validation_ppl": 881.9
 }

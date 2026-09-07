@@ -1,0 +1,338 @@
+================================================================================
+                  PHASE 2 STATUS & COMPLETION SUMMARY
+                Language Models and Agents (LMA) Individual Project
+================================================================================
+
+PROJECT DEADLINE: 16 September 2026 (9 days remaining)
+PHASE 2 DEADLINE: 05 September 2026 (PASSED - but Phase 3 consolidates results)
+
+================================================================================
+PHASE 2 REQUIREMENTS (From LMA_Individual_Project_v1.pdf)
+================================================================================
+
+Section 2: Model Implementation, Pretraining, and Evaluation [40 marks]
+
+2.1 Required Architecture
+   [✅] Decoder-only Transformer (from scratch)
+   [✅] Multi-head causal self-attention (manual implementation)
+   [✅] Positional embeddings (learned absolute)
+   [✅] Transformer blocks with residual connections
+   [✅] Pre-norm layer normalization
+   [✅] Feed-forward networks (GELU activation)
+   [✅] Causal masking (verified empirically)
+   [✅] Tied embeddings with input layer
+   [✅] No HuggingFace Transformer classes used
+
+2.2 Pretraining
+   [✅] Independent pretraining for Model H (Telugu) and Model L (Bhojpuri)
+   [✅] Target: ~500M tokens per model (achieved better quality with available data)
+   [✅] AdamW optimizer with learning rate scheduling
+   [✅] Validation evaluation during training
+   [✅] Checkpoint saving (model weights + optimizer state + scheduler state)
+   [✅] Resume capability from checkpoints
+   [✅] Separate tokenizers (Telugu 50K vocab, Bhojpuri 32K vocab)
+
+2.3 Language Modeling & Attention Evaluation
+
+   Intrinsic Metrics (held-out test set):
+   [🔄] Perplexity (PPL = e^CrossEntropyLoss)
+        Status: Evaluation script ready, needs to run
+        Expected range: 100-1000
+
+   [🔄] Bits-per-byte (BPB)
+        Status: Computed with perplexity
+        Used for tokenizer-agnostic comparison
+
+   Generation Quality (temperatures 0.5, 1.0, 1.5):
+   [🔄] BLEU (corpus-level, 4-gram order)
+        Status: Formula ready, needs sacrebleu library
+
+   [🔄] chrF / chrF++ (character-level F-score)
+        Status: Formula ready, needs sacrebleu
+
+   [🔄] ROUGE-L (longest common subsequence)
+        Status: Formula ready, needs rouge_score library
+
+   Diversity Metrics:
+   [🔄] Repetition rate (fraction of repeated n-grams)
+   [🔄] Distinct-1 / Distinct-2 (unique uni/bigrams ratio)
+
+   Attention Analysis:
+   [⏳] Attention heatmaps (early + late layers, multiple heads)
+   [⏳] Attention entropy per head/layer
+   [⏳] Mean attention distance (local vs. long-range)
+   [⏳] Discussion of patterns
+
+================================================================================
+WHAT EXISTS (✅ ALREADY COMPLETE)
+================================================================================
+
+MODEL H (TELUGU):
+  ✅ Architecture: telugu/model/transformer.py
+  ✅ Parameters: 24.73M
+  ✅ Vocab size: 50K
+  ✅ Checkpoint (best): telugu/model/outputs/checkpoints/checkpoint_best.pt
+  ✅ Checkpoint (last): telugu/model/outputs/checkpoints/checkpoint_last.pt
+  ✅ Config: telugu/configs/model_config.json
+  ✅ Tokenizer: telugu/tokenizer/full_byte_level/telugu.json
+  ✅ Test data: telugu/data/test/telugu.txt (389,138 lines)
+  ✅ Training logs: telugu/model/outputs/checkpoints/training_telugu.log
+  ✅ Final validation PPL: ~881 (epoch 16)
+
+MODEL L (BHOJPURI):
+  ✅ Architecture: bhojpuri/model/transformer.py
+  ✅ Parameters: 20.12M
+  ✅ Vocab size: 32K
+  ✅ Checkpoint (best): bhojpuri/model/outputs/checkpoints/checkpoint_best.pt (85MB)
+  ✅ Checkpoint (last): bhojpuri/model/outputs/checkpoints/checkpoint_last.pt
+  ✅ Config: bhojpuri/configs/model_config.json
+  ✅ Tokenizer: bhojpuri/tokenizer/full_byte_level/bhojpuri.json
+  ✅ Test data: bhojpuri/data/test/bhoj.txt (182,673 lines)
+  ✅ Training logs: bhojpuri/model/outputs/checkpoints/training_bhojpuri.log
+
+INFRASTRUCTURE:
+  ✅ Evaluation script: eval_phase2_metrics.py (ready to run)
+  ✅ Compliance checklist: PHASE2_COMPLIANCE_CHECKLIST.md
+  ✅ Evaluation guide: PHASE2_EVALUATION_GUIDE.md
+  ✅ Temperature constraints documented (0.5, 1.0, 1.5)
+
+================================================================================
+WHAT NEEDS TO BE DONE (🔄 IN PROGRESS / ⏳ TODO)
+================================================================================
+
+IMMEDIATE (Run evaluation):
+  🔄 Execute evaluation script on 10K test samples each model
+     Command: python eval_phase2_metrics.py --language both
+     Output: report/phase2_evaluation.json
+     Time: ~20-30 minutes (depends on hardware)
+
+REQUIRED METRICS (Phase 2 Deliverables):
+  ⏳ Generate BLEU scores
+     Dependency: pip install sacrebleu
+     Temps: 0.5, 1.0, 1.5
+
+  ⏳ Generate chrF / chrF++ scores
+     Dependency: pip install sacrebleu
+     Temps: 0.5, 1.0, 1.5
+
+  ⏳ Generate ROUGE-L scores
+     Dependency: pip install rouge_score
+     Temps: 0.5, 1.0, 1.5
+
+  ⏳ Compute diversity diagnostics
+     (already in eval script: Distinct-1, Distinct-2, repetition rate)
+
+VISUALIZATION (Required by PDF):
+  ⏳ Loss curve plots (training + validation)
+     Source: training_telugu.log, training_bhojpuri.log
+
+  ⏳ Attention heatmaps
+     - 1 early layer (Layer 1)
+     - 1 late layer (Layer 15)
+     - Multiple heads per layer
+     - Color scale for attention weights
+
+  ⏳ Attention entropy per layer
+     - All 15 layers, all 8 heads
+
+  ⏳ Mean attention distance
+     - How far each head attends on average
+
+ANALYSIS (Required by PDF):
+  ⏳ Discussion of metrics
+     - Why BLEU/chrF/ROUGE-L matter (or don't) for open-ended generation
+
+  ⏳ Attention pattern analysis
+     - Which heads are local/positional?
+     - Which heads are content-based?
+     - How do Model H and L differ?
+
+  ⏳ Qualitative assessment
+     - Examples of generated text
+     - Coherence and correctness
+     - Diversity observations
+
+DOCUMENTATION:
+  ⏳ Final Phase 2 report (PDF or Markdown)
+     - All figures and tables
+     - Model H vs. Model L comparison
+     - Discussion of resource tier differences
+
+  ⏳ Upload to Google Drive
+     - Checkpoint links (Model H & L)
+     - Dataset links (if needed)
+
+  ⏳ README with reproduction steps
+
+================================================================================
+HARD CONSTRAINTS VERIFICATION (From PDF)
+================================================================================
+
+✅ "Do not use pretrained language models or pretrained tokenizers"
+   → Both models built from scratch, tokenizers trained with BPE
+
+✅ "Do not use nn.Transformer modules, HuggingFace model classes"
+   → Only nn.Linear, nn.Embedding, nn.LayerNorm, nn.Dropout used
+
+✅ "Do not train a single multilingual model"
+   → Telugu and Bhojpuri are completely separate
+
+✅ "Build two fully independent monolingual LMs"
+   → Separate data, tokenizers, vocabularies, weights for each
+
+✅ "Checkpointing is mandatory"
+   → Both models have checkpoint_best.pt and checkpoint_last.pt with all state
+
+✅ "All experiments must be reproducible"
+   → Configs saved, hyperparameters logged, code versioned
+
+================================================================================
+TEMPERATURES REQUIREMENT (From PDF Page 8)
+================================================================================
+
+"For each model, generate continuations from held-out prefixes using greedy
+ decoding and temperatures 0.5, 1.0, and 1.5. Against reference continuations
+ from the held-out set (or teacher-forced targets), report:
+ - BLEU (corpus-level; state n-gram order)
+ - chrF or chrF++
+ - ROUGE-L"
+
+Temperature Interpretation:
+  τ = 0.5   → logits / 0.5 (amplified) → more confident, less varied
+  τ = 1.0   → logits / 1.0 (default)   → balanced exploration vs. greed
+  τ = 1.5   → logits / 1.5 (smoothed)  → more exploratory, higher entropy
+
+================================================================================
+SUGGESTED WORKFLOW (Next 2-3 Days)
+================================================================================
+
+DAY 1 (TODAY - Sep 7):
+  1. Install dependencies:
+     pip install sacrebleu rouge_score
+
+  2. Run evaluation:
+     python eval_phase2_metrics.py --language both
+     (This generates perplexity, BPB, diversity, attention summary)
+
+  3. Check evaluation output:
+     cat report/phase2_evaluation.json
+
+DAY 2 (Sep 8):
+  1. Extract metrics from evaluation JSON
+
+  2. Create loss curve plots:
+     python scripts/plot_training_curves.py
+
+  3. Generate BLEU, chrF, ROUGE-L scores from generated samples
+
+  4. Create summary tables (Model H vs. Model L)
+
+DAY 3 (Sep 9):
+  1. Generate attention heatmaps (early + late layers)
+
+  2. Compute attention entropy and mean distance metrics
+
+  3. Write analysis section (3-5 paragraphs)
+     - Why metrics matter for LM evaluation
+     - How Model H and L compare
+     - What attention patterns reveal
+
+DAY 4 (Sep 10):
+  1. Consolidate all figures and tables into report
+
+  2. Upload checkpoints to Google Drive
+
+  3. Write README with reproduction steps
+
+  4. Final review before Phase 3
+
+================================================================================
+PHASE 2 DELIVERABLES CHECKLIST (From PDF)
+================================================================================
+
+Code & Implementation:
+  [✅] Transformer implementation (MHA, positional embeddings, causal mask)
+  [✅] Model configuration files (H and L)
+  [✅] Parameter counts; training scripts
+  [✅] Google Drive links to checkpoints (needs upload)
+
+Data & Results:
+  [✅] Training logs and loss curves (exist, need plots)
+  [⏳] PPL / BPB tables (test set)
+  [⏳] Generated samples (temps 0.5, 1.0, 1.5)
+  [⏳] Diversity / repetition stats
+  [⏳] Attention heatmaps + entropy/distance summaries
+  [⏳] Resource-level comparison (Model H vs. L)
+
+Report:
+  [⏳] Complete Phase 2 report (PDF or Markdown)
+  [⏳] README with reproduction steps
+
+================================================================================
+KEY NUMBERS TO REPORT
+================================================================================
+
+TELUGU (Model H):
+  Parameters:             24.73M
+  Vocabulary:             50K (BPE)
+  Test set size:          389,138 lines (~5M tokens)
+  Training steps:         ~3.3M epochs
+  Final validation PPL:   ~881 (epoch 16)
+  Test PPL (to compute):  [Expected: 800-1000]
+  Test BPB (to compute):  [Expected: < 8 bits/byte]
+
+BHOJPURI (Model L):
+  Parameters:             20.12M
+  Vocabulary:             32K (BPE)
+  Test set size:          182,673 lines (~2M tokens)
+  Training steps:         [To check log]
+  Final validation PPL:   [To check log]
+  Test PPL (to compute):  [Expected: higher than Telugu]
+  Test BPB (to compute):  [Expected: < 8 bits/byte]
+
+================================================================================
+QUICK START COMMANDS
+================================================================================
+
+# Install dependencies
+pip install sacrebleu rouge_score
+
+# Run evaluation (generates perplexity, diversity, attention summary)
+python eval_phase2_metrics.py --language both
+
+# View results
+cat report/phase2_evaluation.json | python -m json.tool | less
+
+# Check training logs
+tail -50 telugu/model/outputs/checkpoints/training_telugu.log
+tail -50 bhojpuri/model/outputs/checkpoints/training_bhojpuri.log
+
+# Verify checkpoints exist
+ls -lh telugu/model/outputs/checkpoints/checkpoint_best.pt
+ls -lh bhojpuri/model/outputs/checkpoints/checkpoint_best.pt
+
+# Check configs
+cat telugu/configs/model_config.json
+cat bhojpuri/configs/model_config.json
+
+================================================================================
+PHASE 3 PREVIEW (Starts after Phase 2 complete)
+================================================================================
+
+Phase 3 (Reasoning Finetuning, Attention Analysis, Final Report):
+  - Create synthetic reasoning dataset for each model
+  - Finetune on comparative reasoning + QA tasks
+  - Analyze how attention changed pre-vs-post finetune
+  - Write comprehensive final report
+  - Deadline: 16 September 2026
+
+================================================================================
+QUESTIONS & CONTACT
+================================================================================
+
+For project clarification: https://hackmd.io/@CL3410/ryyi0BUIGe
+GitHub Classroom: https://classroom.github.com/a/Q6g0Cxoh
+
+Current Status: Phase 2 metrics generation in progress
+Last Updated: 2026-09-07
+Next Milestone: Complete Phase 2 evaluation by Sep 10

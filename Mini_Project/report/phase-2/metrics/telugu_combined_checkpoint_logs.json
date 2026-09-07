@@ -1,0 +1,74 @@
+{
+  "language": "Telugu",
+  "model_name": "TeluguTransformer",
+  "checkpoints": {
+    "checkpoints": {
+      "checkpoint_best": {
+        "best_val_ppl": 881.9034324929845,
+        "best_val_loss": 6.78208256304325,
+        "best_step": 3342524,
+        "epoch": 16,
+        "step": 3342524,
+        "model_params": 9901840
+      },
+      "checkpoint_last": {
+        "val_ppl": 881.9034324929845,
+        "val_loss": 6.78208256304325,
+        "step": 3432000,
+        "epoch": 16
+      },
+      "log_lines": 4
+    },
+    "checkpoints_1": {
+      "checkpoint_best": {
+        "best_val_ppl": 2036.035497182128,
+        "best_val_loss": 7.618759812283718,
+        "best_step": 1616524,
+        "epoch": 8,
+        "step": 1616524,
+        "model_params": 9901840
+      },
+      "checkpoint_last": {
+        "val_ppl": 2036.035497182128,
+        "val_loss": 7.618759812283718,
+        "step": 1736000,
+        "epoch": 8
+      },
+      "log_lines": 4
+    },
+    "checkpoints_2": {
+      "checkpoint_best": {
+        "best_val_ppl": 1382.8674166570872,
+        "best_val_loss": 7.231914460588498,
+        "best_step": 2534524,
+        "epoch": 12,
+        "step": 2534524,
+        "model_params": 9901840
+      },
+      "checkpoint_last": {
+        "val_ppl": 1382.8674166570872,
+        "val_loss": 7.231914460588498,
+        "step": 2544000,
+        "epoch": 12
+      },
+      "log_lines": 4
+    },
+    "checkpoints_last": {
+      "checkpoint_best": {
+        "best_val_ppl": 2447.0581602497373,
+        "best_val_loss": 7.802641831141312,
+        "best_step": 798524,
+        "epoch": 4,
+        "step": 798524,
+        "model_params": 9901840
+      },
+      "checkpoint_last": {
+        "val_ppl": 2447.0581602497373,
+        "val_loss": 7.802641831141312,
+        "step": 818000,
+        "epoch": 4
+      },
+      "log_lines": 4
+    }
+  }
+}

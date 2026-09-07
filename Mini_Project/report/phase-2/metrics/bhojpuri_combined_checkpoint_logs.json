@@ -1,0 +1,23 @@
+{
+  "language": "Bhojpuri",
+  "model_name": "BhojpuriTransformer",
+  "checkpoints": {
+    "checkpoints": {
+      "checkpoint_best": {
+        "best_val_ppl": 870.1389220992392,
+        "best_val_loss": 6.768652879474882,
+        "best_step": 252200,
+        "epoch": 10,
+        "step": 252200,
+        "model_params": 9901840
+      },
+      "checkpoint_last": {
+        "val_ppl": 870.1389220992392,
+        "val_loss": 6.768652879474882,
+        "step": 252200,
+        "epoch": 10
+      },
+      "log_lines": 10
+    }
+  }
+}

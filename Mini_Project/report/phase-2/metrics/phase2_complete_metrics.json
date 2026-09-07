@@ -1,0 +1,132 @@
+{
+  "telugu": {
+    "language": "telugu",
+    "test_samples": 10000,
+    "perplexity": {
+      "perplexity": 59783.34,
+      "cross_entropy_loss": 10.9985,
+      "bits_per_byte": 15.8675,
+      "samples_evaluated": 10000,
+      "total_tokens": 996666
+    },
+    "diversity": {
+      "distinct_1": 0.596,
+      "distinct_2": 0.9062,
+      "unique_unigrams": 13762,
+      "unique_bigrams": 20473,
+      "samples": 500
+    },
+    "generation": {
+      "temp_0.5": {
+        "num_samples": 100,
+        "examples": [
+          "ఫస్ట్-క్లాస్ క్రికెట్లోఅడైర్ తొలి వికెట్ మార్కస్ టႿõ\u0015ϯ܋ô\u0016\u0003",
+          "దర్యాబరి దాతృత్వంపై తన వృత్తిని కేంద్రీకరించడం ప్ర\u0015\u0003"
+        ]
+      },
+      "temp_1.0": {
+        "num_samples": 100,
+        "examples": [
+          "ఫస్ట్-క్లాస్ క్రికెట్లోఅడైర్ తొలి వికెట్ మార్కస్ టͽᛠԹ࿰੿˧\u0017 ᎖ē⚎΃௵˜ܞୈƛݔึñ",
+          "దర్యాబరి దాతృత్వంపై తన వృత్తిని కేంద్రీకరించడం ప్రҔʼᢣȡ⛨Ůແᒾ܌ກ୿Řᥔœᇼů၁⊿\u0017\u0003"
+        ]
+      },
+      "temp_1.5": {
+        "num_samples": 100,
+        "examples": [
+          "ఫస్ట్-క్లాస్ క్రికెట్లోఅడైర్ తొలి వికెట్ మార్కస్ టࡂ་ҏ܁Ț༅ǐᘨśƆᢉܜᨎ᬴؉᥵̉⍺ࣧ℅",
+          "దర్యాబరి దాతృత్వంపై తన వృత్తిని కేంద్రీకరించడం ప్రࣩĀὀᔑʒኦᒬ፣ՠۤ†ď᫦Ⴣ↦᫙\u0015ᱸ\u0003"
+        ]
+      }
+    },
+    "generation_quality": {
+      "bleu": 0.03,
+      "num_samples": 100,
+      "rouge_l": {
+        "fmeasure": 0.1837,
+        "samples": 200
+      },
+      "chrf": {
+        "score": 13.7,
+        "samples": 200
+      }
+    },
+    "attention": {
+      "early_layer_entropy": 3.6374,
+      "late_layer_entropy": 3.6374,
+      "samples_analyzed": 1
+    },
+    "compliance": {
+      "checkpoint_best": true,
+      "checkpoint_last": true,
+      "config": true,
+      "test_data": true,
+      "model_loaded": true
+    }
+  },
+  "bhojpuri": {
+    "language": "bhojpuri",
+    "test_samples": 10000,
+    "perplexity": {
+      "perplexity": 11730.35,
+      "cross_entropy_loss": 9.3699,
+      "bits_per_byte": 13.518,
+      "samples_evaluated": 10000,
+      "total_tokens": 985296
+    },
+    "diversity": {
+      "distinct_1": 0.3941,
+      "distinct_2": 0.8438,
+      "unique_unigrams": 10449,
+      "unique_bigrams": 21949,
+      "samples": 500
+    },
+    "generation": {
+      "temp_0.5": {
+        "num_samples": 100,
+        "examples": [
+          "एक प्राथमिक केंद्र एक एयरलाइन के लिए मुख्य केंद्र \u0017\u0003",
+          "2009 ड्राफ़्टके दौरान, ट्रिपल एच को स्मैकडाउन से र|Ʈҍÿ\u0003"
+        ]
+      },
+      "temp_1.0": {
+        "num_samples": 100,
+        "examples": [
+          "एक प्राथमिक केंद्र एक एयरलाइन के लिए मुख्य केंद्र ̌◔ûଐĕ઎Ƅ̎ɳޝठٯǚ࿉ᔓཏÚṈĐȭ",
+          "2009 ड्राफ़्टके दौरान, ट्रिपल एच को स्मैकडाउन से रĚปЗ᳅ബ\u000bுѤҩ௞☌̑♊ĕ๺ÛàÛ\u0003"
+        ]
+      },
+      "temp_1.5": {
+        "num_samples": 100,
+        "examples": [
+          "एक प्राथमिक केंद्र एक एयरलाइन के लिए मुख्य केंद्र ₧Ă׺ˋ፱ụȋᆸሟ͋ƌࡉᄐ܆≠à᳑මȡʤ",
+          "2009 ड्राफ़्टके दौरान, ट्रिपल एच को स्मैकडाउन से रԖఓ೭ǒ↮ᣧ≵ᥤ⎈ຘŋӍᏳ◯̱๼Ɔɝᣆ٫"
+        ]
+      }
+    },
+    "generation_quality": {
+      "bleu": 0.0,
+      "num_samples": 100,
+      "rouge_l": {
+        "fmeasure": 0.1927,
+        "samples": 200
+      },
+      "chrf": {
+        "score": 13.04,
+        "samples": 200
+      }
+    },
+    "attention": {
+      "early_layer_entropy": 3.5686,
+      "late_layer_entropy": 3.6365,
+      "samples_analyzed": 1
+    },
+    "compliance": {
+      "checkpoint_best": true,
+      "checkpoint_last": true,
+      "config": true,
+      "test_data": true,
+      "model_loaded": true
+    }
+  }
+}

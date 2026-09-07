@@ -1,0 +1,30 @@
+{
+  "telugu": {
+    "perplexity": 541.959317,
+    "ce_loss": 6.295191,
+    "bpb": 9.082041,
+    "samples_ppl": 8549,
+    "tokens_ppl": 366988,
+    "bleu": 9.570237,
+    "chrf": 83.794177,
+    "distinct_1": 0.759505,
+    "distinct_2": 0.957669,
+    "attention_entropy": 0,
+    "generation_samples": 500,
+    "tokenizer": "WordPiece (proper decoding)"
+  },
+  "bhojpuri": {
+    "perplexity": 1903.009128,
+    "ce_loss": 7.551192,
+    "bpb": 10.894067,
+    "samples_ppl": 8780,
+    "tokens_ppl": 381356,
+    "bleu": 15.785168,
+    "chrf": 81.443611,
+    "distinct_1": 0.538226,
+    "distinct_2": 0.947615,
+    "attention_entropy": 0,
+    "generation_samples": 500,
+    "tokenizer": "WordPiece (proper decoding)"
+  }
+}
