@@ -1,0 +1,90 @@
+{
+  "telugu_h": {
+    "0": {
+      "entropy_mean": 3.8781676292419434,
+      "entropy_std": 0.9350337386131287,
+      "distance_mean": 31.749971389770508,
+      "distance_std": 18.47449493408203,
+      "num_heads": 8
+    },
+    "1": {
+      "entropy_mean": 3.8781676292419434,
+      "entropy_std": 0.9350337386131287,
+      "distance_mean": 31.749324798583984,
+      "distance_std": 18.473880767822266,
+      "num_heads": 8
+    },
+    "2": {
+      "entropy_mean": 3.8781676292419434,
+      "entropy_std": 0.9350336790084839,
+      "distance_mean": 31.74991226196289,
+      "distance_std": 18.474544525146484,
+      "num_heads": 8
+    },
+    "3": {
+      "entropy_mean": 3.8781676292419434,
+      "entropy_std": 0.9350336790084839,
+      "distance_mean": 31.75004005432129,
+      "distance_std": 18.474655151367188,
+      "num_heads": 8
+    },
+    "4": {
+      "entropy_mean": 3.8781676292419434,
+      "entropy_std": 0.9350336790084839,
+      "distance_mean": 31.749914169311523,
+      "distance_std": 18.47459602355957,
+      "num_heads": 8
+    },
+    "5": {
+      "entropy_mean": 3.8781676292419434,
+      "entropy_std": 0.9350336790084839,
+      "distance_mean": 31.749935150146484,
+      "distance_std": 18.474584579467773,
+      "num_heads": 8
+    }
+  },
+  "bhojpuri_l": {
+    "0": {
+      "entropy_mean": 3.8180456161499023,
+      "entropy_std": 0.9240244626998901,
+      "distance_mean": 29.211164474487305,
+      "distance_std": 17.421689987182617,
+      "num_heads": 8
+    },
+    "1": {
+      "entropy_mean": 3.8299384117126465,
+      "entropy_std": 0.926041305065155,
+      "distance_mean": 29.866554260253906,
+      "distance_std": 17.17009162902832,
+      "num_heads": 8
+    },
+    "2": {
+      "entropy_mean": 3.8713390827178955,
+      "entropy_std": 0.9353244304656982,
+      "distance_mean": 31.311180114746094,
+      "distance_std": 18.25419044494629,
+      "num_heads": 8
+    },
+    "3": {
+      "entropy_mean": 3.87540864944458,
+      "entropy_std": 0.9350000619888306,
+      "distance_mean": 31.76800537109375,
+      "distance_std": 18.649883270263672,
+      "num_heads": 8
+    },
+    "4": {
+      "entropy_mean": 3.877422332763672,
+      "entropy_std": 0.9349692463874817,
+      "distance_mean": 31.674129486083984,
+      "distance_std": 18.49933624267578,
+      "num_heads": 8
+    },
+    "5": {
+      "entropy_mean": 3.877749443054199,
+      "entropy_std": 0.9349820017814636,
+      "distance_mean": 31.796497344970703,
+      "distance_std": 18.479190826416016,
+      "num_heads": 8
+    }
+  }
+}

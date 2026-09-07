@@ -112,3 +112,13 @@ bhojpuri/data/test_metadata.json
 logs/training_telugu.log
 logs/training_bhojpuri.log
 CLAUDE.md
+
+# PyTorch model checkpoints (large .pt files, auto-generated)
+*.pt
+telugu/model/outputs/
+bhojpuri/model/outputs/
+api_token.txt
+SidLMA
+telugu/train/kaggle_bundle/*
+
+bhojpuri/train/kaggle_bundle/*

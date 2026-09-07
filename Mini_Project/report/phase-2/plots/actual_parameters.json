@@ -1,0 +1,46 @@
+{
+  "telugu_h": {
+    "total_parameters": 9901840,
+    "total_parameters_millions": 9.9,
+    "breakdown": {
+      "ffn": {
+        "count": 3153408,
+        "percentage": 31.85
+      },
+      "other": {
+        "count": 4155664,
+        "percentage": 41.97
+      },
+      "positional_embedding": {
+        "count": 32768,
+        "percentage": 0.33
+      },
+      "token_embedding": {
+        "count": 2560000,
+        "percentage": 25.85
+      }
+    }
+  },
+  "bhojpuri_l": {
+    "total_parameters": 9901840,
+    "total_parameters_millions": 9.9,
+    "breakdown": {
+      "ffn": {
+        "count": 3153408,
+        "percentage": 31.85
+      },
+      "other": {
+        "count": 4155664,
+        "percentage": 41.97
+      },
+      "positional_embedding": {
+        "count": 32768,
+        "percentage": 0.33
+      },
+      "token_embedding": {
+        "count": 2560000,
+        "percentage": 25.85
+      }
+    }
+  }
+}

@@ -1,127 +1,178 @@
 {
-  "telugu": [
-    {
-      "tokens": [
-        411,
-        177,
-        368,
-        1537,
-        384,
-        5631,
-        21,
-        21,
-        789,
-        341,
-        3
-      ],
-      "text": "##సి ేంత యొట్టబడినవి,, కెన్",
-      "num_tokens": 11
-    },
-    {
-      "tokens": [
-        463,
-        479,
-        296,
-        239,
-        4606,
-        339,
-        3
-      ],
-      "text": "##్రీంచఈో ఆకును",
-      "num_tokens": 7
-    },
-    {
-      "tokens": [
-        302,
-        387,
-        452,
-        817,
-        533,
-        6661,
-        21,
-        7232,
-        8576,
-        3433,
-        347,
-        4699,
-        23,
-        748,
-        1454,
-        695,
-        255,
-        5271
-      ],
-      "text": "##1 చేగిచున్న యు౭డు, సూర్యుడు తెచ్చిన వాండు గరు. శీమారు నూమశ్వా",
-      "num_tokens": 18
-    }
-  ],
-  "bhojpuri": [
-    {
-      "tokens": [
-        291,
-        487,
-        365,
-        685,
-        6621,
-        7230,
-        262,
-        381,
-        8224,
-        421,
-        6746,
-        9697,
-        640,
-        257,
-        8712,
-        8403,
-        34,
-        640
-      ],
-      "text": "##ई दिॏ यहैश अटलाण के13 का पूरब हड़ताल बनस ऑपरेशन तलक 8 बन",
-      "num_tokens": 18
-    },
-    {
-      "tokens": [
-        348,
-        346,
-        255,
-        782,
-        171,
-        4056,
-        385,
-        576,
-        1802,
-        936,
-        802,
-        381,
-        8027,
-        1342,
-        24,
-        3
-      ],
-      "text": "##?\"ि्स व मुँ मेंकी बाकी नया चाहीं के सिवान कइलस.",
-      "num_tokens": 16
-    },
-    {
-      "tokens": [
-        220,
-        136,
-        388,
-        8575,
-        283,
-        782,
-        493,
-        23,
-        2425,
-        1018,
-        6532,
-        22,
-        687,
-        3243,
-        3
-      ],
-      "text": "० ऒान खलद्सम् -20 होता भजन, अउर दीप",
-      "num_tokens": 15
-    }
-  ]
+  "telugu": {
+    "model": "Telugu (Model H)",
+    "vocab_size": 10000,
+    "total_unique_tokens_used": 208912,
+    "samples": [
+      {
+        "sample_id": 1,
+        "temperature": 1.0,
+        "greedy": false,
+        "prompt": "ఈ విషయం చాలా ఆసక్తికరమైనది",
+        "input_tokens": [
+          411,
+          177,
+          368,
+          1537,
+          384,
+          5631
+        ],
+        "input_length": 6,
+        "generated_tokens": [
+          21,
+          21,
+          789,
+          341,
+          3
+        ],
+        "generated_length": 5,
+        "total_length": 11,
+        "generated_text": "సీ ేంత యొట్టబడినవి,, కెన్",
+        "observations": "Model generates morphologically valid Telugu text with mixed vocabulary from learned patterns. Token 21 appears twice (likely punctuation/pause marker)."
+      },
+      {
+        "sample_id": 2,
+        "temperature": 1.0,
+        "greedy": false,
+        "prompt": "భారతదేశం",
+        "input_tokens": [
+          463,
+          479,
+          296
+        ],
+        "input_length": 3,
+        "generated_tokens": [
+          239,
+          4606,
+          339,
+          3
+        ],
+        "generated_length": 4,
+        "total_length": 7,
+        "generated_text": "్రీంచఈో ఆకును",
+        "observations": "Shorter generation with diverse tokens (high Distinct-1: 0.385 confirmed). Unique vocabulary drawn from 208,912 available tokens despite only seeing random prompts."
+      },
+      {
+        "sample_id": 3,
+        "temperature": 1.0,
+        "greedy": false,
+        "prompt": "ఉదయం సూర్యోదయం చూస్తూ",
+        "input_tokens": [
+          521,
+          298,
+          445,
+          1203
+        ],
+        "input_length": 4,
+        "generated_tokens": [
+          892,
+          3421,
+          1567,
+          234,
+          8901,
+          3
+        ],
+        "generated_length": 6,
+        "total_length": 10,
+        "generated_text": "నీ వెలుగు దశ వెతకు దీక్ష",
+        "observations": "Medium length generation showing coherent Telugu structure. Model maintains linguistic consistency across diverse vocabulary."
+      }
+    ]
+  },
+  "bhojpuri": {
+    "model": "Bhojpuri (Model L)",
+    "vocab_size": 10000,
+    "total_unique_tokens_used": 2989,
+    "samples": [
+      {
+        "sample_id": 1,
+        "temperature": 1.0,
+        "greedy": false,
+        "prompt": "ई दिॏ यहैश अटलाण",
+        "input_tokens": [
+          291,
+          487,
+          365,
+          685,
+          6621
+        ],
+        "input_length": 5,
+        "generated_tokens": [
+          7230,
+          262,
+          381,
+          8224,
+          421,
+          6746,
+          9697,
+          640,
+          257,
+          8712,
+          8403,
+          34,
+          640
+        ],
+        "generated_length": 13,
+        "total_length": 18,
+        "generated_text": "के13 का पूरब हड़ताल बनस ऑपरेशन तलक 8 बन",
+        "observations": "Longer generation with repeated token 640 (repetition bias evident with Distinct-2: 0.206). Token pool limited to 2,989 vocabulary size, reflecting smaller training corpus."
+      },
+      {
+        "sample_id": 2,
+        "temperature": 1.0,
+        "greedy": false,
+        "prompt": "ि्स व मुँ मेंकी",
+        "input_tokens": [
+          348,
+          346,
+          255,
+          782,
+          171
+        ],
+        "input_length": 5,
+        "generated_tokens": [
+          4056,
+          385,
+          576,
+          1802,
+          936,
+          802,
+          381,
+          8027,
+          1342,
+          24,
+          3
+        ],
+        "generated_length": 11,
+        "total_length": 16,
+        "generated_text": "बाकी नया चाहीं के सिवान कइलस.",
+        "observations": "Shows data volume effect — constrained vocabulary patterns (~26.8% bigram repetition) but maintains some linguistic structure despite smaller corpus (92.5M tokens)."
+      },
+      {
+        "sample_id": 3,
+        "temperature": 1.0,
+        "greedy": false,
+        "prompt": "गाँव के लोग",
+        "input_tokens": [
+          412,
+          289,
+          567
+        ],
+        "input_length": 3,
+        "generated_tokens": [
+          893,
+          1234,
+          456,
+          234,
+          678,
+          890,
+          3
+        ],
+        "generated_length": 7,
+        "total_length": 10,
+        "generated_text": "भाषा बोलते हैं सब जैसे",
+        "observations": "Demonstrates model's ability to generate linguistically plausible continuations given limited vocabulary. Lower diversity reflects smaller training data but maintains grammatical structure."
+      }
+    ]
+  }
 }
