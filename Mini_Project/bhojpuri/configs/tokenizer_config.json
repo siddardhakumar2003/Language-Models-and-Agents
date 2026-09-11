@@ -2,7 +2,7 @@
   "language": "bhojpuri",
   "model_type": "wordpiece",
   "tokenizer_path": "../tokenizer/full_wordPiece_level/bhojpuri_wp_tokenizer.json",
-  "vocab_size": 32000,
+  "vocab_size": 16000,
   "special_tokens": {
     "pad_token": "[PAD]",
     "unk_token": "[UNK]",

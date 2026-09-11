@@ -2,7 +2,7 @@
   "language": "telugu",
   "model_type": "wordpiece",
   "tokenizer_path": "../tokenizer/full_wordPiece_level/telugu_wp_tokenizer.json",
-  "vocab_size": 50000,
+  "vocab_size": 20000,
   "special_tokens": {
     "pad_token": "[PAD]",
     "unk_token": "[UNK]",

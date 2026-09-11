@@ -67,7 +67,7 @@ class CausalSelfAttention(nn.Module):
         scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(self.d_k)
 
         if seq_len > self.causal_mask.shape[0]:
-            self.register_buffer("causal_mask", self._make_causal_mask(seq_len), persistent=False)
+            self.register_buffer("causal_mask", self._make_causal_mask(seq_len).to(x.device), persistent=False)
         mask = self.causal_mask[:seq_len, :seq_len]
         scores = scores + mask
 
