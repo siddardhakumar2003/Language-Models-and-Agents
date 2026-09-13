@@ -1,0 +1,9 @@
+{
+  "language": "telugu",
+  "pretrained_test_accuracy": 0.0,
+  "finetuned_test_accuracy": 0.276,
+  "best_val_loss": 3.7910726207953234,
+  "best_val_ppl": 44.30389607918492,
+  "best_step": 1000,
+  "epochs_completed": 5
+}

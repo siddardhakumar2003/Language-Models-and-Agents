@@ -1,0 +1,9 @@
+{
+  "language": "bhojpuri",
+  "pretrained_test_accuracy": 0.0,
+  "finetuned_test_accuracy": 0.328,
+  "best_val_loss": 3.4990073981677443,
+  "best_val_ppl": 33.082597808644394,
+  "best_step": 500,
+  "epochs_completed": 5
+}

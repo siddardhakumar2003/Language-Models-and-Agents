@@ -120,7 +120,9 @@ telugu/model/outputs/
 bhojpuri/model/outputs/
 telugu/train/kaggle_bundle/*
 bhojpuri/train/kaggle_bundle/*
-
+telugu/finetune/data/*
+bhojpuri/finetune/data/*
 # API tokens and temp directories
 api_token.txt
 SidLMA/*
+.kaggle_data_staging

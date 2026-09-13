@@ -1,0 +1,18 @@
+{
+  "language": "telugu",
+  "training_phase": "reasoning_finetuning",
+  "batch_size": 16,
+  "learning_rate": 2e-5,
+  "weight_decay": 0.01,
+  "num_epochs": 20,
+  "warmup_steps": 50,
+  "optimizer": "adamw",
+  "scheduler": "cosine_with_warmup",
+  "loss_function": "cross_entropy",
+  "max_grad_norm": 1.0,
+  "seed": 42,
+  "device": "auto",
+  "num_workers": 2,
+  "amp": true,
+  "description": "Phase 3 Telugu reasoning finetuning: starts from the Phase 2 pretrained checkpoint, tokenizer/vocab fixed, finetunes on the synthetic comparative-reasoning QA set (8000 train examples, see finetune/data/). Loss is masked to answer tokens only. Lower learning_rate than pretraining since this is adapting an already-trained model to a narrow templated task, not learning language from scratch. num_epochs raised to 20 (full pass over all 8000 train examples per epoch, ~500 steps/epoch) since val loss on the prior 5-epoch run bottomed out around epoch 2 then rose (overfitting on the templated data) -- finetune.py now selects checkpoint_best.pt (lowest val loss) for the final test-set accuracy, so extra epochs searching for a better minimum are free of the overfitting risk that motivated the original epoch count."
+}

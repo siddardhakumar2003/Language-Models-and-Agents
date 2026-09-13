@@ -1,0 +1,5 @@
+{"step": 500, "epoch": 1, "train_loss": 4.4339, "val_loss": 4.0333, "val_ppl": 56.45, "lr": "1.92e-05", "timestamp": "2026-09-12T07:01:35.953084"}
+{"step": 1000, "epoch": 2, "train_loss": 2.7064, "val_loss": 3.7911, "val_ppl": 44.3, "lr": "1.64e-05", "timestamp": "2026-09-12T07:02:19.525869"}
+{"step": 1500, "epoch": 3, "train_loss": 2.1444, "val_loss": 3.8816, "val_ppl": 48.5, "lr": "1.20e-05", "timestamp": "2026-09-12T07:03:03.509940"}
+{"step": 2000, "epoch": 4, "train_loss": 1.8943, "val_loss": 3.9644, "val_ppl": 52.69, "lr": "6.30e-06", "timestamp": "2026-09-12T07:03:46.914411"}
+{"step": 2500, "epoch": 5, "train_loss": 1.779, "val_loss": 4.0154, "val_ppl": 55.45, "lr": "1.22e-21", "timestamp": "2026-09-12T07:04:29.592318"}
