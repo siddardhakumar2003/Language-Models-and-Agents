@@ -41,12 +41,26 @@ PERSON_NAMES = [
     "పూర్ణిమ", "మహేష్", "స్వాతి", "రాజేష్", "భారతి", "వెంకట్", "రేఖ", "శంకర్",
     "లత", "గణేష్", "ఉమ", "రామకృష్ణ", "జ్యోతి", "నాగరాజు", "శైలజ", "సాయి",
     "అనూష", "హరి", "పద్మ", "వేణు", "సుమతి", "చందు", "విద్య", "శివ", "రమ్య", "అర్జున్",
+    # Second batch: widens the entity pool so no single name dominates the answer
+    # distribution and held-out test names have more train-side analogues to generalize from.
+    "నాగేశ్వర్", "సుబ్బారావు", "వెంకటలక్ష్మి", "రామలక్ష్మి", "సురేష్", "రామారావు",
+    "జానకి", "పద్మావతి", "శ్రీనివాస్", "వెంకటరమణ", "అనసూయ", "భాస్కర్", "రాఘవ",
+    "సుజాత", "మల్లికార్జున్", "సరళ", "కృష్ణమూర్తి", "విజయలక్ష్మి", "రామ్మోహన్",
+    "గోవింద్", "శశి", "రామకుమార్", "ప్రియ", "ఉదయ్", "చంద్రిక", "రాజశేఖర్", "కమల",
+    "శ్రీదేవి", "రామనాథ్", "సుభాష్", "అనురాధ", "వెంకటేశ్వరరావు", "గాయత్రి",
+    "రాజేంద్ర", "సుమన్", "మోహన్రావు", "రాజ్యలక్ష్మి", "సాయిరామ్", "పవన్", "దుర్గ",
+    "రామస్వామి", "కళ్యాణి", "శేఖర్", "విమల", "రామరాజు", "సునంద", "అశోక్",
+    "మంజుల", "రామచంద్ర", "సుధాకర్",
 ]
 
 OBJECT_NAMES = [
     "పుస్తకం", "కారు", "సైకిల్", "మామిడిపండు", "ఇల్లు", "ఫోన్", "కుర్చీ",
     "బ్యాగ్", "వాచ్", "టేబుల్", "గడియారం", "ల్యాప్‌టాప్", "గొడుగు", "బూట్లు",
     "పెన్ను", "బల్ల", "అద్దం", "బొమ్మ", "పెట్టె", "తువ్వాలు",
+    # Second batch (see PERSON_NAMES comment above).
+    "కంప్యూటర్", "టీవీ", "రేడియో", "కెమెరా", "స్కూటర్", "బస్సు", "రైలు",
+    "విమానం", "పడవ", "మంచం", "సోఫా", "అల్మారా", "తలుపు", "కిటికీ", "దీపం",
+    "బకెట్", "గిన్నె", "చెంచా", "కత్తి", "గొడ్డలి",
 ]
 
 # ============================================================================
@@ -61,6 +75,22 @@ ATTRIBUTES = {
 }
 
 SPECIAL_TOKENS = ["[PAD]", "[UNK]", "[BOS]", "[EOS]"]
+
+# Mode weights (not uniform): "equal" always answers the single fixed token "సమానం"
+# regardless of which entities are involved, and transitive's "yesno" sub-case always
+# answers "అవును" (A>B>C implies A>C by construction) -- both are answer-token-imbalance
+# sinks that teach the model nothing about reading values/copying names, and uniform
+# sampling let them dominate the answer-token distribution enough to cause the finetuned
+# model to collapse onto those two fixed tokens instead of learning to compare/copy. Down-
+# weighting them here (and pairing with class-weighted loss in finetune.py) fixes that.
+MODE_WEIGHTS = {
+    "pairwise_value": 0.30,
+    "pairwise_yesno": 0.25,
+    "transitive": 0.20,
+    "three_value": 0.20,
+    "equal": 0.05,
+}
+TRANSITIVE_ASK_WEIGHTS = {"max": 0.4, "min": 0.4, "yesno": 0.2}
 
 
 def split_pool(names, seed):
@@ -197,7 +227,7 @@ def build_examples(split_name, person_pool, object_pool, n_target, rng, allow_he
             continue
 
         held_out = allow_held_out and rng.random() < 0.25
-        mode = rng.choice(["pairwise_value", "pairwise_yesno", "transitive", "three_value", "equal"])
+        mode = rng.choices(list(MODE_WEIGHTS.keys()), weights=list(MODE_WEIGHTS.values()), k=1)[0]
 
         if mode == "pairwise_value" or mode == "pairwise_yesno":
             A, B = rng.sample(pool, 2)
@@ -209,7 +239,7 @@ def build_examples(split_name, person_pool, object_pool, n_target, rng, allow_he
 
         elif mode == "transitive":
             A, B, C = rng.sample(pool, 3)
-            ask = rng.choice(["max", "min", "yesno"])
+            ask = rng.choices(list(TRANSITIVE_ASK_WEIGHTS.keys()), weights=list(TRANSITIVE_ASK_WEIGHTS.values()), k=1)[0]
             q, ans, tid = tpl_transitive_relation(attr_key, A, B, C, ask, held_out)
 
         elif mode == "three_value":

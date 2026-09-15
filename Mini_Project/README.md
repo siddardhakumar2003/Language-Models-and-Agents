@@ -124,17 +124,20 @@ report/phase-2/
 ├── report.md (28 KB) ✅ PRIMARY REPORT - Markdown format
 ├── report.tex (33 KB) [LaTeX backup]
 ├── generated_samples.json ✅ Model-generated samples
-└── plots/ (35 PNG files) ✅ Comprehensive visualizations
-    ├── final_comparison.png (Training & Val metrics)
-    ├── telugu_training_history.png (4-panel history)
-    ├── bhojpuri_training_history.png (4-panel history)
-    ├── 03_convergence_rate.png (Normalized convergence)
-    ├── 02_loss_ppl_comparison.png (Final validation)
+└── plots/ ✅ Real visualizations (see report.md Sec 5-6 correction notes for what
+              replaced what -- several plots previously listed here, e.g.
+              final_comparison.png/telugu_training_history.png/bhojpuri_training_history.png/
+              03_convergence_rate.png/02_loss_ppl_comparison.png, were built from hand-typed
+              fabricated data, not real training logs; superseded by training_curves/ below)
+    ├── training_curves/ (real, all 4 pretrained models: low+high-param x Telugu+Bhojpuri)
+    │   ├── {telugu,bhojpuri}_{low,high}_loss_curve.png (per-model train/val loss + PPL)
+    │   ├── {telugu,bhojpuri}_low_vs_high_comparison.png
+    │   └── all_models_comparison.png
     ├── parameter_breakdown_detailed.png
     ├── parameter_comparison.png
-    └── attention_complete/
-        ├── telugu/ (12 heatmap files: layers 0-5 all_heads + avg)
-        ├── bhojpuri/ (12 heatmap files: layers 0-5 all_heads + avg)
+    └── attention_complete/ (real, from an actual forward pass on the real checkpoints)
+        ├── telugu/{low,high}_parameter_model/ (all_heads + avg, every layer)
+        ├── bhojpuri/ (all_heads + avg, every layer)
         └── complete_attention_metrics.json
 ```
 
@@ -554,10 +557,51 @@ Translation infrastructure for Bhojpuri data expansion via English→Bhojpuri an
 
 ---
 
-## Next Steps: Phase 3b (Remaining ~1 week)
+## Phase 3: Reasoning Finetuning, Attention Analysis & Final Report
 
-1. **Reasoning Task Dataset** - Create semantic similarity & QA datasets
-2. **Model Finetuning** - Adapt both models to reasoning tasks
-3. **Attention Analysis** - Deep dive into learned representations
-4. **Final Report** - Comprehensive H vs L comparison
-5. **Submission** - Deadline 2026-09-16 11:59 PM
+Full writeup: [`report/phase-3/report.md`](report/phase-3/report.md).
+
+**Reasoning finetuning** (`{telugu,bhojpuri}/finetune/`): synthetic comparative-reasoning QA
+dataset generated programmatically (`generate_reasoning_data.py`), 10K examples per language
+(8000/1000/1000 train/val/test), with train-test entity-name and phrasing leakage avoidance.
+Finetuned from each language's own Phase 2 pretrained checkpoint via
+`finetune_kaggle.ipynb` / `finetune.py`, tokenizer/vocab kept fixed.
+
+**Attention analysis** (`report/phase-3/code/attention_analysis.py`): real per-head attention
+extraction (`model(input_ids, return_attn=True)`) on the actual trained checkpoints -- pretrained
+vs. finetuned, early layer vs. late layer, entropy and mean-attention-distance per head/layer.
+Outputs in `report/phase-3/plots/attention/` and `report/phase-3/metrics/`.
+
+**Reproduction steps:**
+```bash
+# 1. Generate the reasoning dataset (both languages)
+python3 telugu/finetune/generate_reasoning_data.py --num-samples 10000 --seed 42
+python3 bhojpuri/finetune/generate_reasoning_data.py --num-samples 10000 --seed 42
+
+# 2. Finetune on Kaggle: run {telugu,bhojpuri}/finetune/finetune_kaggle.ipynb
+#    (ROOT_DIR -> that language's kaggle_bundle dataset, PRETRAINED_CKPT -> its Phase 2 checkpoint)
+
+# 3. Real attention analysis (pretrained vs. finetuned, both languages, runs on CPU)
+python3 report/phase-3/code/attention_analysis.py --language both
+```
+
+**Google Drive links (checkpoints):**
+
+| Checkpoint | Link |
+|---|---|
+| Telugu pretrained, high-parameter (Model H) | ⚠️ TODO -- upload `telugu/model/outputs/checkpoints/checkpoint_best.pt` and paste the shareable link here |
+| Telugu pretrained, low-parameter (Model H ablation) | ⚠️ TODO -- upload `telugu/model/outputs/submission/checkpoint_best.pt` |
+| Telugu finetuned, high-parameter (Model H) | ⚠️ TODO -- upload `telugu/finetune/outputs/finetune_checkpoints/checkpoint_best.pt` |
+| Telugu finetuned, low-parameter (Model H ablation) | ⚠️ TODO -- upload `telugu/finetune/outputs/finetune_checkpoints_low/checkpoint_best.pt` once `telugu_finetune_low.ipynb` has been run |
+| Bhojpuri pretrained (Model L) | ⚠️ TODO -- upload `bhojpuri/model/outputs/checkpoints/checkpoint_best.pt` |
+| Bhojpuri finetuned (Model L) | ⚠️ TODO -- upload `bhojpuri/finetune/outputs/finetune_checkpoints/checkpoint_best.pt` |
+
+Required by the project spec's submission checklist and not yet done as of this commit --
+upload each checkpoint to Google Drive, set sharing to "anyone with the link," and replace the
+TODOs above before the final submission.
+
+**Outstanding before final submission** (see `report/phase-3/report.md` Sec. 4 for detail):
+finetuning notebooks need a re-run with the rebalanced data + weighted loss fix described in
+the report; the attention analysis should be re-run against the resulting checkpoints; the
+Telugu pretrained-checkpoint situation (a currently-underperforming retrain vs. an earlier
+better-converged checkpoint) needs a decision; and the Drive links above need filling in.

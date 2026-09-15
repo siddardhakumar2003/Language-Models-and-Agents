@@ -1,90 +1,199 @@
 {
   "telugu_h": {
-    "0": {
-      "entropy_mean": 3.8781676292419434,
-      "entropy_std": 0.9350337386131287,
-      "distance_mean": 31.749971389770508,
-      "distance_std": 18.47449493408203,
-      "num_heads": 8
+    "low_parameter_model": {
+      "0": {
+        "entropy_mean": 2.3175,
+        "entropy_std": 0.3981,
+        "distance_mean": 6.5374,
+        "distance_std": 2.8765,
+        "num_heads": 8
+      },
+      "1": {
+        "entropy_mean": 2.3175,
+        "entropy_std": 0.3981,
+        "distance_mean": 6.5374,
+        "distance_std": 2.8765,
+        "num_heads": 8
+      },
+      "2": {
+        "entropy_mean": 2.3175,
+        "entropy_std": 0.3981,
+        "distance_mean": 6.5375,
+        "distance_std": 2.8765,
+        "num_heads": 8
+      },
+      "3": {
+        "entropy_mean": 2.3175,
+        "entropy_std": 0.3981,
+        "distance_mean": 6.5375,
+        "distance_std": 2.8765,
+        "num_heads": 8
+      },
+      "4": {
+        "entropy_mean": 2.3175,
+        "entropy_std": 0.3981,
+        "distance_mean": 6.5375,
+        "distance_std": 2.8765,
+        "num_heads": 8
+      },
+      "5": {
+        "entropy_mean": 2.3175,
+        "entropy_std": 0.3981,
+        "distance_mean": 6.5375,
+        "distance_std": 2.8765,
+        "num_heads": 8
+      },
+      "_meta": {
+        "checkpoint": "telugu/model/outputs/submission/checkpoint_best.pt",
+        "checkpoint_step": 3342524,
+        "checkpoint_best_val_ppl": 881.9034324929845,
+        "params": 7341840,
+        "num_layers": 6
+      }
     },
-    "1": {
-      "entropy_mean": 3.8781676292419434,
-      "entropy_std": 0.9350337386131287,
-      "distance_mean": 31.749324798583984,
-      "distance_std": 18.473880767822266,
-      "num_heads": 8
-    },
-    "2": {
-      "entropy_mean": 3.8781676292419434,
-      "entropy_std": 0.9350336790084839,
-      "distance_mean": 31.74991226196289,
-      "distance_std": 18.474544525146484,
-      "num_heads": 8
-    },
-    "3": {
-      "entropy_mean": 3.8781676292419434,
-      "entropy_std": 0.9350336790084839,
-      "distance_mean": 31.75004005432129,
-      "distance_std": 18.474655151367188,
-      "num_heads": 8
-    },
-    "4": {
-      "entropy_mean": 3.8781676292419434,
-      "entropy_std": 0.9350336790084839,
-      "distance_mean": 31.749914169311523,
-      "distance_std": 18.47459602355957,
-      "num_heads": 8
-    },
-    "5": {
-      "entropy_mean": 3.8781676292419434,
-      "entropy_std": 0.9350336790084839,
-      "distance_mean": 31.749935150146484,
-      "distance_std": 18.474584579467773,
-      "num_heads": 8
+    "high_parameter_model": {
+      "0": {
+        "entropy_mean": 2.1978,
+        "entropy_std": 0.4102,
+        "distance_mean": 5.7431,
+        "distance_std": 2.6569,
+        "num_heads": 8
+      },
+      "1": {
+        "entropy_mean": 2.1044,
+        "entropy_std": 0.419,
+        "distance_mean": 5.7079,
+        "distance_std": 2.6401,
+        "num_heads": 8
+      },
+      "2": {
+        "entropy_mean": 2.0547,
+        "entropy_std": 0.4428,
+        "distance_mean": 5.664,
+        "distance_std": 2.6495,
+        "num_heads": 8
+      },
+      "3": {
+        "entropy_mean": 2.1905,
+        "entropy_std": 0.4091,
+        "distance_mean": 5.7725,
+        "distance_std": 2.6598,
+        "num_heads": 8
+      },
+      "4": {
+        "entropy_mean": 2.1954,
+        "entropy_std": 0.4098,
+        "distance_mean": 5.7761,
+        "distance_std": 2.6644,
+        "num_heads": 8
+      },
+      "5": {
+        "entropy_mean": 2.1972,
+        "entropy_std": 0.4101,
+        "distance_mean": 5.7744,
+        "distance_std": 2.6631,
+        "num_heads": 8
+      },
+      "6": {
+        "entropy_mean": 2.1983,
+        "entropy_std": 0.4102,
+        "distance_mean": 5.754,
+        "distance_std": 2.6582,
+        "num_heads": 8
+      },
+      "7": {
+        "entropy_mean": 2.1983,
+        "entropy_std": 0.4102,
+        "distance_mean": 5.7572,
+        "distance_std": 2.6603,
+        "num_heads": 8
+      },
+      "8": {
+        "entropy_mean": 2.1986,
+        "entropy_std": 0.4102,
+        "distance_mean": 5.7514,
+        "distance_std": 2.6581,
+        "num_heads": 8
+      },
+      "9": {
+        "entropy_mean": 2.1986,
+        "entropy_std": 0.4102,
+        "distance_mean": 5.7517,
+        "distance_std": 2.6579,
+        "num_heads": 8
+      },
+      "_meta": {
+        "checkpoint": "telugu/model/outputs/checkpoints/checkpoint_best.pt",
+        "checkpoint_step": 855272,
+        "checkpoint_best_val_ppl": 4119.8111630723415,
+        "params": 25543712,
+        "num_layers": 10
+      }
     }
   },
   "bhojpuri_l": {
     "0": {
-      "entropy_mean": 3.8180456161499023,
-      "entropy_std": 0.9240244626998901,
-      "distance_mean": 29.211164474487305,
-      "distance_std": 17.421689987182617,
+      "entropy_mean": 2.4075,
+      "entropy_std": 0.3282,
+      "distance_mean": 7.2126,
+      "distance_std": 2.406,
       "num_heads": 8
     },
     "1": {
-      "entropy_mean": 3.8299384117126465,
-      "entropy_std": 0.926041305065155,
-      "distance_mean": 29.866554260253906,
-      "distance_std": 17.17009162902832,
+      "entropy_mean": 2.2271,
+      "entropy_std": 0.3015,
+      "distance_mean": 5.8442,
+      "distance_std": 1.6889,
       "num_heads": 8
     },
     "2": {
-      "entropy_mean": 3.8713390827178955,
-      "entropy_std": 0.9353244304656982,
-      "distance_mean": 31.311180114746094,
-      "distance_std": 18.25419044494629,
+      "entropy_mean": 2.205,
+      "entropy_std": 0.334,
+      "distance_mean": 6.9914,
+      "distance_std": 2.3681,
       "num_heads": 8
     },
     "3": {
-      "entropy_mean": 3.87540864944458,
-      "entropy_std": 0.9350000619888306,
-      "distance_mean": 31.76800537109375,
-      "distance_std": 18.649883270263672,
+      "entropy_mean": 2.3977,
+      "entropy_std": 0.3321,
+      "distance_mean": 7.581,
+      "distance_std": 2.5403,
       "num_heads": 8
     },
     "4": {
-      "entropy_mean": 3.877422332763672,
-      "entropy_std": 0.9349692463874817,
-      "distance_mean": 31.674129486083984,
-      "distance_std": 18.49933624267578,
+      "entropy_mean": 2.4274,
+      "entropy_std": 0.3303,
+      "distance_mean": 7.4219,
+      "distance_std": 2.4713,
       "num_heads": 8
     },
     "5": {
-      "entropy_mean": 3.877749443054199,
-      "entropy_std": 0.9349820017814636,
-      "distance_mean": 31.796497344970703,
-      "distance_std": 18.479190826416016,
+      "entropy_mean": 2.4691,
+      "entropy_std": 0.3234,
+      "distance_mean": 7.4932,
+      "distance_std": 2.4856,
       "num_heads": 8
+    },
+    "6": {
+      "entropy_mean": 2.4716,
+      "entropy_std": 0.323,
+      "distance_mean": 7.5286,
+      "distance_std": 2.4838,
+      "num_heads": 8
+    },
+    "7": {
+      "entropy_mean": 2.4719,
+      "entropy_std": 0.323,
+      "distance_mean": 7.5427,
+      "distance_std": 2.4865,
+      "num_heads": 8
+    },
+    "_meta": {
+      "checkpoint": "bhojpuri/model/outputs/checkpoints/checkpoint_best.pt",
+      "checkpoint_step": 525800,
+      "checkpoint_best_val_ppl": 814.4792329740957,
+      "params": 15082240,
+      "num_layers": 8
     }
   }
 }

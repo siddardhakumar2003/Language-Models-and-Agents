@@ -1,0 +1,28 @@
+{
+  "language": "telugu",
+  "training_phase": "reasoning_finetuning_low_parameter_ablation",
+  "batch_size": 4,
+  "learning_rate": 5e-06,
+  "weight_decay": 0.01,
+  "num_epochs": 20,
+  "warmup_steps": 50,
+  "optimizer": "adamw",
+  "scheduler": "cosine_with_warmup",
+  "loss_function": "cross_entropy",
+  "max_grad_norm": 1.0,
+  "seed": 42,
+  "device": "auto",
+  "num_workers": 2,
+  "amp": true,
+  "model_architecture": {
+    "vocab_size": 10000,
+    "d_model": 256,
+    "num_layers": 6,
+    "num_heads": 8,
+    "d_ff": 1024,
+    "max_seq_len": 128
+  },
+  "tokenizer_filename": "full_wordPiece_level/telugu_wp_tokenizer_low.json",
+  "tokenizer_config_filename": "tokenizer_config_low.json",
+  "description": "Low-parameter ablation: finetunes the Phase 2 SUBMISSION checkpoint (6 layers, 10K WordPiece vocab, 7.34M params, PPL 881.9 -- telugu/model/outputs/submission/checkpoint_best.pt) instead of the larger, currently-in-progress 25.5M-param/20K-vocab checkpoint that finetune_config.json targets. Same LR/epochs/schedule as finetune_config.json, but batch_size is deliberately smaller (4 vs 16): a first run at batch_size=16 (500 steps/epoch) picked checkpoint_best.pt at step 500/epoch 1 -- the very first validation point -- and that checkpoint predicted only EOS for every single test example (0% accuracy across all question types, not just the collapsed-but-nonempty failure mode finetune_config.json's run hit). The smaller low-parameter model evidently overfits this dataset within just 500 steps, worse than the bigger model does, so the 'lowest val loss' checkpoint-selection logic was locking in before the model had learned the QA prompt format at all -- it had literally never seen 'ప్రశ్న: ...సమాధానం:' before finetuning started. batch_size=4 gives 2000 steps/epoch (4x the gradient updates) before the first validation checkpoint, so there's a real chance to learn the task format before overfitting sets in. If this still fails, the next lever to try is more warmup_steps or a lower learning_rate, in that order. Requires the low-parameter checkpoint attached as a separate Kaggle input dataset (PRETRAINED_CKPT in telugu_finetune_low.ipynb) since it's a different set of weights from the one finetune_kaggle.ipynb uses. Does not modify finetune_config.json or the default finetuning path in any way. Reasoning dataset size raised 10K->20K samples (8000->16000 train examples) since the model revisits the same train set num_epochs=20 times and test uses entirely disjoint entity names by design -- more unique (name,value) combinations reduces the risk of memorizing train-specific entities instead of learning the general compare-and-pick skill, and also raises steps/epoch (4000 at batch_size=4, up from 2000) which further helps the EOS-collapse-escape fix. learning_rate dropped 2e-05->5e-06: with the batch_size/data-size fixes above, total_steps grew to 80,000, which stretches the cosine LR schedule so it barely decays for a long time in absolute step terms (verified: at 2e-05 peak, LR was still 99.7% of peak at step 4000 -- end of epoch 1 -- and didnt reach even half its peak value until step ~53,350, roughly epoch 13 of 20). Empirically, checkpoint_best.pt got stuck at epoch 1 across the full 20-epoch run: the model quickly learned to answer every question with a yes/no-shaped token (the easiest, most frequent remaining answer class) and never recovered enough to learn the harder name-comparison/copy skill needed for the other 6 of 8 question types, which stayed at exactly 0% throughout. A 4x lower peak LR keeps the same schedule shape but reduces the absolute magnitude of updates during that long near-peak phase, aiming to avoid prematurely overfitting to the yes/no shortcut before the harder skill has a chance to develop."
+}

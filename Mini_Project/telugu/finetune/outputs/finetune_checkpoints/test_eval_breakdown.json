@@ -1,0 +1,18 @@
+{
+  "checkpoint_used": "/kaggle/working/finetune_checkpoints/checkpoint_best.pt",
+  "checkpoint_step": 4000,
+  "checkpoint_epoch": 1,
+  "overall_accuracy": 0.0905,
+  "held_out_accuracy": 0.0942622950819672,
+  "seen_template_accuracy": 0.08796296296296297,
+  "by_question_type": {
+    "transitive_yesno": 0.16853932584269662,
+    "pairwise_value": 0.0,
+    "transitive_max": 0.0,
+    "transitive_min": 0.0,
+    "pairwise_yesno": 0.3253968253968254,
+    "three_superlative_min": 0.0,
+    "equal": 0.0,
+    "three_superlative_max": 0.0
+  }
+}

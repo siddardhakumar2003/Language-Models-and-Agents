@@ -45,12 +45,25 @@ PERSON_NAMES = [
     "विनोद", "शांति", "प्रकाश", "ममता", "सुरेश", "इंदु", "महेश", "उर्मिला",
     "नरेश", "सुशीला", "जगदीश", "पार्वती", "हरीश", "ललिता", "गोपाल", "कुसुम",
     "छोटू", "बबिता", "मुन्ना", "सरोज", "रामू", "कल्पना", "बिनोद", "अनीता", "श्याम", "रीता",
+    # Second batch: widens the entity pool so no single name dominates the answer
+    # distribution and held-out test names have more train-side analogues to generalize from.
+    "सुरेन्द्र", "धर्मेंद्र", "बृजेश", "मनोज", "राजेश", "अशोक", "विवेक", "दीपक",
+    "संजय", "अरुण", "यशोदा", "कौशल्या", "मंजू", "सुधा", "निर्मला", "वंदना",
+    "प्रेमा", "कुंती", "गंगा", "यमुना", "बसंती", "फूलमती", "चमेली", "गुलाब",
+    "मालती", "सुनील", "अमित", "विकास", "रोहित", "सोनू", "पिंटू", "गुड्डू",
+    "बंटी", "चुन्नू", "टिंकू", "राजा", "बाबू", "लल्लू", "गुड़िया", "सोनी",
+    "पिंकी", "बेबी", "मुनिया", "रानी", "चंदा", "सरला", "विमला", "कमली",
+    "सुमन", "अनुराधा",
 ]
 
 OBJECT_NAMES = [
     "किताब", "गाड़ी", "साइकिल", "आम", "घर", "फोन", "कुर्सी",
     "बैग", "घड़ी", "मेज", "छाता", "लैपटॉप", "जूता", "कलम",
     "आईना", "खिलौना", "बक्सा", "तौलिया", "टोकरी", "थाली",
+    # Second batch (see PERSON_NAMES comment above).
+    "कंप्यूटर", "टीवी", "रेडियो", "कैमरा", "स्कूटर", "बस", "रेल",
+    "हवाईजहाज", "नाव", "खटिया", "सोफा", "अलमारी", "दरवाजा", "खिड़की",
+    "दीया", "बाल्टी", "कटोरा", "चम्मच", "छुरी", "कुल्हाड़ी",
 ]
 
 # ============================================================================
@@ -65,6 +78,22 @@ ATTRIBUTES = {
 }
 
 SPECIAL_TOKENS = ["[PAD]", "[UNK]", "[BOS]", "[EOS]"]
+
+# Mode weights (not uniform): "equal" always answers the single fixed token "बराबर"
+# regardless of which entities are involved, and transitive's "yesno" sub-case always
+# answers "हँ" (A>B>C implies A>C by construction) -- both are answer-token-imbalance
+# sinks that teach the model nothing about reading values/copying names, and uniform
+# sampling let them dominate the answer-token distribution enough to cause the finetuned
+# model to collapse onto those two fixed tokens instead of learning to compare/copy. Down-
+# weighting them here (and pairing with class-weighted loss in finetune.py) fixes that.
+MODE_WEIGHTS = {
+    "pairwise_value": 0.30,
+    "pairwise_yesno": 0.25,
+    "transitive": 0.20,
+    "three_value": 0.20,
+    "equal": 0.05,
+}
+TRANSITIVE_ASK_WEIGHTS = {"max": 0.4, "min": 0.4, "yesno": 0.2}
 
 
 def split_pool(names, seed):
@@ -185,7 +214,7 @@ def build_examples(split_name, person_pool, object_pool, n_target, rng, allow_he
             continue
 
         held_out = allow_held_out and rng.random() < 0.25
-        mode = rng.choice(["pairwise_value", "pairwise_yesno", "transitive", "three_value", "equal"])
+        mode = rng.choices(list(MODE_WEIGHTS.keys()), weights=list(MODE_WEIGHTS.values()), k=1)[0]
 
         if mode == "pairwise_value" or mode == "pairwise_yesno":
             A, B = rng.sample(pool, 2)
@@ -197,7 +226,7 @@ def build_examples(split_name, person_pool, object_pool, n_target, rng, allow_he
 
         elif mode == "transitive":
             A, B, C = rng.sample(pool, 3)
-            ask = rng.choice(["max", "min", "yesno"])
+            ask = rng.choices(list(TRANSITIVE_ASK_WEIGHTS.keys()), weights=list(TRANSITIVE_ASK_WEIGHTS.values()), k=1)[0]
             q, ans, tid = tpl_transitive_relation(attr_key, A, B, C, ask, held_out)
 
         elif mode == "three_value":

@@ -1,0 +1,90 @@
+{
+  "telugu_low": {
+    "label": "Telugu low-param",
+    "vocab_size": 10000,
+    "entropy_by_temp": {
+      "0.5": {
+        "mean": 2.7677,
+        "std": 1.9767
+      },
+      "1.0": {
+        "mean": 9.4985,
+        "std": 2.3111
+      },
+      "1.5": {
+        "mean": 11.9865,
+        "std": 0.6945
+      },
+      "2.0": {
+        "mean": 12.6598,
+        "std": 0.1795
+      }
+    }
+  },
+  "telugu_high": {
+    "label": "Telugu high-param",
+    "vocab_size": 20000,
+    "entropy_by_temp": {
+      "0.5": {
+        "mean": 3.097,
+        "std": 2.0653
+      },
+      "1.0": {
+        "mean": 11.4641,
+        "std": 1.8915
+      },
+      "1.5": {
+        "mean": 13.6712,
+        "std": 0.2991
+      },
+      "2.0": {
+        "mean": 14.035,
+        "std": 0.0964
+      }
+    }
+  },
+  "bhojpuri_low": {
+    "label": "Bhojpuri low-param",
+    "vocab_size": 10000,
+    "entropy_by_temp": {
+      "0.5": {
+        "mean": 3.4879,
+        "std": 1.9107
+      },
+      "1.0": {
+        "mean": 10.7598,
+        "std": 1.0932
+      },
+      "1.5": {
+        "mean": 12.6351,
+        "std": 0.2257
+      },
+      "2.0": {
+        "mean": 13.0001,
+        "std": 0.0812
+      }
+    }
+  },
+  "bhojpuri_high": {
+    "label": "Bhojpuri high-param",
+    "vocab_size": 16000,
+    "entropy_by_temp": {
+      "0.5": {
+        "mean": 3.3533,
+        "std": 1.8493
+      },
+      "1.0": {
+        "mean": 11.0815,
+        "std": 1.4307
+      },
+      "1.5": {
+        "mean": 13.2767,
+        "std": 0.2548
+      },
+      "2.0": {
+        "mean": 13.6684,
+        "std": 0.087
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "language": "telugu",
+  "model_type": "wordpiece",
+  "tokenizer_path": "full_wordPiece_level/telugu_wp_tokenizer_low.json",
+  "vocab_size": 10000,
+  "special_tokens": {
+    "pad_token": "[PAD]",
+    "unk_token": "[UNK]",
+    "bos_token": "[BOS]",
+    "eos_token": "[EOS]"
+  },
+  "special_token_ids": {
+    "pad_token_id": 0,
+    "unk_token_id": 1,
+    "bos_token_id": 2,
+    "eos_token_id": 3
+  },
+  "normalizer": "NFC",
+  "pre_tokenizer": "Whitespace",
+  "decoder": "WordPiece",
+  "description": "WordPiece tokenizer matching the Phase 2 submission checkpoint (10K vocab). Kept as a separate file from configs/tokenizer_config.json (which now describes the later, larger 20K-vocab tokenizer) -- used only by the low-parameter ablation run via finetune_low_config.json's tokenizer_config_filename."
+}
