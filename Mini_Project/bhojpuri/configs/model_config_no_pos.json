@@ -1,0 +1,19 @@
+{
+  "language": "bhojpuri",
+  "model_name": "BhojpuriTransformerNoPos",
+  "architecture": "decoder_only_transformer_no_positional_embeddings",
+  "vocab_size": 16000,
+  "embedding_dim": 320,
+  "num_layers": 8,
+  "num_heads": 8,
+  "head_dim": 40,
+  "hidden_dim": 1280,
+  "max_seq_length": 256,
+  "dropout": 0.1,
+  "layer_norm_eps": 1e-6,
+  "activation": "gelu",
+  "positional_encoding": "none",
+  "tie_embeddings": true,
+  "total_parameters": "~15.0M (15.1M standard model minus the 0.08M positional_embedding table)",
+  "description": "PDF Bonus ablation: same architecture as bhojpuri/configs/model_config.json (the standard high-parameter Bhojpuri model -- 8 layers, 320 dim, 8 heads, 1280 FFN, 16K vocab, max_seq_len 256) with positional embeddings removed entirely (no absolute, no relative, no RoPE). Every other hyperparameter identical so the comparison isolates only the positional-embedding variable. Used by model/transformer_no_pos.py (BhojpuriTransformerNoPos), a new subclass of the standard BhojpuriTransformer -- does not modify model/transformer.py or configs/model_config.json."
+}
