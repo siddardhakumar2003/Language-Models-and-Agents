@@ -194,6 +194,57 @@
       "checkpoint_best_val_ppl": 814.4792329740957,
       "params": 15082240,
       "num_layers": 8
+    },
+    "low_parameter_model": {
+      "0": {
+        "entropy_mean": 2.3517,
+        "entropy_std": 0.3524,
+        "distance_mean": 7.0329,
+        "distance_std": 2.4589,
+        "num_heads": 8
+      },
+      "1": {
+        "entropy_mean": 2.2552,
+        "entropy_std": 0.4054,
+        "distance_mean": 7.6222,
+        "distance_std": 2.5792,
+        "num_heads": 8
+      },
+      "2": {
+        "entropy_mean": 2.3315,
+        "entropy_std": 0.3589,
+        "distance_mean": 7.8338,
+        "distance_std": 2.6466,
+        "num_heads": 8
+      },
+      "3": {
+        "entropy_mean": 2.5035,
+        "entropy_std": 0.3305,
+        "distance_mean": 7.9603,
+        "distance_std": 2.6364,
+        "num_heads": 8
+      },
+      "4": {
+        "entropy_mean": 2.5287,
+        "entropy_std": 0.3273,
+        "distance_mean": 8.0354,
+        "distance_std": 2.6502,
+        "num_heads": 8
+      },
+      "5": {
+        "entropy_mean": 2.5297,
+        "entropy_std": 0.3272,
+        "distance_mean": 8.0336,
+        "distance_std": 2.6434,
+        "num_heads": 8
+      },
+      "_meta": {
+        "checkpoint": "bhojpuri/model/outputs/submission_phase-2/checkpoint_best.pt",
+        "checkpoint_step": 252200,
+        "checkpoint_best_val_ppl": 870.1389220992392,
+        "params": 7341840,
+        "num_layers": 6
+      }
     }
   }
 }

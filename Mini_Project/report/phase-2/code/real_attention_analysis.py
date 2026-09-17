@@ -90,12 +90,14 @@ VARIANTS = [
         file_key="telugu_(h)_high", metrics_key=("telugu_h", "high_parameter_model"), font="Noto Sans Telugu",
     ),
     dict(
-        # Bhojpuri uses ONLY its current high-parameter checkpoint here (not a low/high split
-        # like Telugu): its submission (low-param) checkpoint's PPL (870.1) and this one's
-        # (814.5) are close enough that there's no meaningful low-vs-high ablation story for
-        # Bhojpuri -- the current checkpoint is simply the better, more representative one, so
-        # it replaces the submission checkpoint throughout this report rather than sitting
-        # alongside it.
+        # Bhojpuri's high-parameter checkpoint -- historically the ONLY Bhojpuri variant this
+        # script analyzed (its submission/low-param PPL, 870.1, and this one's, 814.5, are close
+        # enough that there was originally no meaningful low-vs-high *ablation* story worth
+        # running). Output path/file_key/metrics_key are UNCHANGED from before (variant_dir=None,
+        # flat bhojpuri/ layout) so existing references in report/phase-2/report.md and
+        # report/final_report.tex keep working; a dedicated low_parameter_model variant was added
+        # below (nested, new files only) once all-4-models heatmaps were needed for the
+        # consolidated final report.
         lang="bhojpuri", variant_dir=None,
         model_module="bhojpuri.model.transformer", model_cls="BhojpuriTransformer",
         model_arch=BHOJPURI_HIGH_PARAM_ARCH,
@@ -103,6 +105,20 @@ VARIANTS = [
         tokenizer_path=ROOT / "bhojpuri/tokenizer/full_wordPiece_level/bhojpuri_wp_tokenizer.json",
         test_txt=ROOT / "bhojpuri/data/test/bhoj.txt",  # real held-out corpus text, not synthetic
         label="Bhojpuri (Model L)", file_key="bhojpuri_(l)", metrics_key=("bhojpuri_l",), font="Noto Sans Devanagari",
+    ),
+    dict(
+        # Architecture-matched to Telugu's low_parameter_model (same LOW_PARAM_ARCH): the
+        # original submission checkpoint, 6 layers, 10K vocab, 7.34M params. Needs the ORIGINAL
+        # 10K-vocab tokenizer (SidLMA/ mirror), same reasoning as Telugu's low-parameter variant
+        # above -- the current bhojpuri/tokenizer/ was later retrained to 16K vocab.
+        lang="bhojpuri", variant_dir="low_parameter_model",
+        model_module="bhojpuri.model.transformer", model_cls="BhojpuriTransformer",
+        model_arch=LOW_PARAM_ARCH,
+        ckpt=ROOT / "bhojpuri/model/outputs/submission_phase-2/checkpoint_best.pt",
+        tokenizer_path=ROOT / "SidLMA/bhojpuri/tokenizer/full_wordPiece_level/bhojpuri_wp_tokenizer.json",
+        test_txt=ROOT / "bhojpuri/data/test/bhoj.txt",
+        label="Bhojpuri (Model L) -- low-parameter (7.34M, 6L, 10K vocab, submission checkpoint)",
+        file_key="bhojpuri_(l)_low", metrics_key=("bhojpuri_l", "low_parameter_model"), font="Noto Sans Devanagari",
     ),
 ]
 
