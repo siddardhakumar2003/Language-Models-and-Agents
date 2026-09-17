@@ -1,0 +1,9 @@
+{
+  "checkpoint": "bhojpuri/model/outputs/checkpoints/checkpoint_best.pt",
+  "full_test_set_ppl": 789.04,
+  "full_test_set_bpb": 9.624,
+  "samples_evaluated": 182673,
+  "total_tokens": 10594295,
+  "greedy_repetition_rate_bigram": 0.331,
+  "greedy_num_samples": 1000
+}

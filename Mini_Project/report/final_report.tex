@@ -504,13 +504,17 @@ epochs.
  & Standard (with pos.\ emb., 44 epochs) & No positional embeddings (15 epochs) \\
 \midrule
 Best val.\ PPL (training log) & 814.48 & 869.89 \\
-Full test-set eval PPL / BPB & -- & 832.37 / 9.70 \\
+Full test-set eval PPL / BPB & 789.04 / 9.6240 & 832.37 / 9.70 \\
 Last-layer entropy, per head & 2.42--2.52 (real variation) & \textbf{2.3818--2.3821 (near-perfectly flat)} \\
-Greedy repetition rate & -- & 0.462 (falls to 0.0 by $T{=}1.5$) \\
+Greedy repetition rate & 0.331 & 0.462 (falls to 0.0 by $T{=}1.5$) \\
 \bottomrule
 \end{tabular}
-\caption{Standard vs.\ no-positional-embeddings Bhojpuri, real numbers
-(\texttt{bhojpuri/model/outputs/bhojpuri\_no\_pos\_phase2\_evaluation.json}).}
+\caption{Standard vs.\ no-positional-embeddings Bhojpuri, real numbers. Full test-set PPL/BPB and
+greedy repetition rate for the standard model were computed with the exact same protocol as the
+no-pos column (full real 182,673-line test set; 1000-sample greedy generation, same
+prefix/reference construction) via
+\texttt{report/phase-2/code/eval\_bhojpuri\_standard\_matching\_nopos.py}, so this row pair is a
+genuine apples-to-apples comparison, not two different measurement protocols side by side.}
 \label{tab:nopos}
 \end{table}
 \vspace{-8pt}
@@ -547,23 +551,24 @@ essentially uniform (spread of 0.0004 bits) without a position signal to differe
 \end{figure}
 \vspace{-8pt}
 
-\textbf{What breaks (and what doesn't):} PPL degrades only mildly (+6.8\%) despite \emph{zero}
-explicit position information and $3\times$ fewer training epochs -- causal masking alone gives
-an implicit, coarse notion of sequence order (how many keys are visible), which is apparently
-enough for most of next-token prediction's local, morpheme-level signal in this corpus. What
-degrades more sharply is \emph{per-head specialization}: the standard model's last layer shows
-real head-to-head entropy variation (2.42--2.52), while the no-pos model's last-layer heads
-(Fig.~\ref{fig:nopos-heatmap}) are essentially indistinguishable from each other (spread of 0.0004
-bits) -- without a position coordinate to condition on, individual heads cannot specialize into
-distinct roles (e.g.\ "attend locally" vs.\ "attend to sentence start"), so they converge to
-nearly identical behavior. This
-also shows up in generation: greedy decoding collapses into severe repetition
-(``{\devanagariFont एक ठो, एक ठो, एक ठो...}'', rep-rate 0.46, higher than any of the four
-standard models' temperature-matched rates) -- plausibly because, lacking a position signal, the model has a
-weaker sense of "how much have I already produced" and re-enters the same high-probability loop.
-Temperature-driven de-repetition still works correctly (0.46$\to$0.09$\to$0.001$\to$0.0 across
-greedy$\to T{=}1.5$), and BLEU/chrF remain near-zero for the same PPL-driven reasons as the four
-standard models.
+\textbf{What breaks (and what doesn't):} on the matched full-test-set protocol, PPL degrades only
+mildly, +5.5\% (789.04 $\to$ 832.37), despite \emph{zero} explicit position information and
+$3\times$ fewer training epochs -- causal masking alone gives an implicit, coarse notion of
+sequence order (how many keys are visible), which is apparently enough for most of next-token
+prediction's local, morpheme-level signal in this corpus. What degrades more sharply is
+\emph{per-head specialization}: the standard model's last layer shows real head-to-head entropy
+variation (2.42--2.52), while the no-pos model's last-layer heads (Fig.~\ref{fig:nopos-heatmap})
+are essentially indistinguishable from each other (spread of 0.0004 bits) -- without a position
+coordinate to condition on, individual heads cannot specialize into distinct roles (e.g.\ "attend
+locally" vs.\ "attend to sentence start"), so they converge to nearly identical behavior. This
+also shows up in generation: on the same 1000-sample greedy-decoding protocol, repetition is
+39.6\% relatively higher without positional embeddings (bigram rep-rate 0.462 vs.\ the standard
+model's 0.331, ``{\devanagariFont एक ठो, एक ठो, एक ठो...}'' being one such degenerate no-pos
+output) -- plausibly because, lacking a position signal, the model has a weaker sense of "how
+much have I already produced" and re-enters the same high-probability loop more often.
+Temperature-driven de-repetition still works correctly for the no-pos model
+(0.46$\to$0.09$\to$0.001$\to$0.0 across greedy$\to T{=}1.5$), and BLEU/chrF remain near-zero for
+the same PPL-driven reasons as the four standard models.
 
 \section{Ablation Studies: Summary}
 \label{sec:ablation-summary}
@@ -595,7 +600,7 @@ Ablation & Variable isolated & Checkpoints/models & Key finding \\
 4.\ No positional embeddings (Sec.~\ref{sec:bonus}, bonus) &
   Positional-embedding table present vs.\ entirely removed, everything else identical &
   Bhojpuri high-param, standard vs.\ \texttt{NoPos} &
-  PPL degrades only mildly (+6.8\%); last-layer per-head attention collapses to near-perfect
+  PPL degrades only mildly (+5.5\%); last-layer per-head attention collapses to near-perfect
   uniformity (spread 0.0004 bits vs.\ real variation in the standard model); greedy generation
   becomes markedly more repetitive. \\
 \bottomrule
